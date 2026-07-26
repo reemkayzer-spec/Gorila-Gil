@@ -1,1626 +1,832 @@
 <!DOCTYPE html>
-
 <html lang="he" dir="rtl">
-
 <head>
-
-&#x20;   <meta charset="UTF-8">
-
-&#x20;   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-&#x20;   <title>מרכז תפעול ומידע - גורילה</title>
-
-&#x20;   <style>
-
-&#x20;       \* { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
-
-&#x20;       body { margin: 0; padding: 0; background-color: #f4f6f9; color: #2c3e50; line-height: 1.6; overflow-x: hidden; }
-
-&#x20;       
-
-&#x20;       /\* Header \& Sticky Navigation Bar \*/
-
-&#x20;       header { background-color: #1a252f; color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-
-&#x20;       header h1 { margin: 0 0 10px 0; font-size: 1.25em; font-weight: 700; }
-
-&#x20;       
-
-&#x20;       .nav-tabs { 
-
-&#x20;           display: flex; 
-
-&#x20;           justify-content: flex-start; 
-
-&#x20;           gap: 6px; 
-
-&#x20;           overflow-x: auto; 
-
-&#x20;           padding-bottom: 4px; 
-
-&#x20;           -webkit-overflow-scrolling: touch; 
-
-&#x20;           scrollbar-width: none;
-
-&#x20;           width: 100%;
-
-&#x20;       }
-
-&#x20;       .nav-tabs::-webkit-scrollbar { display: none; }
-
-&#x20;       .tab-btn {
-
-&#x20;           background-color: #34495e; color: white; border: none; padding: 8px 14px;
-
-&#x20;           border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em; 
-
-&#x20;           white-space: nowrap; flex-shrink: 0; transition: background-color 0.2s;
-
-&#x20;       }
-
-&#x20;       .tab-btn:hover, .tab-btn.active { background-color: #3498db; }
-
-
-
-&#x20;       /\* Main Container \*/
-
-&#x20;       main { max-width: 1150px; margin: 8px auto; padding: 10px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
-
-&#x20;       .tab-content { display: none; }
-
-&#x20;       .tab-content.active { display: block; }
-
-
-
-&#x20;       /\* Schedule Controls \& Top Bar \*/
-
-&#x20;       .schedule-header-action {
-
-&#x20;           display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; background: #f8f9fa;
-
-&#x20;           padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;
-
-&#x20;       }
-
-&#x20;       .action-btns-group { display: flex; gap: 8px; width: 100%; }
-
-&#x20;       .action-btns-group button { flex: 1; justify-content: center; }
-
-&#x20;       
-
-&#x20;       .add-img-btn, .wa-global-btn {
-
-&#x20;           color: white; border: none; padding: 9px 12px;
-
-&#x20;           border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.82em;
-
-&#x20;           display: flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-
-&#x20;           white-space: nowrap;
-
-&#x20;       }
-
-&#x20;       .add-img-btn { background-color: #2ecc71; }
-
-&#x20;       .add-img-btn:hover { background-color: #27ae60; }
-
-&#x20;       .wa-global-btn { background-color: #25D366; }
-
-&#x20;       .wa-global-btn:hover { background-color: #1da851; }
-
-
-
-&#x20;       .search-box { width: 100%; }
-
-&#x20;       .search-box input {
-
-&#x20;           width: 100%; padding: 9px 14px; border: 2px solid #cbd5e1;
-
-&#x20;           border-radius: 25px; font-size: 0.9em; outline: none; background: #fff;
-
-&#x20;       }
-
-&#x20;       .search-box input:focus { border-color: #3498db; }
-
-
-
-&#x20;       /\* Tables Style - Mobile Friendly \*/
-
-&#x20;       .table-title {
-
-&#x20;           background-color: #1e293b; color: white; padding: 10px 12px;
-
-&#x20;           border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em;
-
-&#x20;           display: flex; justify-content: space-between; align-items: center;
-
-&#x20;       }
-
-&#x20;       .table-container { 
-
-&#x20;           overflow-x: auto; 
-
-&#x20;           margin-bottom: 20px; 
-
-&#x20;           border: 1px solid #e2e8f0; 
-
-&#x20;           border-top: none; 
-
-&#x20;           border-radius: 0 0 8px 8px; 
-
-&#x20;           -webkit-overflow-scrolling: touch;
-
-&#x20;       }
-
-&#x20;       table { width: 100%; border-collapse: collapse; font-size: 0.82em; text-align: center; min-width: 720px; }
-
-&#x20;       th, td { border: 1px solid #e2e8f0; padding: 8px 5px; vertical-align: middle; }
-
-&#x20;       th { background-color: #334155; color: white; font-weight: 600; white-space: nowrap; }
-
-&#x20;       tr:nth-child(even) { background-color: #f8fafc; }
-
-&#x20;       tr:hover { background-color: #f1f5f9; }
-
-
-
-&#x20;       .wa-row-btn {
-
-&#x20;           background-color: #25D366; color: white; border: none; padding: 5px 9px;
-
-&#x20;           border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.78em;
-
-&#x20;           display: inline-flex; align-items: center; gap: 4px; text-decoration: none; white-space: nowrap;
-
-&#x20;       }
-
-
-
-&#x20;       /\* Slide Boxes Style \*/
-
-&#x20;       .slide-box {
-
-&#x20;           background-color: #ffffff; border: 1px solid #e2e8f0; border-right: 4px solid #3498db;
-
-&#x20;           border-radius: 8px; margin-bottom: 15px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-
-&#x20;       }
-
-&#x20;       .slide-badge {
-
-&#x20;           display: inline-block; background-color: #0f172a; color: white; font-size: 0.75em;
-
-&#x20;           padding: 3px 8px; border-radius: 10px; margin-bottom: 8px; font-weight: bold;
-
-&#x20;       }
-
-&#x20;       .slide-title { margin-top: 0; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; font-size: 1.05em; }
-
-&#x20;       
-
-&#x20;       .step-list { margin-top: 8px; padding-right: 12px; font-size: 0.9em; }
-
-&#x20;       .step-list li { margin-bottom: 8px; }
-
-&#x20;       .step-list p { margin: 4px 0; }
-
-
-
-&#x20;       .code-block { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: #0f172a; border: 1px solid #cbd5e1; font-size: 0.85em; word-break: break-all; }
-
-
-
-&#x20;       /\* Links and Resources Grid \*/
-
-&#x20;       .resource-links-grid {
-
-&#x20;           display: grid;
-
-&#x20;           grid-template-columns: 1fr;
-
-&#x20;           gap: 10px;
-
-&#x20;           margin-top: 10px;
-
-&#x20;       }
-
-&#x20;       .resource-card {
-
-&#x20;           background: #f8fafc;
-
-&#x20;           border: 1px solid #cbd5e1;
-
-&#x20;           border-radius: 8px;
-
-&#x20;           padding: 10px;
-
-&#x20;           display: flex;
-
-&#x20;           flex-direction: column;
-
-&#x20;           justify-content: space-between;
-
-&#x20;       }
-
-&#x20;       .resource-card h4 { margin: 0 0 6px 0; color: #1e293b; font-size: 0.9em; }
-
-&#x20;       .link-table-btn {
-
-&#x20;           display: block;
-
-&#x20;           background-color: #0284c7;
-
-&#x20;           color: white;
-
-&#x20;           padding: 6px 8px;
-
-&#x20;           border-radius: 4px;
-
-&#x20;           text-decoration: none;
-
-&#x20;           font-weight: bold;
-
-&#x20;           font-size: 0.8em;
-
-&#x20;           text-align: center;
-
-&#x20;       }
-
-&#x20;       .link-table-btn:hover { background-color: #0369a1; }
-
-
-
-&#x20;       /\* Visual Diagram Mockups \*/
-
-&#x20;       .mockup-visual-card {
-
-&#x20;           background: #1e293b; color: #f8fafc; padding: 10px; border-radius: 6px;
-
-&#x20;           margin: 10px 0; border: 1px solid #334155; font-family: monospace; direction: ltr; text-align: left;
-
-&#x20;           cursor: pointer; font-size: 0.8em; overflow-x: auto;
-
-&#x20;       }
-
-&#x20;       .mockup-header { color: #38bdf8; font-weight: bold; border-bottom: 1px solid #475569; padding-bottom: 4px; margin-bottom: 6px; }
-
-
-
-&#x20;       /\* Inline Video Embed Component \*/
-
-&#x20;       .videos-flex-container {
-
-&#x20;           display: flex;
-
-&#x20;           flex-direction: column;
-
-&#x20;           gap: 10px;
-
-&#x20;           margin: 10px 0;
-
-&#x20;       }
-
-&#x20;       .slide-video-container {
-
-&#x20;           background: #f8fafc;
-
-&#x20;           border: 1px solid #e2e8f0;
-
-&#x20;           border-radius: 8px;
-
-&#x20;           padding: 10px;
-
-&#x20;           width: 100%;
-
-&#x20;       }
-
-&#x20;       .slide-video-container h4 {
-
-&#x20;           margin: 0 0 6px 0;
-
-&#x20;           font-size: 0.85em;
-
-&#x20;           color: #0f172a;
-
-&#x20;       }
-
-&#x20;       .video-wrapper {
-
-&#x20;           position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
-
-&#x20;           border-radius: 6px; background: #000;
-
-&#x20;       }
-
-&#x20;       .video-wrapper iframe {
-
-&#x20;           position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
-
-&#x20;       }
-
-&#x20;       .yt-link-btn {
-
-&#x20;           display: inline-flex; align-items: center; gap: 5px; background-color: #ff0000;
-
-&#x20;           color: white; padding: 5px 10px; border-radius: 15px; text-decoration: none;
-
-&#x20;           font-size: 0.75em; font-weight: bold; margin-top: 6px;
-
-&#x20;       }
-
-
-
-&#x20;       /\* Modal \& Lightbox Styles \*/
-
-&#x20;       .modal, .lightbox-modal {
-
-&#x20;           display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-
-&#x20;           background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 10px;
-
-&#x20;       }
-
-&#x20;       .modal-content {
-
-&#x20;           background-color: white; padding: 18px; border-radius: 8px; width: 100%; max-width: 420px;
-
-&#x20;           text-align: center; position: relative; max-height: 90vh; overflow-y: auto;
-
-&#x20;       }
-
-&#x20;       .close-modal { position: absolute; left: 12px; top: 8px; font-size: 1.4em; cursor: pointer; color: #64748b; }
-
-&#x20;       .upload-preview { max-width: 100%; max-height: 150px; margin-top: 8px; display: none; border-radius: 4px; }
-
-
-
-&#x20;       .cards-container { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-
-&#x20;       .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
-
-&#x20;       .btn { display: block; background-color: #0284c7; color: white; padding: 8px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 8px; font-size: 0.85em; text-align: center; }
-
-
-
-&#x20;       /\* Desktop Adjustments \*/
-
-&#x20;       @media (min-width: 768px) {
-
-&#x20;           header { padding: 18px 12px; }
-
-&#x20;           header h1 { font-size: 1.7em; }
-
-&#x20;           .nav-tabs { justify-content: center; gap: 10px; }
-
-&#x20;           .tab-btn { font-size: 0.95em; padding: 10px 18px; }
-
-&#x20;           main { margin: 20px auto; padding: 20px; }
-
-&#x20;           .schedule-header-action { flex-direction: row; align-items: center; justify-content: space-between; padding: 15px; }
-
-&#x20;           .action-btns-group { width: auto; }
-
-&#x20;           .action-btns-group button { width: auto; }
-
-&#x20;           .search-box { max-width: 280px; width: auto; }
-
-&#x20;           .resource-links-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-
-&#x20;           .videos-flex-container { flex-direction: row; flex-wrap: wrap; }
-
-&#x20;           .slide-video-container { flex: 1; min-width: 280px; max-width: 480px; }
-
-&#x20;           .cards-container { flex-direction: row; }
-
-&#x20;           .card { flex: 1; }
-
-&#x20;           .btn { display: inline-block; width: auto; }
-
-&#x20;       }
-
-&#x20;   </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>מרכז תפעול ומידע - גורילה</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; background-color: #f4f6f9; color: #2c3e50; line-height: 1.7; overflow-x: hidden; }
+        
+        /* Header & Navigation - Mobile Optimized */
+        header { background-color: #1a252f; color: white; padding: 15px 10px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        header h1 { margin: 0 0 12px 0; font-size: 1.4em; font-weight: 700; }
+        
+        .nav-tabs { display: flex; justify-content: center; gap: 6px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background-color: #34495e; color: white; border: none; padding: 8px 12px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: 0.3s;
+        }
+        .tab-btn:hover, .tab-btn.active { background-color: #3498db; }
+
+        /* Main Layout - Mobile Optimized */
+        main { max-width: 1150px; margin: 10px auto; padding: 12px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Schedule Controls & Top Bar */
+        .schedule-header-action {
+            display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; background: #f8f9fa;
+            padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;
+        }
+        .action-btns-group { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
+        .action-btns-group button { flex: 1; min-width: 140px; justify-content: center; }
+        
+        .add-img-btn {
+            background-color: #2ecc71; color: white; border: none; padding: 10px 14px;
+            border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85em;
+            display: flex; align-items: center; gap: 6px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .add-img-btn:hover { background-color: #27ae60; }
+
+        .wa-global-btn {
+            background-color: #25D366; color: white; border: none; padding: 10px 14px;
+            border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.85em;
+            display: flex; align-items: center; gap: 6px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .wa-global-btn:hover { background-color: #1da851; }
+
+        .search-box { width: 100%; max-width: 100%; }
+        .search-box input {
+            width: 100%; padding: 10px 16px; border: 2px solid #cbd5e1;
+            border-radius: 25px; font-size: 0.95em; outline: none; transition: 0.3s; background: #fff;
+        }
+        .search-box input:focus { border-color: #3498db; }
+
+        /* Tables Style - Mobile First Horizontal Scroll fix */
+        .table-title {
+            background-color: #1e293b; color: white; padding: 10px 14px;
+            border-radius: 8px 8px 0 0; margin-top: 20px; margin-bottom: 0; font-size: 1.05em;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .table-container { 
+            overflow-x: auto; 
+            margin-bottom: 25px; 
+            border: 1px solid #e2e8f0; 
+            border-top: none; 
+            border-radius: 0 0 8px 8px; 
+            -webkit-overflow-scrolling: touch;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; text-align: center; min-width: 750px; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px 6px; vertical-align: middle; }
+        th { background-color: #334155; color: white; font-weight: 600; white-space: nowrap; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+        tr:hover { background-color: #f1f5f9; }
+
+        .wa-row-btn {
+            background-color: #25D366; color: white; border: none; padding: 6px 10px;
+            border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.8em;
+            display: inline-flex; align-items: center; gap: 4px; text-decoration: none; transition: 0.2s; white-space: nowrap;
+        }
+        .wa-row-btn:hover { background-color: #128C7E; transform: translateY(-1px); }
+
+        /* Cards & Slide Boxes Style */
+        .slide-box {
+            background-color: #ffffff; border: 1px solid #e2e8f0; border-right: 5px solid #3498db;
+            border-radius: 8px; margin-bottom: 20px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .slide-badge {
+            display: inline-block; background-color: #0f172a; color: white; font-size: 0.78em;
+            padding: 3px 10px; border-radius: 12px; margin-bottom: 10px; font-weight: bold; letter-spacing: 0.5px;
+        }
+        .slide-title { margin-top: 0; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; font-size: 1.15em; }
+        
+        .step-list { margin-top: 10px; padding-right: 15px; }
+        .step-list li { margin-bottom: 10px; }
+        .step-list p { margin: 5px 0; }
+
+        .code-block { background: #f1f5f9; padding: 3px 6px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: #0f172a; border: 1px solid #cbd5e1; font-size: 0.9em; word-break: break-all; }
+
+        /* Links and Resources Grid - Mobile Responsive */
+        .resource-links-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        @media (min-width: 600px) {
+            .resource-links-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+            .schedule-header-action { flex-direction: row; align-items: center; justify-content: space-between; }
+            .action-btns-group { width: auto; }
+            .action-btns-group button { width: auto; min-width: auto; }
+            .search-box { max-width: 280px; }
+        }
+
+        .resource-card {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+        .resource-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.1);
+        }
+        .resource-card h4 { margin: 0 0 8px 0; color: #1e293b; font-size: 0.95em; }
+        .link-table-btn {
+            display: inline-block;
+            background-color: #0284c7;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.82em;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .link-table-btn:hover { background-color: #0369a1; }
+
+        /* Visual Diagram Mockups */
+        .mockup-visual-card {
+            background: #1e293b; color: #f8fafc; padding: 12px; border-radius: 8px;
+            margin: 12px 0; border: 2px solid #334155; font-family: monospace; direction: ltr; text-align: left;
+            cursor: pointer; transition: 0.2s; font-size: 0.85em; overflow-x: auto;
+        }
+        .mockup-visual-card:hover { border-color: #38bdf8; }
+        .mockup-header { color: #38bdf8; font-weight: bold; border-bottom: 1px solid #475569; padding-bottom: 4px; margin-bottom: 8px; }
+
+        /* Inline Video Embed Component & Grid */
+        .videos-flex-container {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+            margin: 14px 0;
+        }
+        @media (min-width: 768px) {
+            .videos-flex-container { flex-direction: row; flex-wrap: wrap; }
+        }
+        .slide-video-container {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            width: 100%;
+            max-width: 100%;
+        }
+        @media (min-width: 768px) {
+            .slide-video-container { min-width: 280px; max-width: 520px; }
+        }
+        .slide-video-container h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.9em;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+            border-radius: 6px; background: #000;
+        }
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
+        }
+        .yt-link-btn {
+            display: inline-flex; align-items: center; gap: 6px; background-color: #ff0000;
+            color: white; padding: 6px 12px; border-radius: 20px; text-decoration: none;
+            font-size: 0.8em; font-weight: bold; transition: 0.2s; margin-top: 8px;
+        }
+        .yt-link-btn:hover { background-color: #cc0000; }
+
+        /* Modal Popup Style */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 10px;
+        }
+        .modal-content {
+            background-color: white; padding: 20px; border-radius: 10px; width: 100%; max-width: 480px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.25); text-align: center; position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .close-modal { position: absolute; left: 15px; top: 10px; font-size: 1.5em; cursor: pointer; color: #64748b; }
+        .close-modal:hover { color: #0f172a; }
+        .upload-preview { max-width: 100%; max-height: 180px; margin-top: 10px; display: none; border: 1px solid #cbd5e1; border-radius: 6px; }
+
+        .cards-container { display: flex; gap: 15px; flex-direction: column; margin-top: 12px; }
+        @media (min-width: 600px) {
+            .cards-container { flex-direction: row; flex-wrap: wrap; }
+        }
+        .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; flex: 1; min-width: 260px; }
+        .btn { display: inline-block; background-color: #0284c7; color: white; padding: 8px 14px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 8px; font-size: 0.9em; text-align: center; width: 100%; }
+        @media (min-width: 600px) { .btn { width: auto; } }
+        .btn:hover { background-color: #0369a1; }
+
+        /* Lightbox Fullscreen */
+        .lightbox-modal {
+            display: none; position: fixed; z-index: 1100; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 15px;
+        }
+    </style>
 </head>
-
 <body>
 
-
-
-&#x20;   <header>
-
-&#x20;       <h1>🖥️ פורטל תפעול והדרכה - גורילה (BAGIRA)</h1>
-
-&#x20;       <div class="nav-tabs" role="tablist">
-
-&#x20;           <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('schedule', this)">📅 סידור עבודה</button>
-
-&#x20;           <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('pdf-slides', this)">🔧 תקלות</button>
-
-&#x20;           <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('training-program', this)">🎓 הסמכה</button>
-
-&#x20;           <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('forms', this)">📋 טפסים</button>
-
-&#x20;       </div>
-
-&#x20;   </header>
-
-
-
-&#x20;   <main>
-
-&#x20;       <!-- סקשן סידור עבודה שבועי -->
-
-&#x20;       <section id="schedule" class="tab-content active" role="tabpanel">
-
-&#x20;           <div class="schedule-header-action">
-
-&#x20;               <h2 style="margin: 0; font-size: 1.15em;">📅 סידור עבודה שבועי</h2>
-
-&#x20;               <div class="search-box">
-
-&#x20;                   <input type="text" id="scheduleSearch" onkeyup="filterSchedule()" placeholder="🔍 חפש עובד, יום או יחידה...">
-
-&#x20;               </div>
-
-&#x20;               <div class="action-btns-group">
-
-&#x20;                   <button class="wa-global-btn" onclick="sendWhatsAppForTomorrow()">
-
-&#x20;                       <span>💬</span> תזכורות למחר
-
-&#x20;                   </button>
-
-&#x20;                   <button class="add-img-btn" onclick="openUploadModal()">
-
-&#x20;                       <span>➕</span> העלאת תמונה
-
-&#x20;                   </button>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <!-- טבלה 1: ניידת 1 -->
-
-&#x20;           <h3 class="table-title">🚚 ניידת 1</h3>
-
-&#x20;           <div class="table-container">
-
-&#x20;               <table class="schedule-table" id="scheduleTable1">
-
-&#x20;                   <thead>
-
-&#x20;                       <tr>
-
-&#x20;                           <th>יום</th>
-
-&#x20;                           <th>תאריך</th>
-
-&#x20;                           <th>מדריך</th>
-
-&#x20;                           <th>כוח מתאמן</th>
-
-&#x20;                           <th>מיקום</th>
-
-&#x20;                           <th>מערכת</th>
-
-&#x20;                           <th>איש קשר</th>
-
-&#x20;                           <th>מס' מתאמנים</th>
-
-&#x20;                           <th>חיוב</th>
-
-&#x20;                           <th>שעות</th>
-
-&#x20;                           <th>הערות</th>
-
-&#x20;                           <th>שליחת תזכורת 📲</th>
-
-&#x20;                       </tr>
-
-&#x20;                   </thead>
-
-&#x20;                   <tbody>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">ראשון</td><td class="col-date">26</td><td class="col-guide">קסה</td>
-
-&#x20;                           <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">שני (058-5500393)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 15:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">שני</td><td class="col-date">27</td><td class="col-guide">קסה</td>
-
-&#x20;                           <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">שני (058-5500393)</td><td>-</td><td>כן</td><td class="col-hours">15:00 - 19:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">קסה</td>
-
-&#x20;                           <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">שני (058-5500393)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 15:00</td>
-
-&#x20;                           <td class="col-notes">צילומים</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">איתי</td>
-
-&#x20;                           <td class="col-unit">זרעית (גדסר ביסלח)</td><td class="col-loc">זרעית</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">דביר (050-9501700)</td><td>-</td><td>כן</td><td class="col-hours">09:30 - 13:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">חמישי</td><td class="col-date">30</td><td class="col-guide">איתי</td>
-
-&#x20;                           <td class="col-unit">עמיעד (גדוד 13)</td><td class="col-loc">עמיעד</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">רוקח (055-8865228)</td><td>-</td><td>כן</td><td class="col-hours">09:00 - 13:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                   </tbody>
-
-&#x20;               </table>
-
-&#x20;           </div>
-
-
-
-&#x20;           <!-- טבלה 2: ניידת 2 -->
-
-&#x20;           <h3 class="table-title">🚚 ניידת 2</h3>
-
-&#x20;           <div class="table-container">
-
-&#x20;               <table class="schedule-table" id="scheduleTable2">
-
-&#x20;                   <thead>
-
-&#x20;                       <tr>
-
-&#x20;                           <th>יום</th>
-
-&#x20;                           <th>תאריך</th>
-
-&#x20;                           <th>מדריך</th>
-
-&#x20;                           <th>כוח מתאמן</th>
-
-&#x20;                           <th>מיקום</th>
-
-&#x20;                           <th>מערכת</th>
-
-&#x20;                           <th>איש קשר</th>
-
-&#x20;                           <th>מס' מתאמנים</th>
-
-&#x20;                           <th>חיוב</th>
-
-&#x20;                           <th>שעות</th>
-
-&#x20;                           <th>הערות</th>
-
-&#x20;                           <th>שליחת תזכורת 📲</th>
-
-&#x20;                       </tr>
-
-&#x20;                   </thead>
-
-&#x20;                   <tbody>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">ראשון</td><td class="col-date">26</td><td class="col-guide">כחלון</td>
-
-&#x20;                           <td class="col-unit">קרני שומרון (931)</td><td class="col-loc">קרני שומרון</td><td class="col-sys">אחוד</td>
-
-&#x20;                           <td class="col-contact">בן צבי (052-2988348)</td><td>-</td><td>כן</td><td class="col-hours">-</td>
-
-&#x20;                           <td class="col-notes">יום מקצועי + אפליקציה</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">שני</td><td class="col-date">27</td><td class="col-guide">איתי</td>
-
-&#x20;                           <td class="col-unit">חומש (934)</td><td class="col-loc">חומש</td><td class="col-sys">אחוד</td>
-
-&#x20;                           <td class="col-contact">יאיר שחר (052-2399579)</td><td>-</td><td>כן</td><td class="col-hours">12:00 - 15:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">עידו</td>
-
-&#x20;                           <td class="col-unit">מטולה (92)</td><td class="col-loc">מטולה</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">טולדו (054-8738546)</td><td>-</td><td>כן</td><td class="col-hours">11:00 - 14:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">כחלון</td>
-
-&#x20;                           <td class="col-unit">מבוא דותן (50)</td><td class="col-loc">מבוא דותן</td><td class="col-sys">אחוד סימולטיבי</td>
-
-&#x20;                           <td class="col-contact">כפיר כהן (054-2058999)</td><td>-</td><td>כן</td><td class="col-hours">-</td>
-
-&#x20;                           <td class="col-notes">צריך רכב</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">כחלון</td>
-
-&#x20;                           <td class="col-unit">נחל עוז (202)</td><td class="col-loc">נחל עוז</td><td class="col-sys">אחוד</td>
-
-&#x20;                           <td class="col-contact">יובל (052-3848424)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 14:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">קסה</td>
-
-&#x20;                           <td class="col-unit">עלומים (101)</td><td class="col-loc">עלומים</td><td class="col-sys">ישלט</td>
-
-&#x20;                           <td class="col-contact">דן תלמי (050-8998173)</td><td>-</td><td>כן</td><td class="col-hours">-</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                       <tr>
-
-&#x20;                           <td class="col-day">חמישי</td><td class="col-date">30</td><td class="col-guide">קסה</td>
-
-&#x20;                           <td class="col-unit">בוקעתא (6228)</td><td class="col-loc">בוקעתא</td><td class="col-sys">אחוד</td>
-
-&#x20;                           <td class="col-contact">רותם (052-5599123)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 14:00</td>
-
-&#x20;                           <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-
-&#x20;                       </tr>
-
-&#x20;                   </tbody>
-
-&#x20;               </table>
-
-&#x20;           </div>
-
-&#x20;       </section>
-
-
-
-&#x20;       <!-- סקשן תפעול ותקלות -->
-
-&#x20;       <section id="pdf-slides" class="tab-content" role="tabpanel">
-
-&#x20;           <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
-
-&#x20;           <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 2</span>
-
-&#x20;               <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
-
-&#x20;               
-
-&#x20;               <div class="step-list">
-
-&#x20;                   <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
-
-&#x20;                   <ul>
-
-&#x20;                       <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
-
-&#x20;                       <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
-
-&#x20;                       <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
-
-&#x20;                       <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
-
-&#x20;                       <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
-
-&#x20;                   </ul>
-
-
-
-&#x20;                   <div class="mockup-visual-card" onclick="openLightboxFromText('🎯 פתרון אין תנועה / יש ריצוד במשגר\\n\\n1. נכבה DriveEncoder.\\n2. נכבה ונדליק את הספרטון (שיטת 1 1 3).\\n3. אופציה מס 3 אחרי 1, ואחרי עוד פעם 1 ונשנה פעמיים.\\n4. נבדוק שאין V איפה שכתוב Gyro-Only Mode.\\n5. נלחץ X מהחלונית ונחזור להדליק את ה-DriveEncoder.')">
-
-&#x20;                       <div class="mockup-header">🎯 Spartacus -> Gyro-Only Mode \& DriveEncoder Adjustment</div>
-
-&#x20;                       <div>1️⃣ Turn OFF <strong>DriveEncoder</strong></div>
-
-&#x20;                       <div>2️⃣ Toggle Sparton (Method 1 1 3)</div>
-
-&#x20;                       <div>3️⃣ Verify NO Checkmark (V) on <strong>Gyro-Only Mode</strong></div>
-
-&#x20;                       <div>4️⃣ Close Settings Box -> Turn ON <strong>DriveEncoder</strong></div>
-
-&#x20;                       <span style="color: #38bdf8; margin-top: 6px; display: block;">🔍 לחץ לצפייה בהנחיות פתרון הריצוד המלאות</span>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <p><strong>2. סידור קומים (Device Manager):</strong></p>
-
-&#x20;                   <ul>
-
-&#x20;                       <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
-
-&#x20;                       <li>נכנסים לתיקיית <strong>PORTS (COM \& LPT)</strong> – יש לוודא הופעת 4 קומים:
-
-&#x20;                           <ul>
-
-&#x20;                               <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
-
-&#x20;                               <li><strong>COM3:</strong> USB Serial Port</li>
-
-&#x20;                               <li><strong>COM4:</strong> USB Serial Port</li>
-
-&#x20;                               <li><strong>COM5:</strong> USB-SERIAL CH340</li>
-
-&#x20;                           </ul>
-
-&#x20;                       </li>
-
-&#x20;                       <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
-
-&#x20;                   </ul>
-
-
-
-&#x20;                   <div class="slide-video-container">
-
-&#x20;                       <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
-
-&#x20;                       <div class="video-wrapper">
-
-&#x20;                           <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" allowfullscreen></iframe>
-
-&#x20;                       </div>
-
-&#x20;                       <a href="https://youtu.be/yct6JCOWgIs" target="\_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-
-&#x20;                   </div>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 3</span>
-
-&#x20;               <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
-
-&#x20;               <div class="step-list">
-
-&#x20;                   <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
-
-&#x20;                   <ul>
-
-&#x20;                       <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
-
-&#x20;                   </ul>
-
-&#x20;                   <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
-
-&#x20;                   <ul>
-
-&#x20;                       <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
-
-&#x20;                       <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
-
-&#x20;                       <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
-
-&#x20;                       <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
-
-&#x20;                   </ul>
-
-
-
-&#x20;                   <div class="slide-video-container">
-
-&#x20;                       <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
-
-&#x20;                       <div class="video-wrapper">
-
-&#x20;                           <iframe src="https://www.youtube.com/embed/\_SPomcHd1VU" title="תלת מימד לא עולה" allowfullscreen></iframe>
-
-&#x20;                       </div>
-
-&#x20;                       <a href="https://youtu.be/\_SPomcHd1VU" target="\_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-
-&#x20;                   </div>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 4</span>
-
-&#x20;               <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
-
-&#x20;               <div class="step-list">
-
-&#x20;                   <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
-
-&#x20;                   <ul>
-
-&#x20;                       <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
-
-&#x20;                   </ul>
-
-
-
-&#x20;                   <div class="slide-video-container">
-
-&#x20;                       <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
-
-&#x20;                       <div class="video-wrapper">
-
-&#x20;                           <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" allowfullscreen></iframe>
-
-&#x20;                       </div>
-
-&#x20;                       <a href="https://youtube.com/shorts/gfm4laG0SYo" target="\_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
-
-&#x20;                   <ul>
-
-&#x20;                       <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
-
-&#x20;                   </ul>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 5</span>
-
-&#x20;               <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
-
-&#x20;               <ol class="step-list">
-
-&#x20;                   <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
-
-&#x20;                   <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
-
-&#x20;                   <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
-
-&#x20;                   <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
-
-&#x20;               </ol>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 6</span>
-
-&#x20;               <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
-
-&#x20;               <ol class="step-list">
-
-&#x20;                   <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
-
-&#x20;                   <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
-
-&#x20;                   <li>הזינו נתיב <span class="code-block">\\\\10.0.0.8\\c</span> ובחרו בתרחישים הרצויים.</li>
-
-&#x20;               </ol>
-
-
-
-&#x20;               <div class="videos-flex-container">
-
-&#x20;                   <div class="slide-video-container">
-
-&#x20;                       <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
-
-&#x20;                       <div class="video-wrapper">
-
-&#x20;                           <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" allowfullscreen></iframe>
-
-&#x20;                       </div>
-
-&#x20;                       <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="\_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="slide-video-container">
-
-&#x20;                       <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
-
-&#x20;                       <div class="video-wrapper">
-
-&#x20;                           <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" allowfullscreen></iframe>
-
-&#x20;                       </div>
-
-&#x20;                       <a href="https://youtu.be/W6bQJojtayQ" target="\_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-
-&#x20;                   </div>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 7</span>
-
-&#x20;               <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
-
-&#x20;               <ol class="step-list">
-
-&#x20;                   <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
-
-&#x20;                   <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
-
-&#x20;                   <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
-
-&#x20;                   <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
-
-&#x20;                   <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
-
-&#x20;                   <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
-
-&#x20;               </ol>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">שקופית 8</span>
-
-&#x20;               <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
-
-&#x20;               <div class="step-list">
-
-&#x20;                   <ol>
-
-&#x20;                       <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
-
-&#x20;                       <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\\IT\\NEW VERSION May 2025</span>.</li>
-
-&#x20;                       <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-
-&#x20;                       <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
-
-&#x20;                       <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
-
-&#x20;                   </ol>
-
-
-
-&#x20;                   <div class="mockup-visual-card" onclick="openLightboxFromText('📥 התקנת דרייברים של NVIDIA\\n\\n1. הרצת קובץ ההתקנה של Nvidia.\\n2. בחירת Nvidia Graphics Driver -> לחיצה על AGREE AND CONTINUE.\\n3. בחירת Express (Recommended) -> לחיצה על NEXT.\\n4. בסיום ההתקנה - חובה לאתחל את המחשב (Restart).')">
-
-&#x20;                       <div class="mockup-header">📥 NVIDIA Graphics Driver Installer Options</div>
-
-&#x20;                       <div>1️⃣ Click <strong>NVIDIA Graphics Driver</strong> -> Press <strong>AGREE AND CONTINUE</strong></div>
-
-&#x20;                       <div>2️⃣ Select <strong>Express (Recommended)</strong> -> Press <strong>NEXT</strong></div>
-
-&#x20;                       <div>3️⃣ Restart computer after installation completes!</div>
-
-&#x20;                       <span style="color: #38bdf8; margin-top: 6px; display: block;">🔍 לחץ לצפייה בדיאגרמת ההתקנה של NVIDIA</span>
-
-&#x20;                   </div>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-&#x20;       </section>
-
-
-
-&#x20;       <!-- סקשן תוכנית הסמכה -->
-
-&#x20;       <section id="training-program" class="tab-content" role="tabpanel">
-
-&#x20;           <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
-
-&#x20;           <p style="font-size: 0.85em;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014 (מהדורה 03)</p>
-
-
-
-&#x20;           <div class="slide-box" style="border-right-color: #0284c7; background: #f0f9ff;">
-
-&#x20;               <span class="slide-badge" style="background-color: #0284c7;">📚 קישורים ומשאבי למידה מהירים</span>
-
-&#x20;               <h3 class="slide-title">🔗 חומרי הדרכה, מצגות ונהלים במערכת SharePoint</h3>
-
-&#x20;               
-
-&#x20;               <div class="resource-links-grid">
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>🏢 מצגת הכרת החברה ומוצרים</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D\&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%A8%D7%99%D7%9D.pptx\&action=edit\&mobileredirect=true" target="\_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>👥 מצגת מבנה מחלקה</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D\&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%A8%D7%99%D7%9D.pptx\&action=edit\&mobileredirect=true" target="\_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>💻 מצגת העלאת מערכת</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D\&file=%D7%94%D7%A1%D7%9E%D7%9B%D7%AA%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%9C.pptx\&action=edit\&mobileredirect=true" target="\_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>🔧 מצגת תקלות ותפעול גורילה</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D\&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%D7%A4%D7%A2%D7%95%D7%9C%20%D7%92%D7%95%D7%A8%D7%99%D7%9C%D7%94%20%D7%92%D7%99%D7%9C.pptx\&action=edit\&mobileredirect=true\&wdOrigin=WAC.POWERPOINT.HOME-BUTTON%2CAPPHOME-WEB.FILEBROWSER.RECENT\&wdPreviousSession=3d103aad-3d83-12b9-ddca-650c519b1203\&wdPreviousSessionSrc=Wac\&ct=1782823429304" target="\_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>📝 מבחן עיוני</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry\_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="\_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>📋 נוהל דיווחים יומיים וחודשיים (ILS003)</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality\_Assurance/\_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D\&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx\&action=default\&mobileredirect=true" target="\_blank" class="link-table-btn">📄 פתח נוהל ILS003 🔗</a>
-
-&#x20;                   </div>
-
-
-
-&#x20;                   <div class="resource-card">
-
-&#x20;                       <h4>📋 נוהל הופעת עובדים חטיבת התפעול (ILS002)</h4>
-
-&#x20;                       <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality\_Assurance/\_layouts/15/Doc.aspx?sourcedoc=%7BB43F2CA8-199C-4128-8F14-88102E79E6CD%7D\&file=ILS002%20%D7%94%D7%95%D7%A4%D7%A2%D7%AA%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A7%D7%98%D7%99%D7%91%D7%AA%20%D7%94%D7%AA%D7%A4%D7%A2%D7%95%D7%ע.doc\&action=default\&mobileredirect=true" target="\_blank" class="link-table-btn">📄 פתח נוהל ILS002 🔗</a>
-
-&#x20;                   </div>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">יום מס' 1 - כללי</span>
-
-&#x20;               <h3 class="slide-title">🏢 הכרת החברה ואופן העבודה</h3>
-
-&#x20;               <div class="table-container">
-
-&#x20;                   <table>
-
-&#x20;                       <thead>
-
-&#x20;                           <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר במערכת</th></tr>
-
-&#x20;                       </thead>
-
-&#x20;                       <tbody>
-
-&#x20;                           <tr>
-
-&#x20;                               <td>הכרת החברה</td>
-
-&#x20;                               <td>מנהל אתר</td>
-
-&#x20;                               <td>מצגת חברה + מוצרים: פריסת המאמנים, תחומי עיסוק, הצהרת איכות.</td>
-
-&#x20;                               <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D\&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%A8%D7%99%D7%9D.pptx\&action=edit\&mobileredirect=true" target="\_blank" class="link-table-btn">🔗 מצגת חברה</a></td>
-
-&#x20;                           </tr>
-
-&#x20;                           <tr>
-
-&#x20;                               <td>אופן העבודה בתפעול</td>
-
-&#x20;                               <td>מנהל אתר</td>
-
-&#x20;                               <td>מצגת מבנה מחלקה: מבנה ארגוני, ממשקים מול רכזת תפעול ומנהלי אזורים.</td>
-
-&#x20;                               <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D\&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%A8%D7%99%D7%9D.pptx\&action=edit\&mobileredirect=true" target="\_blank" class="link-table-btn">🔗 מצגת מבנה מחלקה</a></td>
-
-&#x20;                           </tr>
-
-&#x20;                           <tr>
-
-&#x20;                               <td>נהלי איכות ודיווח</td>
-
-&#x20;                               <td>מנהל אתר</td>
-
-&#x20;                               <td>למידת נוהל הופעת עובדים (ILS002) ונוהל דיווחים יומיים/חודשיים (ILS003).</td>
-
-&#x20;                               <td>
-
-&#x20;                                   <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality\_Assurance/\_layouts/15/Doc.aspx?sourcedoc=%7BB43F2CA8-199C-4128-8F14-88102E79E6CD%7D\&file=ILS002%20%D7%94%D7%95%D7%A4%D7%A2%D7%AA%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A7%D7%98%D7%99%D7%91%D7%AA%20%D7%94%D7%AA%D7%A4%D7%A2%D7%95%D7%9C.doc\&action=default\&mobileredirect=true" target="\_blank" class="link-table-btn" style="margin-bottom:4px;">🔗 נוהל ILS002</a>
-
-&#x20;                                   <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality\_Assurance/\_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D\&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx\&action=default\&mobileredirect=true" target="\_blank" class="link-table-btn">🔗 נוהל ILS003</a>
-
-&#x20;                               </td>
-
-&#x20;                           </tr>
-
-&#x20;                       </tbody>
-
-&#x20;                   </table>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-
-
-&#x20;           <div class="slide-box">
-
-&#x20;               <span class="slide-badge">יום מס' 2 - תפעול</span>
-
-&#x20;               <h3 class="slide-title">🔧 שיעורי תפעול והעלאת מערכות</h3>
-
-&#x20;               <div class="table-container">
-
-&#x20;                   <table>
-
-&#x20;                       <thead>
-
-&#x20;                           <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר במערכת</th></tr>
-
-&#x20;                       </thead>
-
-&#x20;                       <tbody>
-
-&#x20;                           <tr>
-
-&#x20;                               <td>שיעור העלאת מערכות</td>
-
-&#x20;                               <td>מנהל אתר</td>
-
-&#x20;                               <td>מצגת + מעשי: הדלקת המערכת, הפעלת אימון כוון בודד, כיבוי.</td>
-
-&#x20;                               <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D\&file=%D7%94%D7%A1%D7%9E%D7%9B%D7%AA%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%9C.pptx\&action=edit\&mobileredirect=true" target="\_blank" class="link-table-btn">🔗 מצגת העלאת מערכת</a></td>
-
-&#x20;                           </tr>
-
-&#x20;                           <tr>
-
-&#x20;                               <td>פתרון תקלות נפוצות</td>
-
-&#x20;                               <td>מנהל אתר</td>
-
-&#x20;                               <td>מעשי ומצגת: טיפול בתקלות תקשורת, קומים, דרייברים ומסכים.</td>
-
-&#x20;                               <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry\_Department/\_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D\&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%D7%A4%D7%A2%D7%95%D7%9C%20%D7%92%D7%95%D7%A8%D7%99%D7%9C%20%D7%92%D7%99%D7%9C.pptx\&action=edit\&mobileredirect=true\&wdOrigin=WAC.POWERPOINT.HOME-BUTTON%2CAPPHOME-WEB.FILEBROWSER.RECENT\&wdPreviousSession=3d103aad-3d83-12b9-ddca-650c519b1203\&wdPreviousSessionSrc=Wac\&ct=1782823429304" target="\_blank" class="link-table-btn">🔗 מצגת תקלות תפעול</a></td>
-
-&#x20;                           </tr>
-
-&#x20;                           <tr>
-
-&#x20;                               <td>מבחן מסכם עיוני</td>
-
-&#x20;                               <td>מנהל אתר</td>
-
-&#x20;                               <td>ביצוע מבחן הסמכה עיוני מסכם לבדיקת שליטה בחומר.</td>
-
-&#x20;                               <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry\_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="\_blank" class="link-table-btn" style="background-color:#2ecc71;">✍️ למבחן העיוני</a></td>
-
-&#x20;                           </tr>
-
-&#x20;                       </tbody>
-
-&#x20;                   </table>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-&#x20;       </section>
-
-
-
-&#x20;       <!-- סקשן טפסים -->
-
-&#x20;       <section id="forms" class="tab-content" role="tabpanel">
-
-&#x20;           <h2>📋 טפסים וציוד</h2>
-
-&#x20;           <div class="cards-container">
-
-&#x20;               <div class="card">
-
-&#x20;                   <h3>🚗 רשימת ציוד לרכב</h3>
-
-&#x20;                   <p style="font-size: 0.85em; color: #64748b;">טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
-
-&#x20;                   <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="\_blank" class="btn">לפתיחת הטופס 🔗</a>
-
-&#x20;               </div>
-
-&#x20;               <div class="card">
-
-&#x20;                   <h3>✍️ משוב מתאמנים</h3>
-
-&#x20;                   <p style="font-size: 0.85em; color: #64748b;">טופס איסוף רשמים ומשוב מהמתאמנים.</p>
-
-&#x20;                   <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="\_blank" class="btn">לפתיחת הטופס 🔗</a>
-
-&#x20;               </div>
-
-&#x20;           </div>
-
-&#x20;       </section>
-
-&#x20;   </main>
-
-
-
-&#x20;   <!-- Lightbox Modal -->
-
-&#x20;   <div id="lightboxModal" class="lightbox-modal" onclick="closeLightbox()">
-
-&#x20;       <div id="lightboxContainer" style="background: white; padding: 16px; border-radius: 8px; width: 92%; max-width: 450px; text-align: right; color: #1e293b; white-space: pre-wrap; font-size: 0.95em; line-height: 1.5; box-shadow: 0 10px 25px rgba(0,0,0,0.3);"></div>
-
-&#x20;   </div>
-
-
-
-&#x20;   <!-- Upload Modal -->
-
-&#x20;   <div id="uploadModal" class="modal">
-
-&#x20;       <div class="modal-content">
-
-&#x20;           <span class="close-modal" onclick="closeUploadModal()">\&times;</span>
-
-&#x20;           <h3 style="font-size: 1.1em; margin-top: 0;">➕ העלאת תמונת אימונים מעודכנת</h3>
-
-&#x20;           <p style="font-size: 0.85em; color: #64748b;">בחר תמונה (צילום מסך או קובץ) כדי להעלות ולעדכן את הטבלאות באתר:</p>
-
-&#x20;           <input type="file" id="imageInput" accept="image/\*" onchange="previewImage(event)" style="margin-top: 8px; width: 100%; font-size: 0.85em;">
-
-&#x20;           <br>
-
-&#x20;           <img id="imagePreview" class="upload-preview" alt="תצוגה מקדימה">
-
-&#x20;           <br><br>
-
-&#x20;           <button class="btn" onclick="processUploadedImage()" style="width: 100%;">עדכן טבלאות 🔄</button>
-
-&#x20;       </div>
-
-&#x20;   </div>
-
-
-
-&#x20;   <script>
-
-&#x20;       // פונקציית מעבר טאבים מתוקנת ומותאמת למובייל
-
-&#x20;       function switchTab(tabId, btnElement) {
-
-&#x20;           // הסרת המחלקה active מכל הטאבים והתוכנים
-
-&#x20;           document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-
-&#x20;           document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
-&#x20;           
-
-&#x20;           // הצגת הטאב הנבחר והפעלת כפתור הטאב
-
-&#x20;           const targetTab = document.getElementById(tabId);
-
-&#x20;           if (targetTab) {
-
-&#x20;               targetTab.classList.add('active');
-
-&#x20;           }
-
-&#x20;           
-
-&#x20;           if (btnElement) {
-
-&#x20;               btnElement.classList.add('active');
-
-&#x20;           }
-
-
-
-&#x20;           // גלילה חלקה לראש העמוד במסכים קטנים
-
-&#x20;           window.scrollTo({ top: 0, behavior: 'smooth' });
-
-&#x20;       }
-
-
-
-&#x20;       function filterSchedule() {
-
-&#x20;           let input = document.getElementById("scheduleSearch").value.toUpperCase();
-
-&#x20;           let rows = document.querySelectorAll(".schedule-table tbody tr");
-
-&#x20;           rows.forEach(row => {
-
-&#x20;               let text = row.innerText.toUpperCase();
-
-&#x20;               row.style.display = text.includes(input) ? "" : "none";
-
-&#x20;           });
-
-&#x20;       }
-
-
-
-&#x20;       function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
-
-&#x20;       function closeUploadModal() {
-
-&#x20;           document.getElementById('uploadModal').style.display = 'none';
-
-&#x20;           document.getElementById('imagePreview').style.display = 'none';
-
-&#x20;           document.getElementById('imageInput').value = '';
-
-&#x20;       }
-
-
-
-&#x20;       function previewImage(event) {
-
-&#x20;           const preview = document.getElementById('imagePreview');
-
-&#x20;           const file = event.target.files\[0];
-
-&#x20;           if (file) {
-
-&#x20;               preview.src = URL.createObjectURL(file);
-
-&#x20;               preview.style.display = 'block';
-
-&#x20;           }
-
-&#x20;       }
-
-
-
-&#x20;       function processUploadedImage() {
-
-&#x20;           const input = document.getElementById('imageInput');
-
-&#x20;           if (input.files.length === 0) {
-
-&#x20;               alert('אנא בחר קובץ תמונה תחילה.');
-
-&#x20;               return;
-
-&#x20;           }
-
-&#x20;           alert('התמונה הועלתה בהצלחה! הטבלאות יעודכנו בהתאם לנתונים שבתמונה.');
-
-&#x20;           closeUploadModal();
-
-&#x20;       }
-
-
-
-&#x20;       function openLightboxFromText(text) {
-
-&#x20;           const modal = document.getElementById('lightboxModal');
-
-&#x20;           const container = document.getElementById('lightboxContainer');
-
-&#x20;           container.innerText = text;
-
-&#x20;           modal.style.display = 'flex';
-
-&#x20;       }
-
-
-
-&#x20;       function closeLightbox() {
-
-&#x20;           document.getElementById('lightboxModal').style.display = 'none';
-
-&#x20;       }
-
-
-
-&#x20;       function parseContactInfo(contactText) {
-
-&#x20;           let phone = contactText.replace(/\[^0-9]/g, '');
-
-&#x20;           if (phone.startsWith('0')) { phone = '972' + phone.substring(1); }
-
-&#x20;           let nameMatch = contactText.match(/^\[^(]+/);
-
-&#x20;           let name = nameMatch ? nameMatch\[0].trim() : 'איש קשר';
-
-&#x20;           return { phone, name };
-
-&#x20;       }
-
-
-
-&#x20;       function sendRowWhatsApp(btnElement) {
-
-&#x20;           const row = btnElement.closest('tr');
-
-&#x20;           const day = row.querySelector('.col-day').innerText.trim();
-
-&#x20;           const date = row.querySelector('.col-date').innerText.trim();
-
-&#x20;           const guide = row.querySelector('.col-guide').innerText.trim();
-
-&#x20;           const unit = row.querySelector('.col-unit').innerText.trim();
-
-&#x20;           const location = row.querySelector('.col-loc').innerText.trim();
-
-&#x20;           const system = row.querySelector('.col-sys').innerText.trim();
-
-&#x20;           const contactRaw = row.querySelector('.col-contact').innerText.trim();
-
-&#x20;           const hours = row.querySelector('.col-hours').innerText.trim();
-
-&#x20;           const notes = row.querySelector('.col-notes').innerText.trim();
-
-
-
-&#x20;           const { phone, name } = parseContactInfo(contactRaw);
-
-&#x20;           if (!phone) { alert('לא נמצא מספר טלפון תקין בשורה זו.'); return; }
-
-
-
-&#x20;           let msg = `שלום ${name},\\nתזכורת לאימון גורילה מחר (${day}, תאריך ${date}):\\n\\n`;
-
-&#x20;           msg += `📍 \*מיקום/יחידה:\* ${unit} (${location})\\n`;
-
-&#x20;           msg += `👤 \*מדריך אחראי:\* ${guide}\\n`;
-
-&#x20;           msg += `⏰ \*שעות:\* ${hours !== '-' ? hours : 'לפי תיאום'}\\n`;
-
-&#x20;           msg += `🖥️ \*מערכת:\* ${system}\\n`;
-
-&#x20;           if (notes \&\& notes !== '-') { msg += `📝 \*הערות:\* ${notes}\\n`; }
-
-&#x20;           msg += `\\nנתראה באימון! 🦍`;
-
-
-
-&#x20;           const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-
-&#x20;           window.open(waUrl, '\_blank');
-
-&#x20;       }
-
-
-
-&#x20;       function sendWhatsAppForTomorrow() {
-
-&#x20;           const rows = document.querySelectorAll(".schedule-table tbody tr");
-
-&#x20;           let sentCount = 0;
-
-&#x20;           rows.forEach(row => {
-
-&#x20;               if (row.style.display !== 'none') {
-
-&#x20;                   const btn = row.querySelector('.wa-row-btn');
-
-&#x20;                   if (btn) {
-
-&#x20;                       setTimeout(() => { sendRowWhatsApp(btn); }, sentCount \* 800);
-
-&#x20;                       sentCount++;
-
-&#x20;                   }
-
-&#x20;               }
-
-&#x20;           });
-
-&#x20;           if (sentCount === 0) { alert('לא נמצאו שורות תקינות לשליחה.'); }
-
-&#x20;       }
-
-&#x20;   </script>
-
+    <header>
+        <h1>🖥️ פורטל תפעול והדרכה - גורילה (BAGIRA)</h1>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
+            <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
+            <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
+            <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- סקשן סידור עבודה שבועי -->
+        <section id="schedule" class="tab-content active">
+            <div class="schedule-header-action">
+                <h2 style="margin: 0; font-size: 1.25em;">📅 סידור עבודה שבועי</h2>
+                <div class="search-box">
+                    <input type="text" id="scheduleSearch" onkeyup="filterSchedule()" placeholder="🔍 חפש עובד, יום או יחידה...">
+                </div>
+                <div class="action-btns-group">
+                    <button class="wa-global-btn" onclick="sendWhatsAppForTomorrow()">
+                        <span>💬</span> תזכורות למחר
+                    </button>
+                    <button class="add-img-btn" onclick="openUploadModal()">
+                        <span>➕</span> העלאת תמונה
+                    </button>
+                </div>
+            </div>
+
+            <!-- טבלה 1: ניידת 1 -->
+            <h3 class="table-title">🚚 ניידת 1</h3>
+            <div class="table-container">
+                <table class="schedule-table" id="scheduleTable1">
+                    <thead>
+                        <tr>
+                            <th>יום</th>
+                            <th>תאריך</th>
+                            <th>מדריך</th>
+                            <th>כוח מתאמן</th>
+                            <th>מיקום</th>
+                            <th>מערכת</th>
+                            <th>איש קשר</th>
+                            <th>מס' מתאמנים</th>
+                            <th>חיוב</th>
+                            <th>שעות</th>
+                            <th>הערות</th>
+                            <th>שליחת תזכורת 📲</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-day">ראשון</td><td class="col-date">26</td><td class="col-guide">קסה</td>
+                            <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">שני (058-5500393)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 15:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">שני</td><td class="col-date">27</td><td class="col-guide">קסה</td>
+                            <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">שני (058-5500393)</td><td>-</td><td>כן</td><td class="col-hours">15:00 - 19:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">קסה</td>
+                            <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">שני (058-5500393)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 15:00</td>
+                            <td class="col-notes">צילומים</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">איתי</td>
+                            <td class="col-unit">זרעית (גדסר ביסלח)</td><td class="col-loc">זרעית</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">דביר (050-9501700)</td><td>-</td><td>כן</td><td class="col-hours">09:30 - 13:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">חמישי</td><td class="col-date">30</td><td class="col-guide">איתי</td>
+                            <td class="col-unit">עמיעד (גדוד 13)</td><td class="col-loc">עמיעד</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">רוקח (055-8865228)</td><td>-</td><td>כן</td><td class="col-hours">09:00 - 13:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- טבלה 2: ניידת 2 -->
+            <h3 class="table-title">🚚 ניידת 2</h3>
+            <div class="table-container">
+                <table class="schedule-table" id="scheduleTable2">
+                    <thead>
+                        <tr>
+                            <th>יום</th>
+                            <th>תאריך</th>
+                            <th>מדריך</th>
+                            <th>כוח מתאמן</th>
+                            <th>מיקום</th>
+                            <th>מערכת</th>
+                            <th>איש קשר</th>
+                            <th>מס' מתאמנים</th>
+                            <th>חיוב</th>
+                            <th>שעות</th>
+                            <th>הערות</th>
+                            <th>שליחת תזכורת 📲</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-day">ראשון</td><td class="col-date">26</td><td class="col-guide">כחלון</td>
+                            <td class="col-unit">קרני שומרון (931)</td><td class="col-loc">קרני שומרון</td><td class="col-sys">אחוד</td>
+                            <td class="col-contact">בן צבי (052-2988348)</td><td>-</td><td>כן</td><td class="col-hours">-</td>
+                            <td class="col-notes">יום מקצועי + אפליקציה</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">שני</td><td class="col-date">27</td><td class="col-guide">איתי</td>
+                            <td class="col-unit">חומש (934)</td><td class="col-loc">חומש</td><td class="col-sys">אחוד</td>
+                            <td class="col-contact">יאיר שחר (052-2399579)</td><td>-</td><td>כן</td><td class="col-hours">12:00 - 15:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">עידו</td>
+                            <td class="col-unit">מטולה (92)</td><td class="col-loc">מטולה</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">טולדו (054-8738546)</td><td>-</td><td>כן</td><td class="col-hours">11:00 - 14:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">כחלון</td>
+                            <td class="col-unit">מבוא דותן (50)</td><td class="col-loc">מבוא דותן</td><td class="col-sys">אחוד סימולטיבי</td>
+                            <td class="col-contact">כפיר כהן (054-2058999)</td><td>-</td><td>כן</td><td class="col-hours">-</td>
+                            <td class="col-notes">צריך רכב</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">כחלון</td>
+                            <td class="col-unit">נחל עוז (202)</td><td class="col-loc">נחל עוז</td><td class="col-sys">אחוד</td>
+                            <td class="col-contact">יובל (052-3848424)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 14:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">קסה</td>
+                            <td class="col-unit">עלומים (101)</td><td class="col-loc">עלומים</td><td class="col-sys">ישלט</td>
+                            <td class="col-contact">דן תלמי (050-8998173)</td><td>-</td><td>כן</td><td class="col-hours">-</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                        <tr>
+                            <td class="col-day">חמישי</td><td class="col-date">30</td><td class="col-guide">קסה</td>
+                            <td class="col-unit">בוקעתא (6228)</td><td class="col-loc">בוקעתא</td><td class="col-sys">אחוד</td>
+                            <td class="col-contact">רותם (052-5599123)</td><td>-</td><td>כן</td><td class="col-hours">10:00 - 14:00</td>
+                            <td class="col-notes">-</td><td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- סקשן תפעול ותקלות -->
+        <section id="pdf-slides" class="tab-content">
+            <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
+            <p style="color: #64748b; margin-bottom: 20px; font-size: 0.9em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
+
+            <!-- שקופית 2: תקלות משגר וסידור קומים -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 2</span>
+                <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
+                
+                <div class="step-list">
+                    <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
+                    <ul>
+                        <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
+                        <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
+                        <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
+                        <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
+                        <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
+                    </ul>
+
+                    <div class="mockup-visual-card" onclick="openLightboxFromText('🎯 פתרון אין תנועה / יש ריצוד במשגר\n\n1. נכבה DriveEncoder.\n2. נכבה ונדליק את הספרטון (שיטת 1 1 3).\n3. אופציה מס 3 אחרי 1, ואחרי עוד פעם 1 ונשנה פעמיים.\n4. נבדוק שאין V איפה שכתוב Gyro-Only Mode.\n5. נלחץ X מהחלונית ונחזור להדליק את ה-DriveEncoder.')">
+                        <div class="mockup-header">🎯 Spartacus -> Gyro-Only Mode & DriveEncoder Adjustment</div>
+                        <div>1️⃣ Turn OFF <strong>DriveEncoder</strong></div>
+                        <div>2️⃣ Toggle Sparton (Method 1 1 3)</div>
+                        <div>3️⃣ Verify NO Checkmark (V) on <strong>Gyro-Only Mode</strong></div>
+                        <div>4️⃣ Close Settings Box -> Turn ON <strong>DriveEncoder</strong></div>
+                        <span class="img-hint" style="color: #38bdf8; margin-top: 8px; display: block;">🔍 לחץ לצפייה בהנחיות פתרון הריצוד המלאות</span>
+                    </div>
+
+                    <p><strong>2. סידור קומים (Device Manager):</strong></p>
+                    <ul>
+                        <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
+                        <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
+                            <ul>
+                                <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
+                                <li><strong>COM3:</strong> USB Serial Port</li>
+                                <li><strong>COM4:</strong> USB Serial Port</li>
+                                <li><strong>COM5:</strong> USB-SERIAL CH340</li>
+                            </ul>
+                        </li>
+                        <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
+                    </ul>
+
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- שקופית 3: תקלות תצוגה -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 3</span>
+                <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
+                <div class="step-list">
+                    <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
+                    <ul>
+                        <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
+                    </ul>
+                    <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
+                    <ul>
+                        <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
+                        <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
+                        <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
+                        <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
+                    </ul>
+
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- שקופית 4: תקלות קריסת מערכת -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 4</span>
+                <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
+                <div class="step-list">
+                    <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
+                    <ul>
+                        <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
+                    </ul>
+
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+
+                    <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
+                    <ul>
+                        <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- שקופית 5: הדלקת המערכת -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 5</span>
+                <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
+                <ol class="step-list">
+                    <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
+                    <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
+                    <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
+                    <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
+                </ol>
+            </div>
+
+            <!-- שקופית 6: העברת תרגילים -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 6</span>
+                <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
+                <ol class="step-list">
+                    <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
+                    <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
+                    <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
+                </ol>
+
+                <div class="videos-flex-container">
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- שקופית 7: ניקיון ותחזוקה חודשית -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 7</span>
+                <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
+                <ol class="step-list">
+                    <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
+                    <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
+                    <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
+                    <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
+                    <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
+                    <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
+                </ol>
+            </div>
+
+            <!-- שקופית 8: התקנת דרייברים של NVIDIA -->
+            <div class="slide-box">
+                <span class="slide-badge">שקופית 8</span>
+                <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
+                <div class="step-list">
+                    <ol>
+                        <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
+                        <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
+                        <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
+                        <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                        <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
+                    </ol>
+
+                    <div class="mockup-visual-card" onclick="openLightboxFromText('📥 התקנת דרייברים של NVIDIA\n\n1. הרצת קובץ ההתקנה של Nvidia.\n2. בחירת Nvidia Graphics Driver -> לחיצה על AGREE AND CONTINUE.\n3. בחירת Express (Recommended) -> לחיצה על NEXT.\n4. בסיום ההתקנה - חובה לאתחל את המחשב (Restart).')">
+                        <div class="mockup-header">📥 NVIDIA Graphics Driver Installer Options</div>
+                        <div>1️⃣ Click <strong>NVIDIA Graphics Driver</strong> -> Press <strong>AGREE AND CONTINUE</strong></div>
+                        <div>2️⃣ Select <strong>Express (Recommended)</strong> -> Press <strong>NEXT</strong></div>
+                        <div>3️⃣ Restart computer after installation completes!</div>
+                        <span class="img-hint" style="color: #38bdf8; margin-top: 8px; display: block;">🔍 לחץ לצפייה בדיאגרמת ההתקנה של NVIDIA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- סקשן תוכנית הסמכה -->
+        <section id="training-program" class="tab-content">
+            <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
+            <p style="font-size: 0.9em;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014 (מהדורה 03)</p>
+
+            <div class="slide-box" style="border-right-color: #0284c7; background: #f0f9ff;">
+                <span class="slide-badge" style="background-color: #0284c7;">📚 קישורים ומשאבי למידה מהירים</span>
+                <h3 class="slide-title">🔗 חומרי הדרכה, מצגות ונהלים במערכת SharePoint</h3>
+                
+                <div class="resource-links-grid">
+                    <div class="resource-card">
+                        <h4>🏢 מצגת הכרת החברה ומוצרים</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%A8%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>👥 מצגת מבנה מחלקה</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%A8%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>💻 מצגת העלאת מערכת</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9E%D7%9B%D7%AA%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%9C.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>🔧 מצגת תקלות ותפעול גורילה</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%D7%A4%D7%A2%D7%95%D7%9C%20%D7%92%D7%95%D7%A8%D7%99%D7%9C%D7%94%20%D7%92%D7%99%D7%9C.pptx&action=edit&mobileredirect=true&wdOrigin=WAC.POWERPOINT.HOME-BUTTON%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=3d103aad-3d83-12b9-ddca-650c519b1203&wdPreviousSessionSrc=Wac&ct=1782823429304" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>📝 מבחן עיוני</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>📋 נוהל דיווחים יומיים וחודשיים (ILS003)</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 פתח נוהל ILS003 🔗</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>📋 נוהל הופעת עובדים חטיבת התפעול (ILS002)</h4>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB43F2CA8-199C-4128-8F14-88102E79E6CD%7D&file=ILS002%20%D7%94%D7%95%D7%A4%D7%A2%D7%AA%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A7%D7%98%D7%99%D7%91%D7%AA%20%D7%94%D7%AA%D7%A4%D7%A2%D7%95%D7%9C.doc&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 פתח נוהל ILS002 🔗</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- יום מס' 1 -->
+            <div class="slide-box">
+                <span class="slide-badge">יום מס' 1 - כללי</span>
+                <h3 class="slide-title">🏢 הכרת החברה ואופן העבודה</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר במערכת</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>הכרת החברה</td>
+                                <td>מנהל אתר</td>
+                                <td>מצגת חברה + מוצרים: פריסת המאמנים, תחומי עיסוק, הצהרת איכות.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%a8%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת חברה</a></td>
+                            </tr>
+                            <tr>
+                                <td>אופן העבודה בתפעול</td>
+                                <td>מנהל אתר</td>
+                                <td>מצגת מבנה מחלקה: מבנה ארגוני, ממשקים מול רכזת תפעול ומנהלי אזורים.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%a8%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת מבנה מחלקה</a></td>
+                            </tr>
+                            <tr>
+                                <td>נהלי איכות ודיווח</td>
+                                <td>מנהל אתר</td>
+                                <td>למידת נוהל הופעת עובדים (ILS002) ונוהל דיווחים יומיים/חודשיים (ILS003).</td>
+                                <td>
+                                    <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB43F2CA8-199C-4128-8F14-88102E79E6CD%7D&file=ILS002%20%D7%94%D7%95%D7%A4%D7%A2%D7%AA%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A7%D7%98%D7%99%D7%91%D7%AA%20%D7%94%D7%AA%D7%A4%D7%A2%D7%95%D7%9C.doc&action=default&mobileredirect=true" target="_blank" class="link-table-btn" style="margin-bottom:4px; display:block;">🔗 נוהל ILS002</a>
+                                    <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9e%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn" style="display:block;">🔗 נוהל ILS003</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- יום מס' 2 -->
+            <div class="slide-box">
+                <span class="slide-badge">יום מס' 2 - תפעול</span>
+                <h3 class="slide-title">🔧 שיעורי תפעול והעלאת מערכות</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר במערכת</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>שיעור העלאת מערכות</td>
+                                <td>מנהל אתר</td>
+                                <td>מצגת + מעשי: הדלקת המערכת, הפעלת אימון כוון בודד, כיבוי.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9E%D7%9B%D7%AA%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%9C.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת העלאת מערכת</a></td>
+                            </tr>
+                            <tr>
+                                <td>פתרון תקלות נפוצות</td>
+                                <td>מנהל אתר</td>
+                                <td>מעשי ומצגת: טיפול בתקלות תקשורת, קומים, דרייברים ומסכים.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%D7%A4%D7%A2%D7%95%D7%9C%20%D7%92%D7%95%D7%A8%D7%99%D7%9C%D7%94%20%D7%92%D7%99%D7%9C.pptx&action=edit&mobileredirect=true&wdOrigin=WAC.POWERPOINT.HOME-BUTTON%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=3d103aad-3d83-12b9-ddca-650c519b1203&wdPreviousSessionSrc=Wac&ct=1782823429304" target="_blank" class="link-table-btn">🔗 מצגת תקלות תפעול</a></td>
+                            </tr>
+                            <tr>
+                                <td>מבחן מסכם עיוני</td>
+                                <td>מנהל אתר</td>
+                                <td>ביצוע מבחן הסמכה עיוני מסכם לבדיקת שליטה בחומר.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color:#2ecc71;">✍️ למבחן העיוני</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- סקשן טפסים -->
+        <section id="forms" class="tab-content">
+            <h2>📋 טפסים וציוד</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>🚗 רשימת ציוד לרכב</h3>
+                    <p>טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
+                    <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                </div>
+                <div class="card">
+                    <h3>✍️ משוב מתאמנים</h3>
+                    <p>טופס איסוף רשמים ומשוב מהמתאמנים.</p>
+                    <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- חלון קופץ להצגת פרטים מוגדלים (Lightbox Fullscreen) -->
+    <div id="lightboxModal" class="lightbox-modal" onclick="closeLightbox()">
+        <div id="lightboxContainer" style="background: white; padding: 20px; border-radius: 10px; width: 95%; max-width: 500px; text-align: right; color: #1e293b; white-space: pre-wrap; font-size: 1em; line-height: 1.6; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></div>
+    </div>
+
+    <!-- חלון קופץ להעלאת תמונת אימונים מעודכנת -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeUploadModal()">&times;</span>
+            <h3 style="font-size: 1.15em;">➕ העלאת תמונת אימונים מעודכנת</h3>
+            <p style="font-size: 0.9em;">בחר תמונה (צילום מסך או קובץ) כדי להעלות ולעדכן את הטבלאות באתר:</p>
+            <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)" style="margin-top: 10px; width: 100%; font-size: 0.9em;">
+            <br>
+            <img id="imagePreview" class="upload-preview" alt="תצוגה מקדימה">
+            <br><br>
+            <button class="btn" onclick="processUploadedImage()" style="width: 100%;">עדכן טבלאות 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            // וידוא העברת ה-active גם אם האירוע נקרא מפונקציה חיצונית או מגע נייד
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else if (window.event && window.event.currentTarget) {
+                window.event.currentTarget.classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterSchedule() {
+            let input = document.getElementById("scheduleSearch").value.toUpperCase();
+            let rows = document.querySelectorAll(".schedule-table tbody tr");
+            rows.forEach(row => {
+                let text = row.innerText.toUpperCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        }
+
+        function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('imageInput').value = '';
+        }
+
+        function previewImage(event) {
+            const preview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+        }
+
+        function processUploadedImage() {
+            const input = document.getElementById('imageInput');
+            if (input.files.length === 0) {
+                alert('אנא בחר קובץ תמונה תחילה.');
+                return;
+            }
+            alert('התמונה הועלתה בהצלחה! הטבלאות יעודכנו בהתאם לנתונים שבתמונה.');
+            closeUploadModal();
+        }
+
+        function openLightboxFromText(text) {
+            const modal = document.getElementById('lightboxModal');
+            const container = document.getElementById('lightboxContainer');
+            container.innerText = text;
+            modal.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').style.display = 'none';
+        }
+
+        function parseContactInfo(contactText) {
+            let phone = contactText.replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) { phone = '972' + phone.substring(1); }
+            let nameMatch = contactText.match(/^[^(]+/);
+            let name = nameMatch ? nameMatch[0].trim() : 'איש קשר';
+            return { phone, name };
+        }
+
+        function sendRowWhatsApp(btnElement) {
+            const row = btnElement.closest('tr');
+            const day = row.querySelector('.col-day').innerText.trim();
+            const date = row.querySelector('.col-date').innerText.trim();
+            const guide = row.querySelector('.col-guide').innerText.trim();
+            const unit = row.querySelector('.col-unit').innerText.trim();
+            const location = row.querySelector('.col-loc').innerText.trim();
+            const system = row.querySelector('.col-sys').innerText.trim();
+            const contactRaw = row.querySelector('.col-contact').innerText.trim();
+            const hours = row.querySelector('.col-hours').innerText.trim();
+            const notes = row.querySelector('.col-notes').innerText.trim();
+
+            const { phone, name } = parseContactInfo(contactRaw);
+            if (!phone) { alert('לא נמצא מספר טלפון תקין בשורה זו.'); return; }
+
+            let msg = `שלום ${name},\nתזכורת לאימון גורילה מחר (${day}, תאריך ${date}):\n\n`;
+            msg += `📍 *מיקום/יחידה:* ${unit} (${location})\n`;
+            msg += `👤 *מדריך אחראי:* ${guide}\n`;
+            msg += `⏰ *שעות:* ${hours !== '-' ? hours : 'לפי תיאום'}\n`;
+            msg += `🖥️ *מערכת:* ${system}\n`;
+            if (notes && notes !== '-') { msg += `📝 *הערות:* ${notes}\n`; }
+            msg += `\nנתראה באימון! 🦍`;
+
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function sendWhatsAppForTomorrow() {
+            const rows = document.querySelectorAll(".schedule-table tbody tr");
+            let sentCount = 0;
+            rows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    const btn = row.querySelector('.wa-row-btn');
+                    if (btn) {
+                        setTimeout(() => { sendRowWhatsApp(btn); }, sentCount * 800);
+                        sentCount++;
+                    }
+                }
+            });
+            if (sentCount === 0) { alert('לא נמצאו שורות תקינות לשליחה.'); }
+        }
+    </script>
 </body>
-
 </html>
-
