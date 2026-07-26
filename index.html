@@ -92,28 +92,6 @@
 
         .code-block { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: #0f172a; border: 1px solid #cbd5e1; font-size: 0.85em; word-break: break-all; }
 
-        /* Guide Images - Mobile Touch Optimized */
-        .guide-img-container {
-            margin: 12px 0;
-            text-align: center;
-        }
-        .guide-img {
-            width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            border-radius: 6px;
-            border: 1px solid #cbd5e1;
-            background: #000;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .img-tap-hint {
-            font-size: 0.78em;
-            color: #0284c7;
-            margin-top: 4px;
-            font-weight: bold;
-        }
-
         /* Links and Resources Grid - Mobile Responsive */
         .resource-links-grid {
             display: grid;
@@ -170,20 +148,6 @@
         .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; flex: 1; min-width: 240px; }
         .btn { display: inline-block; background-color: #0284c7; color: white; padding: 8px 12px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 6px; font-size: 0.85em; text-align: center; width: 100%; }
         @media (min-width: 600px) { .btn { width: auto; } }
-
-        /* Lightbox Fullscreen for Mobile - Fixed & Interactive */
-        .lightbox-modal {
-            display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; padding: 5px;
-        }
-        .lightbox-content {
-            max-width: 100%; max-height: 95vh; object-fit: contain; border-radius: 4px;
-        }
-        .lightbox-close-btn {
-            position: absolute; top: 15px; left: 20px; color: white; font-size: 2.2em; font-weight: bold;
-            cursor: pointer; background: rgba(0,0,0,0.5); width: 45px; height: 45px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; z-index: 10000;
-        }
     </style>
 </head>
 <body>
@@ -359,11 +323,6 @@
                         <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
                     </ul>
 
-                    <div class="guide-img-container">
-                        <img src="1.jpg" alt="אין תנועה ויש ריצוד" class="guide-img" onclick="openLightbox(this.src)">
-                        <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                    </div>
-
                     <p><strong>2. סידור קומים (Device Manager):</strong></p>
                     <ul>
                         <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
@@ -377,11 +336,6 @@
                         </li>
                         <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
                     </ul>
-
-                    <div class="guide-img-container">
-                        <img src="6.jpg" alt="סידור קומים" class="guide-img" onclick="openLightbox(this.src)">
-                        <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                    </div>
 
                     <div class="slide-video-container">
                         <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
@@ -403,11 +357,6 @@
                         <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
                     </ul>
 
-                    <div class="guide-img-container">
-                        <img src="5.jpg" alt="מסך שחור בישלט" class="guide-img" onclick="openLightbox(this.src)">
-                        <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                    </div>
-
                     <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
                     <ul>
                         <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
@@ -415,16 +364,6 @@
                         <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
                         <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
                     </ul>
-
-                    <div class="guide-img-container">
-                        <img src="8.jpg" alt="הגדרות תצוגה" class="guide-img" onclick="openLightbox(this.src)">
-                        <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                    </div>
-
-                    <div class="guide-img-container">
-                        <img src="7.jpg" alt="עריכת HZ ידנית" class="guide-img" onclick="openLightbox(this.src)">
-                        <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                    </div>
 
                     <div class="slide-video-container">
                         <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
@@ -471,11 +410,6 @@
                     <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
                     <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
                 </ol>
-
-                <div class="guide-img-container">
-                    <img src="2.jpg" alt="הדלקת הגורילה" class="guide-img" onclick="openLightbox(this.src)">
-                    <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                </div>
             </div>
 
             <!-- שקופית 6: העברת תרגילים -->
@@ -487,11 +421,6 @@
                     <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
                     <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
                 </ol>
-
-                <div class="guide-img-container">
-                    <img src="4.jpg" alt="העברת תרגילים בין גורילות" class="guide-img" onclick="openLightbox(this.src)">
-                    <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                </div>
 
                 <div class="videos-flex-container">
                     <div class="slide-video-container">
@@ -538,11 +467,6 @@
                         <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
                         <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
                     </ol>
-
-                    <div class="guide-img-container">
-                        <img src="3.jpg" alt="הורדת דרייבר NVIDIA" class="guide-img" onclick="openLightbox(this.src)">
-                        <div class="img-tap-hint">🔍 לחץ על התמונה להגדלה במסך מלא</div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -567,7 +491,7 @@
                     </div>
                     <div class="resource-card">
                         <h4>💻 מצגת העלאת מערכת</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%9C.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%ְל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
                     </div>
                     <div class="resource-card">
                         <h4>🔧 מצגת תקלות ותפעול גורילה</h4>
@@ -652,12 +576,6 @@
         </section>
     </main>
 
-    <!-- חלון קופץ להגדלת תמונות במסך מלא (מותאם לנייד) -->
-    <div id="lightboxModal" class="lightbox-modal" onclick="closeLightbox()">
-        <span class="lightbox-close-btn">&times;</span>
-        <img id="lightboxImage" class="lightbox-content" alt="תצוגה מוגדלת">
-    </div>
-
     <!-- חלון קופץ להעלאת תמונת אימונים מעודכנת -->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
@@ -721,17 +639,6 @@
             }
             alert('התמונה הועלתה בהצלחה! הטבלאות יעודכנו בהתאם לנתונים שבתמונה.');
             closeUploadModal();
-        }
-
-        function openLightbox(imgSrc) {
-            const modal = document.getElementById('lightboxModal');
-            const lightboxImg = document.getElementById('lightboxImage');
-            lightboxImg.src = imgSrc;
-            modal.style.display = 'flex';
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightboxModal').style.display = 'none';
         }
 
         function parseContactInfo(contactText) {
