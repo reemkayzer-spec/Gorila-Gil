@@ -169,16 +169,16 @@
         th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; font-size: 0.82em; }
 
         /* Column Proportion Rules */
-        table th:nth-child(1), table td:nth-child(1) { width: 75px; min-width: 75px; } /* תאריך + אות יום */
-        table th:nth-child(2), table td:nth-child(2) { width: 100px; min-width: 100px; } /* מדריך (מורחב לשם מלא) */
-        table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } /* כוח מתאמן */
-        table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } /* מיקום */
-        table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } /* ישלט/אחוד */
-        table th:nth-child(6), table td:nth-child(6) { width: 80px; min-width: 80px; } /* איש קשר */
-        table th:nth-child(7), table td:nth-child(7) { width: 50px; min-width: 50px; } /* מס מתאמנים */
-        table th:nth-child(8), table td:nth-child(8) { width: 55px; min-width: 55px; } /* חיוב */
-        table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } /* שעות - מורחב */
-        table th:nth-child(10), table td:nth-child(10) { min-width: 220px; } /* הערות - רחב ומרווח מאוד */
+        table th:nth-child(1), table td:nth-child(1) { width: 75px; min-width: 75px; } 
+        table th:nth-child(2), table td:nth-child(2) { width: 100px; min-width: 100px; } 
+        table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } 
+        table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } 
+        table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
+        table th:nth-child(6), table td:nth-child(6) { width: 80px; min-width: 80px; } 
+        table th:nth-child(7), table td:nth-child(7) { width: 50px; min-width: 50px; } 
+        table th:nth-child(8), table td:nth-child(8) { width: 55px; min-width: 55px; } 
+        table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } 
+        table th:nth-child(10), table td:nth-child(10) { min-width: 220px; } 
         
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
@@ -288,9 +288,6 @@
             background-color: #20ba5a;
         }
 
-        .phone-link { color: var(--link-color); text-decoration: none; font-weight: 600; }
-        .phone-link:hover { text-decoration: underline; }
-
         /* Cards & Slide Boxes Style - Mobile Optimized */
         .slide-box {
             background-color: var(--card-bg); border: 1px solid var(--border-color); border-right: 4px solid #3498db;
@@ -305,31 +302,6 @@
 
         .code-block { background: var(--code-bg); padding: 2px 5px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85em; word-break: break-all; }
 
-        /* Links and Resources Grid - Mobile Responsive */
-        .resource-links-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        @media (min-width: 600px) {
-            .resource-links-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-            .schedule-header-action { flex-direction: row; align-items: center; justify-content: space-between; }
-            .action-btns-group { width: auto; }
-            .action-btns-group button { width: auto; min-width: auto; }
-            .search-box { max-width: 260px; }
-        }
-
-        .resource-card {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .resource-card h4 { margin: 0 0 6px 0; color: var(--text-color); font-size: 0.9em; }
-        .link-table-btn {
-            display: inline-block; background-color: #0284c7; color: white; padding: 6px 10px;
-            border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.8em; text-align: center;
-        }
-
         /* Inline Video Embed Component */
         .videos-flex-container { display: flex; gap: 10px; flex-direction: column; margin: 12px 0; }
         @media (min-width: 768px) { .videos-flex-container { flex-direction: row; flex-wrap: wrap; } }
@@ -343,17 +315,6 @@
             display: inline-flex; align-items: center; gap: 6px; background-color: #ff0000;
             color: white; padding: 6px 10px; border-radius: 15px; text-decoration: none; font-size: 0.78em; font-weight: bold; margin-top: 6px;
         }
-
-        /* Modal Popup Style */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 10px;
-        }
-        .modal-content {
-            background-color: var(--main-bg); color: var(--text-color); padding: 16px; border-radius: 10px; width: 100%; max-width: 420px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.25); text-align: center; position: relative; max-height: 90vh; overflow-y: auto;
-        }
-        .close-modal { position: absolute; left: 12px; top: 8px; font-size: 1.4em; cursor: pointer; color: #64748b; }
 
         .cards-container { display: flex; gap: 10px; flex-direction: column; margin-top: 10px; }
         @media (min-width: 600px) { .cards-container { flex-direction: row; flex-wrap: wrap; } }
@@ -378,7 +339,6 @@
     <header>
         <div class="header-top">
             <h1>
-                <!-- אייקון טיל גיל מעודן ומדויק -->
                 <div style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background:#f37021; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); vertical-align:middle; overflow:hidden;">
                     <svg width="28" height="28" viewBox="0 0 100 100" style="transform: rotate(-45deg);">
                         <rect x="35" y="20" width="30" height="60" rx="15" fill="#1e293b"/>
@@ -408,13 +368,7 @@
             <!-- אזור התחברות מדריך לפעם ראשונה -->
             <div class="trainer-profile-bar" id="trainerProfileBar">
                 <div class="trainer-info-text" id="trainerInfoDisplay">👤 לא זוהית כמדריך. אנא הזן פרטים:</div>
-                <div class="trainer-inputs-group" id="trainerInputsArea">
-                    <input type="text" id="tFirstName" placeholder="שם פרטי">
-                    <input type="text" id="tLastName" placeholder="שם משפחה">
-                    <input type="email" id="tEmail" placeholder="כתובת מייל">
-                    <input type="tel" id="tPhone" placeholder="מספר טלפון">
-                    <button class="trainer-save-btn" onclick="saveTrainerProfile()">שמור פרופיל 💾</button>
-                </div>
+                <div class="trainer-inputs-group" id="trainerInputsArea"></div>
             </div>
 
             <div class="schedule-header-action">
@@ -432,10 +386,8 @@
                 </div>
             </div>
 
-            <!-- סרגל מעבר בין שבועות חיל אוויר (ראשון-שבת, ללא כפילויות) -->
             <div class="week-tabs-bar" id="weekTabsBar"></div>
 
-            <!-- Spreadsheet Grid (ניידת 1 צפון למעלה | ניידת 2 מרכז/דרום מתחתיה) -->
             <div class="spreadsheet-container">
                 <div class="sheet-box">
                     <div class="sheet-side-header">
@@ -502,7 +454,6 @@
                 </div>
             </div>
 
-            <!-- תקיות חודשים בתחתית העמוד -->
             <div class="month-folders-bar" id="monthFoldersBar"></div>
         </section>
 
@@ -866,7 +817,7 @@
                 </table>
             </div>
 
-            <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
+            <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות ותפעול</h3>
             <div class="table-container">
                 <table>
                     <thead>
@@ -972,7 +923,6 @@
         </section>
     </main>
 
-    <!-- דטלייסטס דינמיות להשלמה אוטומטית (זיכרון הנתונים) -->
     <div id="datalistsContainer"></div>
 
     <script>
@@ -980,8 +930,8 @@
         const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
         
         const currentYear = 2026;
-        let activeMonth = 6; // July 2026
-        let activeWeekIndex = 0; // Selected week index
+        let activeMonth = 6; // July 2026 (0-indexed: July is 6)
+        let activeWeekIndex = 0; 
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "ינאי סביר"];
         const systemsOptions = ["", "אחוד", "ישלט", "אחוד סימולטיבי"];
@@ -999,7 +949,7 @@
         function getAirForceWeek(date) {
             const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
             const julyFirst = new Date(currentYear, 6, 1);
-            const dayOfWeek = julyFirst.getDay(); // 0 = Sun
+            const dayOfWeek = julyFirst.getDay();
             const firstSunday = new Date(currentYear, 6, 1 - dayOfWeek);
             
             const diffTime = d - firstSunday;
@@ -1009,10 +959,6 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            for (let m = 0; m < 12; m++) {
-                localStorage.removeItem(`gorilla_sheet_${currentYear}_${m}`);
-            }
-
             const savedTab = localStorage.getItem('gorilla_active_tab');
             if (savedTab) {
                 const btn = document.querySelector(`.tab-btn[onclick*="${savedTab}"]`);
@@ -1066,7 +1012,7 @@
                 if (typeof input.showPicker === 'function') {
                     input.showPicker();
                 } else {
-                    input.focus();
+                    input.click();
                 }
             }
         }
@@ -1082,7 +1028,7 @@
         }
 
         function updateCleaningButtonText(btn, dateStr) {
-            if (!dateStr) return;
+            if (!dateStr || !btn) return;
             const parts = dateStr.split('-');
             if (parts.length === 3) {
                 btn.innerText = `${parts[2]}/${parts[1]}`;
@@ -1095,7 +1041,7 @@
             const inputsArea = document.getElementById('trainerInputsArea');
 
             if (trainer) {
-                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email} | ${trainer.phone}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
+                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email} | ${trainer.phone || 'אין טלפון'}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
                 inputsArea.style.display = 'none';
             } else {
                 display.innerHTML = `👤 התחברות מדריך (פעם ראשונה):`;
@@ -1111,10 +1057,10 @@
         }
 
         function saveTrainerProfile() {
-            const fName = document.getElementById('tFirstName').value.trim();
-            const lName = document.getElementById('tLastName').value.trim();
-            const email = document.getElementById('tEmail').value.trim();
-            const phone = document.getElementById('tPhone').value.trim();
+            const fName = document.getElementById('tFirstName')?.value.trim();
+            const lName = document.getElementById('tLastName')?.value.trim();
+            const email = document.getElementById('tEmail')?.value.trim();
+            const phone = document.getElementById('tPhone')?.value.trim();
 
             if (!fName || !lName || !email || !phone) {
                 alert('אנא מלא שם פרטי, שם משפחה, כתובת מייל ומספר טלפון.');
@@ -1202,26 +1148,28 @@
             link.click();
             document.body.removeChild(link);
 
-            // 2. Prepare Shift Summary Text for Email & WhatsApp
+            // 2. Prepare Shift Summary Text
             let shiftsText = `שלום ${trainer.firstName},\nלהלן פירוט המשמרות שלך לשבוע ${targetWeekObj.weekNum}:\n\n`;
             trainerShifts.forEach(s => {
                 shiftsText += `• תאריך: ${s.date}/${s.month} | יחידה: ${s.unit} | מיקום: ${s.loc} | מערכת: ${s.sys} | שעות: ${s.hours || 'לפי תיאום'}\n`;
             });
 
-            // 3. Send Email via mailto
+            // 3. Send Email
             const mailSubject = encodeURIComponent(`משמרות גורילה - שבוע ${targetWeekObj.weekNum}`);
             const mailBody = encodeURIComponent(shiftsText + `\nקובץ הזימון ליומן (ICS) ירד למחשב שלך.`);
             window.location.href = `mailto:${trainer.email}?subject=${mailSubject}&body=${mailBody}`;
 
-            // 4. Send WhatsApp message to trainer's phone
-            setTimeout(() => {
-                let cleanPhone = trainer.phone.replace(/\D/g, '');
-                if (cleanPhone.startsWith('0')) {
-                    cleanPhone = '972' + cleanPhone.substring(1);
-                }
-                const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(shiftsText)}`;
-                window.open(waUrl, '_blank');
-            }, 500);
+            // 4. Send WhatsApp
+            if (trainer.phone) {
+                setTimeout(() => {
+                    let cleanPhone = trainer.phone.replace(/\D/g, '');
+                    if (cleanPhone.startsWith('0')) {
+                        cleanPhone = '972' + cleanPhone.substring(1);
+                    }
+                    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(shiftsText)}`;
+                    window.open(waUrl, '_blank');
+                }, 500);
+            }
         }
 
         function initMonthFolders() {
@@ -1268,25 +1216,25 @@
                     try {
                         const parsed = JSON.parse(saved);
                         if (parsed.north && Array.isArray(parsed.north)) {
-                            north = [];
-                            parsed.north.forEach(item => {
-                                if (item && item.values) {
-                                    const dateObj = new Date(currentYear, monthIdx, item.dayNum);
-                                    const hDayName = hebrewDaysShort[dateObj.getDay()];
-                                    const isWeekend = (dateObj.getDay() === 5 || dateObj.getDay() === 6);
-                                    north.push({ dayNum: item.dayNum, hDayName, isWeekend, values: item.values });
-                                }
+                            north = parsed.north.map(item => {
+                                const dateObj = new Date(currentYear, monthIdx, item.dayNum);
+                                return {
+                                    dayNum: item.dayNum,
+                                    hDayName: hebrewDaysShort[dateObj.getDay()],
+                                    isWeekend: (dateObj.getDay() === 5 || dateObj.getDay() === 6),
+                                    values: item.values
+                                };
                             });
                         }
                         if (parsed.south && Array.isArray(parsed.south)) {
-                            south = [];
-                            parsed.south.forEach(item => {
-                                if (item && item.values) {
-                                    const dateObj = new Date(currentYear, monthIdx, item.dayNum);
-                                    const hDayName = hebrewDaysShort[dateObj.getDay()];
-                                    const isWeekend = (dateObj.getDay() === 5 || dateObj.getDay() === 6);
-                                    south.push({ dayNum: item.dayNum, hDayName, isWeekend, values: item.values });
-                                }
+                            south = parsed.south.map(item => {
+                                const dateObj = new Date(currentYear, monthIdx, item.dayNum);
+                                return {
+                                    dayNum: item.dayNum,
+                                    hDayName: hebrewDaysShort[dateObj.getDay()],
+                                    isWeekend: (dateObj.getDay() === 5 || dateObj.getDay() === 6),
+                                    values: item.values
+                                };
                             });
                         }
                     } catch(e) { console.error(e); }
@@ -1310,7 +1258,7 @@
                 const date = new Date(currentYear, monthIdx, dayNum);
                 const wNum = getAirForceWeek(date);
 
-                const dayOfWeek = date.getDay(); // 0 = Sun
+                const dayOfWeek = date.getDay();
                 const sunDate = new Date(date);
                 sunDate.setDate(date.getDate() - dayOfWeek);
 
@@ -1354,6 +1302,7 @@
         }
 
         function extractMemory(vals) {
+            if (!vals) return;
             if (vals[2] && vals[2].trim()) memoryData.units.add(vals[2].trim());
             if (vals[3] && vals[3].trim()) memoryData.locations.add(vals[3].trim());
             if (vals[5] && vals[5].trim()) memoryData.contacts.add(vals[5].trim());
@@ -1386,7 +1335,7 @@
                 let isTodayWeek = false;
                 if (currentYear === today.getFullYear()) {
                     isTodayWeek = weekObj.days.some(d => d.month === today.getMonth() && d.day === today.getDate());
-                    if (isTodayWeek) {
+                    if (isTodayWeek && activeWeekIndex === 0) {
                         activeWeekIndex = idx;
                     }
                 }
@@ -1411,6 +1360,7 @@
         function updateActionButtonsText() {
             if (monthWeeksCache.length === 0) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
+            if (!currentWeekObj) return;
             document.getElementById('gcalBtn').innerHTML = `<span>📅</span> סנכרן משמרות שבוע ${currentWeekObj.weekNum} ליומן Google`;
             document.getElementById('waGroupBtn').innerHTML = `<span>📋</span> סיכום שבועי לקבוצה (שבוע ${currentWeekObj.weekNum})`;
         }
@@ -1479,7 +1429,6 @@
             if (monthWeeksCache.length === 0) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
 
-            // Exclude Friday and Saturday (weekdays only)
             const weekdays = currentWeekObj.days.filter(d => !d.isWeekend);
 
             let promptMsg = "בחר את התאריך מתוך השבוע הנוכחי להוספת שורה (ימי חול בלבד):\n";
@@ -1581,14 +1530,20 @@
         function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
             const monthData = getMonthDataCache(monthIdx);
             if (side === 'north') {
-                monthData.north[cacheIndex].values[fieldIndex] = value;
+                if (monthData.north[cacheIndex]) {
+                    monthData.north[cacheIndex].values[fieldIndex] = value;
+                }
             } else {
-                monthData.south[cacheIndex].values[fieldIndex] = value;
+                if (monthData.south[cacheIndex]) {
+                    monthData.south[cacheIndex].values[fieldIndex] = value;
+                }
             }
 
-            const allVals = side === 'north' ? monthData.north[cacheIndex].values : monthData.south[cacheIndex].values;
-            extractMemory(allVals);
-            rebuildDatalists();
+            const targetRow = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
+            if (targetRow) {
+                extractMemory(targetRow.values);
+                rebuildDatalists();
+            }
 
             const saveData = {
                 north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values })),
@@ -1693,7 +1648,8 @@
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
-            document.getElementById(tabId).classList.add('active');
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) targetTab.classList.add('active');
             if (event && event.currentTarget) event.currentTarget.classList.add('active');
             if (save) localStorage.setItem('gorilla_active_tab', tabId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
