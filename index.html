@@ -216,6 +216,15 @@
             border-color: #fef08a !important;
         }
 
+        .canceled-row td {
+            background-color: rgba(239, 68, 68, 0.2) !important;
+            border-color: #f87171 !important;
+        }
+        body.dark-mode .canceled-row td {
+            background-color: rgba(239, 68, 68, 0.3) !important;
+            border-color: #991b1b !important;
+        }
+
         .cell-input {
             width: 100%; border: none; background: transparent; text-align: center;
             font-size: 0.88em; color: var(--text-color); outline: none; padding: 2px;
@@ -1213,8 +1222,13 @@
 
                 northRows.forEach((nData, index) => {
                     const trNorth = document.createElement('tr');
+                    const notes = nData.values[9] || '';
+                    const isCanceled = notes.includes('בוטל') || notes.includes('התבטל');
+
                     if (isToday) trNorth.className = 'today-row';
+                    else if (isCanceled) trNorth.className = 'canceled-row';
                     else if (dayInfo.isWeekend) trNorth.className = 'weekend-row';
+
                     const actualIndex = monthData.north.indexOf(nData);
                     trNorth.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, nData.values, 'north', dayInfo.month, actualIndex, index > 0);
                     northBody.appendChild(trNorth);
@@ -1222,8 +1236,13 @@
 
                 southRows.forEach((sData, index) => {
                     const trSouth = document.createElement('tr');
+                    const notes = sData.values[9] || '';
+                    const isCanceled = notes.includes('בוטל') || notes.includes('התבטל');
+
                     if (isToday) trSouth.className = 'today-row';
+                    else if (isCanceled) trSouth.className = 'canceled-row';
                     else if (dayInfo.isWeekend) trSouth.className = 'weekend-row';
+
                     const actualIndex = monthData.south.indexOf(sData);
                     trSouth.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, sData.values, 'south', dayInfo.month, actualIndex, index > 0);
                     southBody.appendChild(trSouth);
@@ -1278,10 +1297,22 @@
             renderCurrentWeekTables();
         }
 
+        function removeExtraRow(side, monthIdx, cacheIndex) {
+            if (!confirm("האם אתה בטוח שברצונך למחוק שורה זו?")) return;
+            const monthData = getMonthDataCache(monthIdx);
+            if (side === 'north') {
+                monthData.north.splice(cacheIndex, 1);
+            } else {
+                monthData.south.splice(cacheIndex, 1);
+            }
+            saveMonthDataToCloud(monthIdx, monthData);
+            renderCurrentWeekTables();
+        }
+
         function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex, isExtra) {
             const dateStr = `${String(dayNum).padStart(2, '0')}.${String(monthIdx + 1).padStart(2, '0')}`;
             const currentVal = vals[0] || `${dateStr} ${hDayName}`;
-            const extraBadge = isExtra ? `<div style="font-size:0.7em; color:#e74c3c; font-weight:600; margin-top:1px;">(נוסף)</div>` : '';
+            const extraBadge = isExtra ? `<div style="font-size:0.7em; color:#e74c3c; font-weight:600; margin-top:1px; cursor:pointer;" onclick="removeExtraRow('${side}', ${monthIdx}, ${cacheIndex})" title="לחץ למחיקת השורה">❌ (נוסף)</div>` : '';
 
             return `
                 <td>
@@ -1308,7 +1339,7 @@
                     </select>
                 </td>
                 <td><input type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" list="mem-hours" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
-                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" list="mem-notes" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 9, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" list="mem-notes" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 9, this.value); renderCurrentWeekTables();"></td>
             `;
         }
 
