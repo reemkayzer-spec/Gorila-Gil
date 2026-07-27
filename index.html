@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מרכז תפעול ומידע - גורילה</title>
+    <title>תפעול והדרכה - צוות גיל</title>
     <style>
         :root {
             --bg-color: #f4f6f9;
@@ -37,45 +37,56 @@
         body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
         /* Header & Navigation - Mobile Optimized */
-        header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1150px; margin: 0 auto 8px auto; padding: 0 6px; }
-        header h1 { margin: 0; font-size: 1.1em; font-weight: 700; }
+        header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
+        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
         
-        .theme-toggle-btn { background: #334155; color: white; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 0.75em; font-weight: bold; }
+        .theme-toggle-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.78em; font-weight: bold; transition: 0.2s; }
         .theme-toggle-btn:hover { background: #475569; }
 
         .nav-tabs { display: flex; justify-content: center; gap: 6px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .nav-tabs::-webkit-scrollbar { display: none; }
         .tab-btn {
-            background-color: #34495e; color: white; border: none; padding: 8px 12px;
+            background-color: #34495e; color: white; border: none; padding: 8px 14px;
             border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: 0.3s;
         }
         .tab-btn:hover, .tab-btn.active { background-color: #3498db; }
 
         /* Main Layout - Mobile Optimized */
-        main { max-width: 1150px; margin: 6px auto; padding: 12px; background: var(--main-bg); border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); transition: background 0.3s; }
+        main { max-width: 1400px; margin: 12px auto; padding: 16px; background: var(--main-bg); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: background 0.3s; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* Trainer Profile Bar */
+        .trainer-profile-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .trainer-info-text { font-size: 0.9em; font-weight: bold; }
+        .trainer-inputs-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .trainer-inputs-group input {
+            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85em; background: var(--input-bg); color: var(--text-color);
+        }
+        .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
+        .trainer-save-btn:hover { background: #0369a1; }
+
         /* Schedule Controls & Top Bar */
         .schedule-header-action {
-            display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; background: var(--card-bg);
-            padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--card-bg);
+            padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);
         }
         .action-btns-group { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
-        .action-btns-group button { flex: 1; min-width: 130px; justify-content: center; }
+        .action-btns-group button { flex: 1; min-width: 220px; justify-content: center; }
         
-        .add-img-btn, .wa-global-btn, .wa-group-btn {
+        .wa-group-btn, .gcal-btn {
             color: white; border: none; padding: 10px 14px;
             border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.82em;
             display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .add-img-btn { background-color: #2ecc71; }
-        .add-img-btn:hover { background-color: #27ae60; }
-        .wa-global-btn { background-color: #25D366; }
-        .wa-global-btn:hover { background-color: #1da851; }
         .wa-group-btn { background-color: #128c7e; }
         .wa-group-btn:hover { background-color: #0e6f64; }
+        .gcal-btn { background-color: #4285F4; }
+        .gcal-btn:hover { background-color: #3367d6; }
 
         .search-box { width: 100%; }
         .search-box input {
@@ -84,25 +95,150 @@
         }
         .search-box input:focus { border-color: #3498db; }
 
-        /* Tables Style - Mobile First Horizontal Scroll fix */
-        .table-title {
-            background-color: #1e293b; color: white; padding: 10px 12px;
-            border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em;
-            display: flex; justify-content: space-between; align-items: center;
+        /* Weekly Sub-Navigation Tabs */
+        .week-tabs-bar {
+            display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap;
         }
+        .week-tab-btn {
+            background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
+            padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85em; cursor: pointer; transition: 0.3s;
+        }
+        .week-tab-btn:hover, .week-tab-btn.active {
+            background-color: #0284c7; color: white; border-color: #0284c7;
+        }
+        .week-tab-btn.today-week-tab {
+            background-color: #fef08a !important;
+            color: #854d0e !important;
+            border-color: #facc15 !important;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
+        }
+        body.dark-mode .week-tab-btn.today-week-tab {
+            background-color: #713f12 !important;
+            color: #fef08a !important;
+            border-color: #ca8a04 !important;
+        }
+
+        /* Spreadsheet Layout for Schedule - Stacked Vertically */
+        .spreadsheet-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .sheet-box {
+            background: var(--main-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .sheet-side-header {
+            background-color: #1e293b; color: white; padding: 10px 14px;
+            display: flex; justify-content: space-between; align-items: center; font-size: 0.95em; font-weight: bold; flex-wrap: wrap; gap: 8px;
+        }
+        .header-btns-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .unit-wa-btn, .unit-add-btn {
+            color: white; border: none; padding: 5px 10px;
+            border-radius: 20px; font-size: 0.78em; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            white-space: nowrap;
+        }
+        .unit-wa-btn { background-color: #25d366; }
+        .unit-wa-btn:hover { background-color: #20ba5a; }
+        .unit-wa-btn svg { width: 14px; height: 14px; fill: white; flex-shrink: 0; }
+
+        .unit-add-btn { background-color: #0284c7; }
+        .unit-add-btn:hover { background-color: #0369a1; }
+
         .table-container { 
             overflow-x: auto; 
-            margin-bottom: 20px; 
-            border: 1px solid var(--border-color); 
-            border-top: none; 
-            border-radius: 0 0 8px 8px; 
+            margin: 0; 
+            border: none;
+            border-radius: 0; 
             -webkit-overflow-scrolling: touch;
         }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8em; text-align: center; min-width: 600px; }
-        th, td { border: 1px solid var(--border-color); padding: 9px 6px; vertical-align: middle; }
-        th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; }
-        tr:nth-child(even) { background-color: var(--table-even); }
-        tr:hover { background-color: rgba(52, 152, 219, 0.05); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
+        th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
+        th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; font-size: 0.82em; }
+
+        /* Column Proportion Rules */
+        table th:nth-child(1), table td:nth-child(1) { width: 75px; min-width: 75px; } /* תאריך + אות יום */
+        table th:nth-child(2), table td:nth-child(2) { width: 100px; min-width: 100px; } /* מדריך (מורחב לשם מלא) */
+        table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } /* כוח מתאמן */
+        table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } /* מיקום */
+        table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } /* ישלט/אחוד */
+        table th:nth-child(6), table td:nth-child(6) { width: 80px; min-width: 80px; } /* איש קשר */
+        table th:nth-child(7), table td:nth-child(7) { width: 50px; min-width: 50px; } /* מס מתאמנים */
+        table th:nth-child(8), table td:nth-child(8) { width: 55px; min-width: 55px; } /* חיוב */
+        table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } /* שעות - מורחב */
+        table th:nth-child(10), table td:nth-child(10) { min-width: 220px; } /* הערות - רחב ומרווח מאוד */
+        
+        .weekend-row td {
+            background-color: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+        }
+
+        /* Today Row Highlight */
+        .today-row td {
+            background-color: #fef08a !important;
+            border-color: #facc15 !important;
+            font-weight: bold;
+        }
+        body.dark-mode .today-row td {
+            background-color: #713f12 !important;
+            border-color: #fef08a !important;
+        }
+
+        .cell-input {
+            width: 100%; border: none; background: transparent; text-align: center;
+            font-size: 0.88em; color: var(--text-color); outline: none; padding: 2px;
+        }
+        .cell-input:focus { background: rgba(52, 152, 219, 0.1); border-radius: 4px; }
+
+        .cell-select {
+            width: 100%; border: 1px solid var(--border-color); background: var(--input-bg);
+            color: var(--text-color); font-size: 0.78em; border-radius: 4px; padding: 2px 1px; outline: none; cursor: pointer;
+            appearance: auto; -webkit-appearance: auto; -moz-appearance: auto;
+        }
+        .cell-select.has-selection {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            border: none;
+            text-align-last: center;
+            font-weight: bold;
+        }
+
+        /* Month Folder Tabs at Bottom - Enhanced Active State */
+        .month-folders-bar {
+            display: flex; gap: 6px; overflow-x: auto; padding: 14px 6px; margin-top: 20px;
+            border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px;
+            justify-content: center; flex-wrap: wrap; align-items: flex-end;
+        }
+        .month-folder-btn {
+            background-color: #475569; color: white; border: none; padding: 9px 16px;
+            border-radius: 6px 6px 0 0; cursor: pointer; font-weight: bold; font-size: 0.9em; transition: 0.3s;
+        }
+        .month-folder-btn:hover {
+            background-color: #64748b;
+        }
+        .month-folder-btn.active {
+            background-color: #0284c7; 
+            color: #ffffff; 
+            transform: translateY(-6px) scale(1.08);
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.5);
+            border: 2px solid #ffffff;
+            font-weight: 800;
+            z-index: 10;
+        }
 
         .status-select, .notes-input {
             padding: 5px 10px;
@@ -119,20 +255,41 @@
         .notes-input { width: 100%; }
         .status-select:focus, .notes-input:focus { border-color: #3498db; }
 
-        .phone-link {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: 600;
+        .cleaning-date-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-        .phone-link:hover {
-            text-decoration: underline;
+        .cleaning-date-input {
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.85em;
+            outline: none;
+        }
+        .cleaning-today-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.78em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cleaning-today-btn:hover {
+            background-color: #20ba5a;
         }
 
-        .wa-row-btn {
-            background-color: #25D366; color: white; border: none; padding: 6px 10px;
-            border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.8em;
-            display: inline-flex; align-items: center; gap: 4px; text-decoration: none; white-space: nowrap; min-height: 32px;
-        }
+        .phone-link { color: var(--link-color); text-decoration: none; font-weight: 600; }
+        .phone-link:hover { text-decoration: underline; }
 
         /* Cards & Slide Boxes Style - Mobile Optimized */
         .slide-box {
@@ -197,7 +354,6 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.25); text-align: center; position: relative; max-height: 90vh; overflow-y: auto;
         }
         .close-modal { position: absolute; left: 12px; top: 8px; font-size: 1.4em; cursor: pointer; color: #64748b; }
-        .upload-preview { max-width: 100%; max-height: 160px; margin-top: 8px; display: none; border-radius: 6px; }
 
         .cards-container { display: flex; gap: 10px; flex-direction: column; margin-top: 10px; }
         @media (min-width: 600px) { .cards-container { flex-direction: row; flex-wrap: wrap; } }
@@ -221,7 +377,20 @@
 
     <header>
         <div class="header-top">
-            <h1>🖥️ פורטל תפעול והדרכה - גורילה</h1>
+            <h1>
+                <!-- אייקון טיל גיל מעודן ומדויק -->
+                <div style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background:#f37021; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); vertical-align:middle; overflow:hidden;">
+                    <svg width="28" height="28" viewBox="0 0 100 100" style="transform: rotate(-45deg);">
+                        <rect x="35" y="20" width="30" height="60" rx="15" fill="#1e293b"/>
+                        <path d="M 35 35 Q 50 10 65 35 Z" fill="#334155"/>
+                        <circle cx="50" cy="28" r="4" fill="#38bdf8"/>
+                        <polygon points="20,55 35,50 35,70" fill="#0f172a"/>
+                        <polygon points="80,55 65,50 65,70" fill="#0f172a"/>
+                        <polygon points="45,80 55,80 52,90 48,90" fill="#f59e0b"/>
+                    </svg>
+                </div>
+                תפעול והדרכה - צוות גיל
+            </h1>
             <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 מצב כהה</button>
         </div>
         <div class="nav-tabs">
@@ -234,155 +403,107 @@
     </header>
 
     <main>
-        <!-- סקשן סידור עבודה שבועי -->
+        <!-- סקשן סידור עבודה שבועי - אימוני גורילות גיל -->
         <section id="schedule" class="tab-content active">
+            <!-- אזור התחברות מדריך לפעם ראשונה -->
+            <div class="trainer-profile-bar" id="trainerProfileBar">
+                <div class="trainer-info-text" id="trainerInfoDisplay">👤 לא זוהית כמדריך. אנא הזן פרטים:</div>
+                <div class="trainer-inputs-group" id="trainerInputsArea">
+                    <input type="text" id="tFirstName" placeholder="שם פרטי">
+                    <input type="text" id="tLastName" placeholder="שם משפחה">
+                    <input type="email" id="tEmail" placeholder="כתובת מייל">
+                    <input type="tel" id="tPhone" placeholder="מספר טלפון">
+                    <button class="trainer-save-btn" onclick="saveTrainerProfile()">שמור פרופיל 💾</button>
+                </div>
+            </div>
+
             <div class="schedule-header-action">
-                <h2 style="margin: 0; font-size: 1.15em;">📅 סידור עבודה שבועי</h2>
+                <h2 style="margin: 0; font-size: 1.15em;">📅 אימוני גורילות גיל - סידור עבודה חודשי ושבועי</h2>
                 <div class="search-box">
-                    <input type="text" id="scheduleSearch" onkeyup="filterSchedule()" placeholder="🔍 חפש עובד, יום או יחידה...">
+                    <input type="text" id="scheduleSearch" onkeyup="filterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
                 </div>
                 <div class="action-btns-group">
-                    <button class="wa-group-btn" onclick="sendGroupWhatsAppSummary()">
-                        <span>📋</span> סיכום לקבוצה
+                    <button class="gcal-btn" id="gcalBtn" onclick="exportWeeklyShiftsToCalendar()">
+                        <span>📅</span> סנכרן משמרות ליומן Google
                     </button>
-                    <button class="wa-global-btn" onclick="sendWhatsAppForTomorrow()">
-                        <span>💬</span> תזכורות למחר
-                    </button>
-                    <button class="add-img-btn" onclick="openUploadModal()">
-                        <span>➕</span> העלאת תמונה
+                    <button class="wa-group-btn" id="waGroupBtn" onclick="sendGroupWhatsAppSummary()">
+                        <span>📋</span> סיכום שבועי לקבוצה
                     </button>
                 </div>
             </div>
 
-            <!-- טבלה 1: ניידת 1 -->
-            <h3 class="table-title">🚚 ניידת 1</h3>
-            <div class="table-container">
-                <table class="schedule-table" id="scheduleTable1">
-                    <thead>
-                        <tr>
-                            <th>יום</th>
-                            <th>תאריך</th>
-                            <th>מדריך</th>
-                            <th>כוח מתאמן</th>
-                            <th>מיקום</th>
-                            <th>מערכת</th>
-                            <th>איש קשר</th>
-                            <th>שעות</th>
-                            <th>הערות</th>
-                            <th>תזכורת 📲</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="col-day">ראשון</td><td class="col-date">26</td><td class="col-guide">קסה</td>
-                            <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">שני (<a href="tel:0585500393" class="phone-link">058-5500393</a>)</td>
-                            <td class="col-hours">10:00 - 15:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">שני</td><td class="col-date">27</td><td class="col-guide">קסה</td>
-                            <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">שני (<a href="tel:0585500393" class="phone-link">058-5500393</a>)</td>
-                            <td class="col-hours">15:00 - 19:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">קסה</td>
-                            <td class="col-unit">מגלן - גולים</td><td class="col-loc">מגלן</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">שני (<a href="tel:0585500393" class="phone-link">058-5500393</a>)</td>
-                            <td class="col-hours">10:00 - 15:00</td><td class="col-notes">צילומים</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">איתי</td>
-                            <td class="col-unit">זרעית (גדסר ביסלח)</td><td class="col-loc">זרעית</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">דביר (<a href="tel:0509501700" class="phone-link">050-9501700</a>)</td>
-                            <td class="col-hours">09:30 - 13:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">חמישי</td><td class="col-date">30</td><td class="col-guide">איתי</td>
-                            <td class="col-unit">עמיעד (גדוד 13)</td><td class="col-loc">עמיעד</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">רוקח (<a href="tel:0558865228" class="phone-link">055-8865228</a>)</td>
-                            <td class="col-hours">09:00 - 13:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- סרגל מעבר בין שבועות חיל אוויר (ראשון-שבת, ללא כפילויות) -->
+            <div class="week-tabs-bar" id="weekTabsBar"></div>
+
+            <!-- Spreadsheet Grid (ניידת 1 צפון למעלה | ניידת 2 מרכז/דרום מתחתיה) -->
+            <div class="spreadsheet-container">
+                <div class="sheet-box">
+                    <div class="sheet-side-header">
+                        <span>ניידת 1 צפון</span>
+                        <div class="header-btns-group">
+                            <button class="unit-add-btn" onclick="addExtraRow('north')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
+                            <button class="unit-wa-btn" onclick="sendTomorrowReminder('north')">
+                                <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                שלח הודעה למתאמנים של מחר
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="sheetNorthTable">
+                            <thead>
+                                <tr>
+                                    <th>תאריך</th>
+                                    <th>מדריך</th>
+                                    <th>כוח מתאמן</th>
+                                    <th>מיקום</th>
+                                    <th>ישלט/אחוד</th>
+                                    <th>איש קשר</th>
+                                    <th>מס מתאמנים</th>
+                                    <th>חיוב</th>
+                                    <th>שעות</th>
+                                    <th>הערות</th>
+                                </tr>
+                            </thead>
+                            <tbody id="northTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="sheet-box">
+                    <div class="sheet-side-header">
+                        <span>ניידת 2 מרכז/דרום</span>
+                        <div class="header-btns-group">
+                            <button class="unit-add-btn" onclick="addExtraRow('south')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
+                            <button class="unit-wa-btn" onclick="sendTomorrowReminder('south')">
+                                <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                שלח הודעה למתאמנים של מחר
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="sheetSouthTable">
+                            <thead>
+                                <tr>
+                                    <th>תאריך</th>
+                                    <th>מדריך</th>
+                                    <th>כוח מתאמן</th>
+                                    <th>מיקום</th>
+                                    <th>ישלט/אחוד</th>
+                                    <th>איש קשר</th>
+                                    <th>מס מתאמנים</th>
+                                    <th>חיוב</th>
+                                    <th>שעות</th>
+                                    <th>הערות</th>
+                                </tr>
+                            </thead>
+                            <tbody id="southTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <!-- טבלה 2: ניידת 2 -->
-            <h3 class="table-title">🚚 ניידת 2</h3>
-            <div class="table-container">
-                <table class="schedule-table" id="scheduleTable2">
-                    <thead>
-                        <tr>
-                            <th>יום</th>
-                            <th>תאריך</th>
-                            <th>מדריך</th>
-                            <th>כוח מתאמן</th>
-                            <th>מיקום</th>
-                            <th>מערכת</th>
-                            <th>איש קשר</th>
-                            <th>שעות</th>
-                            <th>הערות</th>
-                            <th>תזכורת 📲</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="col-day">ראשון</td><td class="col-date">26</td><td class="col-guide">כחלון</td>
-                            <td class="col-unit">קרני שומרון (931)</td><td class="col-loc">קרני שומרון</td><td class="col-sys">אחוד</td>
-                            <td class="col-contact">בן צבי (<a href="tel:0522988348" class="phone-link">052-2988348</a>)</td>
-                            <td class="col-hours">-</td><td class="col-notes">יום מקצועי + אפליקציה</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">שני</td><td class="col-date">27</td><td class="col-guide">איתי</td>
-                            <td class="col-unit">חומש (934)</td><td class="col-loc">חומש</td><td class="col-sys">אחוד</td>
-                            <td class="col-contact">יאיר שחר (<a href="tel:0522399579" class="phone-link">052-2399579</a>)</td>
-                            <td class="col-hours">12:00 - 15:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">עידו</td>
-                            <td class="col-unit">מטולה (92)</td><td class="col-loc">מטולה</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">טולדו (<a href="tel:0548738546" class="phone-link">054-8738546</a>)</td>
-                            <td class="col-hours">11:00 - 14:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">שלישי</td><td class="col-date">28</td><td class="col-guide">כחלון</td>
-                            <td class="col-unit">מבוא דותן (50)</td><td class="col-loc">מבוא דותן</td><td class="col-sys">אחוד סימולטיבי</td>
-                            <td class="col-contact">כפיר כהן (<a href="tel:0542058999" class="phone-link">054-2058999</a>)</td>
-                            <td class="col-hours">-</td><td class="col-notes">צריך רכב</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">כחלון</td>
-                            <td class="col-unit">נחל עוז (202)</td><td class="col-loc">נחל עוז</td><td class="col-sys">אחוד</td>
-                            <td class="col-contact">יובל (<a href="tel:0523848424" class="phone-link">052-3848424</a>)</td>
-                            <td class="col-hours">10:00 - 14:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">רביעי</td><td class="col-date">29</td><td class="col-guide">קסה</td>
-                            <td class="col-unit">עלומים (101)</td><td class="col-loc">עלומים</td><td class="col-sys">ישלט</td>
-                            <td class="col-contact">דן תלמי (<a href="tel:0508998173" class="phone-link">050-8998173</a>)</td>
-                            <td class="col-hours">-</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                        <tr>
-                            <td class="col-day">חמישי</td><td class="col-date">30</td><td class="col-guide">קסה</td>
-                            <td class="col-unit">בוקעתא (6228)</td><td class="col-loc">בוקעתא</td><td class="col-sys">אחוד</td>
-                            <td class="col-contact">רותם (<a href="tel:0525599123" class="phone-link">052-5599123</a>)</td>
-                            <td class="col-hours">10:00 - 14:00</td><td class="col-notes">-</td>
-                            <td><button class="wa-row-btn" onclick="sendRowWhatsApp(this)">📲 שלח</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- תקיות חודשים בתחתית העמוד -->
+            <div class="month-folders-bar" id="monthFoldersBar"></div>
         </section>
 
         <!-- סקשן סטטוס גורילות -->
@@ -408,7 +529,12 @@
                                     <option value="לא תקין">לא תקין</option>
                                 </select>
                             </td>
-                            <td>02/07</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
                         </tr>
                         <tr data-id="2">
@@ -419,7 +545,12 @@
                                     <option value="לא תקין" selected>לא תקין</option>
                                 </select>
                             </td>
-                            <td>X</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="לא ידוע." onchange="saveStatusData()"></td>
                         </tr>
                         <tr data-id="3">
@@ -430,7 +561,12 @@
                                     <option value="לא תקין">לא תקין</option>
                                 </select>
                             </td>
-                            <td>02/07</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" onchange="saveStatusData()"></td>
                         </tr>
                         <tr data-id="4">
@@ -441,7 +577,12 @@
                                     <option value="לא תקין" selected>לא תקין</option>
                                 </select>
                             </td>
-                            <td>X</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" onchange="saveStatusData()"></td>
                         </tr>
                         <tr data-id="5">
@@ -452,7 +593,12 @@
                                     <option value="לא תקין">לא תקין</option>
                                 </select>
                             </td>
-                            <td>02/07</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
                         </tr>
                         <tr data-id="6">
@@ -463,18 +609,28 @@
                                     <option value="לא תקין">לא תקין</option>
                                 </select>
                             </td>
-                            <td>02/07</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
                         </tr>
                         <tr data-id="7">
-                            <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 7</td>
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td>
                             <td>
                                 <select class="status-select" onchange="updateRowStatus(this)">
                                     <option value="תקין" selected>תקין</option>
-                                    <option value="לא תקין">לא תקין</option>
+                                    <option value="לא תקין" selected>לא תקין</option>
                                 </select>
                             </td>
-                            <td>02/07</td>
+                            <td>
+                                <div class="cleaning-date-wrapper">
+                                    <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
+                                    <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                </div>
+                            </td>
                             <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
                         </tr>
                     </tbody>
@@ -643,12 +799,11 @@
             </div>
         </section>
 
-        <!-- סקשן תוכנית הסמכה - מסודר לפי ימים כמו במקור -->
+        <!-- סקשן תוכנית הסמכה -->
         <section id="training-program" class="tab-content">
             <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
             <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
 
-            <!-- יום מס' 1 - כללי -->
             <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
             <div class="table-container">
                 <table>
@@ -659,17 +814,17 @@
                         <tr>
                             <td>הכרת החברה</td><td>מנהל אתר</td>
                             <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
-                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%96%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
                         </tr>
                         <tr>
                             <td>הצגת מוצרים</td><td>מנהל אתר</td>
                             <td>הצגת מוצרי החברה.</td>
-                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%96%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
                         </tr>
                         <tr>
                             <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
                             <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
-                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%95%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%96%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
                         </tr>
                         <tr>
                             <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
@@ -685,7 +840,6 @@
                 </table>
             </div>
 
-            <!-- יום מס' 2 - תפעול -->
             <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
             <div class="table-container">
                 <table>
@@ -712,7 +866,6 @@
                 </table>
             </div>
 
-            <!-- יום מס' 3+4 - אימון כוון בודד -->
             <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
             <div class="table-container">
                 <table>
@@ -728,7 +881,7 @@
                         <tr>
                             <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
                             <td>תפעול תקלות נפוצות במערכת.</td>
-                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%20%D7%92%D7%95%D7%A8%D7%99%D7%9ל%20%D7%92%D7%99%D7%9ל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%tt%20%D7%92%D7%95%D7%A8%D7%99%D7%9ל%20%D7%92%D7%99%D7%9ל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
                         </tr>
                         <tr>
                             <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
@@ -739,7 +892,6 @@
                 </table>
             </div>
 
-            <!-- יום מס' 5 - חניכת אימון ומבחנים -->
             <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
             <div class="table-container">
                 <table>
@@ -761,7 +913,6 @@
                 </table>
             </div>
 
-            <!-- יום מס' 6 - ניהול אתר ומבחן מעשי -->
             <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
             <div class="table-container">
                 <table>
@@ -772,7 +923,7 @@
                         <tr>
                             <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
                             <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
-                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
                         </tr>
                         <tr>
                             <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
@@ -821,35 +972,51 @@
         </section>
     </main>
 
-    <!-- חלון קופץ להעלאת תמונת אימונים מעודכנת -->
-    <div id="uploadModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeUploadModal()">&times;</span>
-            <h3 style="font-size: 1.1em;">➕ העלאת תמונת אימונים מעודכנת</h3>
-            <p style="font-size: 0.85em;">בחר תמונה (צילום מסך או קובץ) כדי להעלות ולעדכן את הטבלאות באתר:</p>
-            <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)" style="margin-top: 8px; width: 100%; font-size: 0.85em;">
-            <br>
-            <img id="imagePreview" class="upload-preview" alt="תצוגה מקדימה">
-            <br><br>
-            <button class="btn" onclick="processUploadedImage()" style="width: 100%;">עדכן טבלאות 🔄</button>
-        </div>
-    </div>
+    <!-- דטלייסטס דינמיות להשלמה אוטומטית (זיכרון הנתונים) -->
+    <div id="datalistsContainer"></div>
 
     <script>
-        // Load initial preferences and status selections from LocalStorage
+        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
+        const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+        
+        const currentYear = 2026;
+        let activeMonth = 6; // July 2026
+        let activeWeekIndex = 0; // Selected week index
+
+        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "ינאי סביר"];
+        const systemsOptions = ["", "אחוד", "ישלט", "אחוד סימולטיבי"];
+        const chargesOptions = ["", "4", "9", "12", "15"];
+
+        let memoryData = {
+            units: new Set(),
+            locations: new Set(),
+            contacts: new Set(),
+            traineesCount: new Set(["10", "15", "20", "25", "30", "40"]),
+            hours: new Set(["08:00 - 13:00", "09:00 - 14:00", "12:00 - 17:00", "08:30 - 15:30"]),
+            notes: new Set(["אימון שגרתי תקין", "בוצע שיגור מוצלח", "תדרוך קצינים", "נדרש רענון למשגר"])
+        };
+
+        function getAirForceWeek(date) {
+            const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const julyFirst = new Date(currentYear, 6, 1);
+            const dayOfWeek = julyFirst.getDay(); // 0 = Sun
+            const firstSunday = new Date(currentYear, 6, 1 - dayOfWeek);
+            
+            const diffTime = d - firstSunday;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const weekOffset = Math.floor(diffDays / 7);
+            return 27 + weekOffset;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
+            for (let m = 0; m < 12; m++) {
+                localStorage.removeItem(`gorilla_sheet_${currentYear}_${m}`);
+            }
+
             const savedTab = localStorage.getItem('gorilla_active_tab');
             if (savedTab) {
                 const btn = document.querySelector(`.tab-btn[onclick*="${savedTab}"]`);
                 if (btn) switchTab(savedTab, { currentTarget: btn }, false);
-            }
-            const savedSearch = localStorage.getItem('gorilla_search_query');
-            if (savedSearch) {
-                const searchInput = document.getElementById('scheduleSearch');
-                if (searchInput) {
-                    searchInput.value = savedSearch;
-                    filterSchedule();
-                }
             }
             const savedTheme = localStorage.getItem('gorilla_theme');
             if (savedTheme === 'dark') {
@@ -857,54 +1024,633 @@
                 document.getElementById('themeToggleBtn').innerText = '☀️ מצב בהיר';
             }
 
-            // Restore Gorilla Status selections and row background colors / notes
+            initTrainerProfile();
+            initMonthFolders();
+            loadMonthData(activeMonth);
+
+            // Restore Gorilla Status & set cleaning dates
+            const todayDateStr = new Date().toISOString().split('T')[0];
             const statusRows = document.querySelectorAll('#statusTableBody tr');
             statusRows.forEach((row, index) => {
                 const savedStatus = localStorage.getItem(`gorilla_status_${index}`);
+                const savedCleaning = localStorage.getItem(`gorilla_cleaning_${index}`);
                 const savedNotes = localStorage.getItem(`gorilla_notes_${index}`);
-                
                 const statusSelect = row.querySelector('.status-select');
+                const cleaningInput = row.querySelector('.cleaning-date-input');
+                const cleaningBtn = row.querySelector('.cleaning-today-btn');
                 const notesInput = row.querySelector('.notes-input');
                 const nameCell = row.querySelector('.gorilla-name-cell');
 
-                if (savedStatus) {
-                    statusSelect.value = savedStatus;
-                }
-                if (savedNotes !== null) {
-                    notesInput.value = savedNotes;
-                }
+                if (savedStatus) statusSelect.value = savedStatus;
+                
+                let targetDate = savedCleaning ? savedCleaning : todayDateStr;
+                cleaningInput.value = targetDate;
+                
+                updateCleaningButtonText(cleaningBtn, targetDate);
 
-                // Apply color based on current select value
+                if (savedNotes !== null) notesInput.value = savedNotes;
+
                 if (statusSelect.value === 'לא תקין') {
                     nameCell.style.background = '#e74c3c';
                     nameCell.style.color = 'white';
                     notesInput.style.color = '#e74c3c';
                     notesInput.style.fontWeight = 'bold';
-                } else {
-                    nameCell.style.background = '#27ae60';
-                    nameCell.style.color = 'white';
-                    notesInput.style.color = '';
-                    notesInput.style.fontWeight = '';
                 }
             });
         });
+
+        function openCleaningPicker(btn) {
+            const row = btn.closest('tr');
+            const input = row.querySelector('.cleaning-date-input');
+            if (input) {
+                if (typeof input.showPicker === 'function') {
+                    input.showPicker();
+                } else {
+                    input.focus();
+                }
+            }
+        }
+
+        function onCleaningDateChange(input) {
+            const row = input.closest('tr');
+            const btn = row.querySelector('.cleaning-today-btn');
+            const val = input.value;
+            if (val) {
+                updateCleaningButtonText(btn, val);
+            }
+            saveStatusData();
+        }
+
+        function updateCleaningButtonText(btn, dateStr) {
+            if (!dateStr) return;
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                btn.innerText = `${parts[2]}/${parts[1]}`;
+            }
+        }
+
+        function initTrainerProfile() {
+            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            const display = document.getElementById('trainerInfoDisplay');
+            const inputsArea = document.getElementById('trainerInputsArea');
+
+            if (trainer) {
+                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email} | ${trainer.phone}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
+                inputsArea.style.display = 'none';
+            } else {
+                display.innerHTML = `👤 התחברות מדריך (פעם ראשונה):`;
+                inputsArea.innerHTML = `
+                    <input type="text" id="tFirstName" placeholder="שם פרטי">
+                    <input type="text" id="tLastName" placeholder="שם משפחה">
+                    <input type="email" id="tEmail" placeholder="כתובת מייל">
+                    <input type="tel" id="tPhone" placeholder="מספר טלפון">
+                    <button class="trainer-save-btn" onclick="saveTrainerProfile()">שמור פרופיל 💾</button>
+                `;
+                inputsArea.style.display = 'flex';
+            }
+        }
+
+        function saveTrainerProfile() {
+            const fName = document.getElementById('tFirstName').value.trim();
+            const lName = document.getElementById('tLastName').value.trim();
+            const email = document.getElementById('tEmail').value.trim();
+            const phone = document.getElementById('tPhone').value.trim();
+
+            if (!fName || !lName || !email || !phone) {
+                alert('אנא מלא שם פרטי, שם משפחה, כתובת מייל ומספר טלפון.');
+                return;
+            }
+
+            const profile = { firstName: fName, lastName: lName, email: email, phone: phone };
+            localStorage.setItem('gorilla_trainer_profile', JSON.stringify(profile));
+            initTrainerProfile();
+            alert('הפרטים נשמרו בהצלחה!');
+        }
+
+        function editTrainerProfile() {
+            localStorage.removeItem('gorilla_trainer_profile');
+            initTrainerProfile();
+        }
+
+        function exportWeeklyShiftsToCalendar() {
+            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            if (!trainer) {
+                alert('אנא הזן את פרטי המדריך שלך בראש העמוד לפני ייצוא המשמרות.');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            if (monthWeeksCache.length === 0) return;
+
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+            const nextWeekIndex = activeWeekIndex + 1;
+            const nextWeekObj = monthWeeksCache[nextWeekIndex];
+
+            let targetWeekObj = currentWeekObj;
+            if (nextWeekObj) {
+                let choice = prompt(`בחר איזה שבוע לסנכרן ליומן ולשלוח:\n1) שבוע ${currentWeekObj.weekNum} (הנוכחי)\n2) שבוע ${nextWeekObj.weekNum} (הבא)\n\nהקלד 1 או 2:`, "1");
+                if (!choice) return;
+                if (choice.trim() === "2") {
+                    targetWeekObj = nextWeekObj;
+                }
+            }
+
+            let trainerShifts = [];
+            targetWeekObj.days.forEach(dayInfo => {
+                const monthData = getMonthDataCache(dayInfo.month);
+                const nRows = monthData.north.filter(item => item.dayNum === dayInfo.day);
+                const sRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
+
+                [...nRows, ...sRows].forEach(item => {
+                    const guide = item.values[1];
+                    const unit = item.values[2];
+                    const loc = item.values[3];
+                    const sys = item.values[4];
+                    const hours = item.values[8];
+
+                    if (guide && trainer.firstName && guide.includes(trainer.firstName)) {
+                        trainerShifts.push({ date: dayInfo.day, month: dayInfo.month + 1, unit, loc, sys, hours });
+                    }
+                });
+            });
+
+            if (trainerShifts.length === 0) {
+                alert(`לא נמצאו משמרות הרשומות על שם "${trainer.firstName}" בשבוע ${targetWeekObj.weekNum}.`);
+                return;
+            }
+
+            // 1. Download ICS File
+            let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gorilla Training Portal//HE\n";
+            trainerShifts.forEach(shift => {
+                const dStr = String(shift.date).padStart(2, '0');
+                const mStr = String(shift.month).padStart(2, '0');
+                const dateStamp = `${currentYear}${mStr}${dStr}`;
+                icsContent += "BEGIN:VEVENT\n";
+                icsContent += `SUMMARY:אימון גורילה - ${shift.unit} (${shift.loc})\n`;
+                icsContent += `DESCRIPTION:מערכת: ${shift.sys}\\nשעות: ${shift.hours || 'לפי תיאום'}\n`;
+                icsContent += `DTSTART;VALUE=DATE:${dateStamp}\n`;
+                icsContent += `DTEND;VALUE=DATE:${dateStamp}\n`;
+                icsContent += "END:VEVENT\n";
+            });
+            icsContent += "END:VCALENDAR";
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', `my_gorilla_shifts_week_${targetWeekObj.weekNum}.ics`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 2. Prepare Shift Summary Text for Email & WhatsApp
+            let shiftsText = `שלום ${trainer.firstName},\nלהלן פירוט המשמרות שלך לשבוע ${targetWeekObj.weekNum}:\n\n`;
+            trainerShifts.forEach(s => {
+                shiftsText += `• תאריך: ${s.date}/${s.month} | יחידה: ${s.unit} | מיקום: ${s.loc} | מערכת: ${s.sys} | שעות: ${s.hours || 'לפי תיאום'}\n`;
+            });
+
+            // 3. Send Email via mailto
+            const mailSubject = encodeURIComponent(`משמרות גורילה - שבוע ${targetWeekObj.weekNum}`);
+            const mailBody = encodeURIComponent(shiftsText + `\nקובץ הזימון ליומן (ICS) ירד למחשב שלך.`);
+            window.location.href = `mailto:${trainer.email}?subject=${mailSubject}&body=${mailBody}`;
+
+            // 4. Send WhatsApp message to trainer's phone
+            setTimeout(() => {
+                let cleanPhone = trainer.phone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) {
+                    cleanPhone = '972' + cleanPhone.substring(1);
+                }
+                const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(shiftsText)}`;
+                window.open(waUrl, '_blank');
+            }, 500);
+        }
+
+        function initMonthFolders() {
+            const bar = document.getElementById('monthFoldersBar');
+            bar.innerHTML = '';
+            monthNames.forEach((mName, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `month-folder-btn ${idx === activeMonth ? 'active' : ''}`;
+                btn.innerText = mName;
+                btn.onclick = () => {
+                    document.querySelectorAll('.month-folder-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeMonth = idx;
+                    activeWeekIndex = 0;
+                    loadMonthData(activeMonth);
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        let monthWeeksCache = [];
+        let allMonthsDataCache = {};
+
+        function getMonthDataCache(monthIdx) {
+            if (!allMonthsDataCache[monthIdx]) {
+                const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+                let north = [];
+                let south = [];
+                for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+                    const dateObj = new Date(currentYear, monthIdx, dayNum);
+                    const dayOfWeek = dateObj.getDay(); 
+                    const hDayName = hebrewDaysShort[dayOfWeek];
+                    const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
+
+                    let sampleNorth = ["", "", "", "", "", "", "", "", "", ""];
+                    let sampleSouth = ["", "", "", "", "", "", "", "", "", ""];
+
+                    north.push({ dayNum, hDayName, isWeekend, values: sampleNorth });
+                    south.push({ dayNum, hDayName, isWeekend, values: sampleSouth });
+                }
+
+                const saved = localStorage.getItem(`gorilla_sheet_${currentYear}_${monthIdx}`);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (parsed.north && Array.isArray(parsed.north)) {
+                            north = [];
+                            parsed.north.forEach(item => {
+                                if (item && item.values) {
+                                    const dateObj = new Date(currentYear, monthIdx, item.dayNum);
+                                    const hDayName = hebrewDaysShort[dateObj.getDay()];
+                                    const isWeekend = (dateObj.getDay() === 5 || dateObj.getDay() === 6);
+                                    north.push({ dayNum: item.dayNum, hDayName, isWeekend, values: item.values });
+                                }
+                            });
+                        }
+                        if (parsed.south && Array.isArray(parsed.south)) {
+                            south = [];
+                            parsed.south.forEach(item => {
+                                if (item && item.values) {
+                                    const dateObj = new Date(currentYear, monthIdx, item.dayNum);
+                                    const hDayName = hebrewDaysShort[dateObj.getDay()];
+                                    const isWeekend = (dateObj.getDay() === 5 || dateObj.getDay() === 6);
+                                    south.push({ dayNum: item.dayNum, hDayName, isWeekend, values: item.values });
+                                }
+                            });
+                        }
+                    } catch(e) { console.error(e); }
+                }
+                allMonthsDataCache[monthIdx] = { north, south };
+            }
+            return allMonthsDataCache[monthIdx];
+        }
+
+        function loadMonthData(monthIdx) {
+            for (let m = 0; m < 12; m++) {
+                const mData = getMonthDataCache(m);
+                mData.north.forEach(item => extractMemory(item.values));
+                mData.south.forEach(item => extractMemory(item.values));
+            }
+
+            const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+            const weeksMap = new Map();
+
+            for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+                const date = new Date(currentYear, monthIdx, dayNum);
+                const wNum = getAirForceWeek(date);
+
+                const dayOfWeek = date.getDay(); // 0 = Sun
+                const sunDate = new Date(date);
+                sunDate.setDate(date.getDate() - dayOfWeek);
+
+                if (sunDate.getMonth() === monthIdx) {
+                    if (!weeksMap.has(wNum)) {
+                        const satDate = new Date(sunDate);
+                        satDate.setDate(satDate.getDate() + 6);
+
+                        let weekDays = [];
+                        for (let d = new Date(sunDate); d <= satDate; d.setDate(d.getDate() + 1)) {
+                            if (d.getFullYear() === currentYear) {
+                                weekDays.push({
+                                    month: d.getMonth(),
+                                    day: d.getDate(),
+                                    hDayName: hebrewDaysShort[d.getDay()],
+                                    isWeekend: (d.getDay() === 5 || d.getDay() === 6)
+                                });
+                            }
+                        }
+
+                        weeksMap.set(wNum, {
+                            weekNum: wNum,
+                            days: weekDays
+                        });
+                    }
+                }
+            }
+
+            monthWeeksCache = [];
+            weeksMap.forEach((wObj) => {
+                monthWeeksCache.push(wObj);
+            });
+
+            if (activeWeekIndex >= monthWeeksCache.length) {
+                activeWeekIndex = 0;
+            }
+
+            rebuildDatalists();
+            initWeekTabs();
+            renderCurrentWeekTables();
+        }
+
+        function extractMemory(vals) {
+            if (vals[2] && vals[2].trim()) memoryData.units.add(vals[2].trim());
+            if (vals[3] && vals[3].trim()) memoryData.locations.add(vals[3].trim());
+            if (vals[5] && vals[5].trim()) memoryData.contacts.add(vals[5].trim());
+            if (vals[6] && vals[6].trim()) memoryData.traineesCount.add(vals[6].trim());
+            if (vals[8] && vals[8].trim()) memoryData.hours.add(vals[8].trim());
+            if (vals[9] && vals[9].trim()) memoryData.notes.add(vals[9].trim());
+        }
+
+        function rebuildDatalists() {
+            let container = document.getElementById('datalistsContainer');
+            container.innerHTML = `
+                <datalist id="mem-units">${Array.from(memoryData.units).map(v => `<option value="${v}">`).join('')}</datalist>
+                <datalist id="mem-locations">${Array.from(memoryData.locations).map(v => `<option value="${v}">`).join('')}</datalist>
+                <datalist id="mem-contacts">${Array.from(memoryData.contacts).map(v => `<option value="${v}">`).join('')}</datalist>
+                <datalist id="mem-count">${Array.from(memoryData.traineesCount).map(v => `<option value="${v}">`).join('')}</datalist>
+                <datalist id="mem-hours">${Array.from(memoryData.hours).map(v => `<option value="${v}">`).join('')}</datalist>
+                <datalist id="mem-notes">${Array.from(memoryData.notes).map(v => `<option value="${v}">`).join('')}</datalist>
+            `;
+        }
+
+        function initWeekTabs() {
+            const bar = document.getElementById('weekTabsBar');
+            bar.innerHTML = '';
+            
+            const today = new Date();
+
+            monthWeeksCache.forEach((weekObj, idx) => {
+                const btn = document.createElement('button');
+                
+                let isTodayWeek = false;
+                if (currentYear === today.getFullYear()) {
+                    isTodayWeek = weekObj.days.some(d => d.month === today.getMonth() && d.day === today.getDate());
+                    if (isTodayWeek) {
+                        activeWeekIndex = idx;
+                    }
+                }
+
+                const startD = weekObj.days[0];
+                const endD = weekObj.days[weekObj.days.length - 1];
+
+                btn.className = `week-tab-btn ${idx === activeWeekIndex ? 'active' : ''} ${isTodayWeek ? 'today-week-tab' : ''}`;
+                btn.innerText = `שבוע ${weekObj.weekNum} (${startD.day}/${startD.month+1} - ${endD.day}/${endD.month+1})`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.week-tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeWeekIndex = idx;
+                    renderCurrentWeekTables();
+                };
+                bar.appendChild(btn);
+            });
+
+            updateActionButtonsText();
+        }
+
+        function updateActionButtonsText() {
+            if (monthWeeksCache.length === 0) return;
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+            document.getElementById('gcalBtn').innerHTML = `<span>📅</span> סנכרן משמרות שבוע ${currentWeekObj.weekNum} ליומן Google`;
+            document.getElementById('waGroupBtn').innerHTML = `<span>📋</span> סיכום שבועי לקבוצה (שבוע ${currentWeekObj.weekNum})`;
+        }
+
+        function renderCurrentWeekTables() {
+            const northBody = document.getElementById('northTableBody');
+            const southBody = document.getElementById('southTableBody');
+            northBody.innerHTML = '';
+            southBody.innerHTML = '';
+
+            if (monthWeeksCache.length === 0) return;
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+            if (!currentWeekObj) return;
+
+            updateActionButtonsText();
+
+            const today = new Date();
+
+            currentWeekObj.days.forEach(dayInfo => {
+                const monthData = getMonthDataCache(dayInfo.month);
+                const isToday = (currentYear === today.getFullYear() && dayInfo.month === today.getMonth() && dayInfo.day === today.getDate());
+
+                const northRows = monthData.north.filter(item => item.dayNum === dayInfo.day);
+                const southRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
+
+                if (northRows.length === 0) {
+                    northRows.push({ dayNum: dayInfo.day, values: ["", "", "", "", "", "", "", "", "", ""] });
+                }
+                if (southRows.length === 0) {
+                    southRows.push({ dayNum: dayInfo.day, values: ["", "", "", "", "", "", "", "", "", ""] });
+                }
+
+                northRows.forEach((nData, index) => {
+                    const trNorth = document.createElement('tr');
+                    if (isToday) trNorth.className = 'today-row';
+                    else if (dayInfo.isWeekend) trNorth.className = 'weekend-row';
+
+                    const actualIndex = monthData.north.indexOf(nData);
+                    const isExtra = (index > 0);
+                    trNorth.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, nData.values, 'north', dayInfo.month, actualIndex, isExtra);
+                    northBody.appendChild(trNorth);
+                });
+
+                southRows.forEach((sData, index) => {
+                    const trSouth = document.createElement('tr');
+                    if (isToday) trSouth.className = 'today-row';
+                    else if (dayInfo.isWeekend) trSouth.className = 'weekend-row';
+
+                    const actualIndex = monthData.south.indexOf(sData);
+                    const isExtra = (index > 0);
+                    trSouth.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, sData.values, 'south', dayInfo.month, actualIndex, isExtra);
+                    southBody.appendChild(trSouth);
+                });
+            });
+
+            document.querySelectorAll('.cell-select').forEach(sel => {
+                if (sel.value !== "") {
+                    sel.classList.add('has-selection');
+                } else {
+                    sel.classList.remove('has-selection');
+                }
+            });
+        }
+
+        function addExtraRow(side) {
+            if (monthWeeksCache.length === 0) return;
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+
+            // Exclude Friday and Saturday (weekdays only)
+            const weekdays = currentWeekObj.days.filter(d => !d.isWeekend);
+
+            let promptMsg = "בחר את התאריך מתוך השבוע הנוכחי להוספת שורה (ימי חול בלבד):\n";
+            weekdays.forEach((d, idx) => {
+                promptMsg += `${idx + 1}) ${String(d.day).padStart(2, '0')}.${String(d.month + 1).padStart(2, '0')} (${d.hDayName})\n`;
+            });
+            promptMsg += "\nהקלד את מספר השורה (1-" + weekdays.length + ") או את מספר התאריך:";
+
+            let input = prompt(promptMsg);
+            if (!input) return;
+
+            input = input.trim();
+            let dayNum = parseInt(input);
+
+            if (dayNum >= 1 && dayNum <= weekdays.length && input.length <= 2) {
+                const chosenDay = weekdays[dayNum - 1];
+                dayNum = chosenDay.day;
+            }
+
+            if (isNaN(dayNum) || dayNum < 1 || dayNum > 31) {
+                alert("בחירה לא תקינה.");
+                return;
+            }
+
+            let targetMonthIdx = activeMonth;
+            const matchedDayInfo = currentWeekObj.days.find(d => d.day === dayNum);
+            if (matchedDayInfo) {
+                targetMonthIdx = matchedDayInfo.month;
+            }
+
+            const monthData = getMonthDataCache(targetMonthIdx);
+            const dateStr = `${String(dayNum).padStart(2, '0')}.${String(targetMonthIdx + 1).padStart(2, '0')}`;
+            const dateObj = new Date(currentYear, targetMonthIdx, dayNum);
+            const hDayName = hebrewDaysShort[dateObj.getDay()];
+            const defaultCombined = `${dateStr} ${hDayName}`;
+
+            const newValues = [defaultCombined, "", "", "", "", "", "", "", "", ""];
+
+            if (side === 'north') {
+                monthData.north.push({ dayNum, hDayName, isWeekend: false, values: newValues });
+                monthData.north.sort((a, b) => a.dayNum - b.dayNum);
+            } else {
+                monthData.south.push({ dayNum, hDayName, isWeekend: false, values: newValues });
+                monthData.south.sort((a, b) => a.dayNum - b.dayNum);
+            }
+
+            const saveData = {
+                north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values })),
+                south: monthData.south.map(item => ({ dayNum: item.dayNum, values: item.values }))
+            };
+            localStorage.setItem(`gorilla_sheet_${currentYear}_${targetMonthIdx}`, JSON.stringify(saveData));
+
+            renderCurrentWeekTables();
+        }
+
+        function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex, isExtra) {
+            const dateStr = `${String(dayNum).padStart(2, '0')}.${String(monthIdx + 1).padStart(2, '0')}`;
+            const defaultCombined = `${dateStr} ${hDayName}`;
+            const currentVal = vals[0] || defaultCombined;
+            const extraBadge = isExtra ? `<div style="font-size:0.7em; color:#e74c3c; font-weight:600; margin-top:1px;">(נוסף)</div>` : '';
+
+            return `
+                <td>
+                    <input type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
+                    ${extraBadge}
+                </td>
+                <td>
+                    <select class="cell-select ${vals[1] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 1, this.value)">
+                        ${guidesOptions.map(g => `<option value="${g}" ${vals[1] === g ? 'selected' : ''}>${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח מתאמן" list="mem-units" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[3] || ''}" placeholder="מיקום" list="mem-locations" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 3, this.value)"></td>
+                <td>
+                    <select class="cell-select ${vals[4] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 4, this.value)">
+                        ${systemsOptions.map(s => `<option value="${s}" ${vals[4] === s ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[5] || ''}" placeholder="איש קשר" list="mem-contacts" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 5, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[6] || ''}" placeholder="מס'" list="mem-count" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 6, this.value)"></td>
+                <td>
+                    <select class="cell-select ${vals[7] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value)">
+                        ${chargesOptions.map(c => `<option value="${c}" ${vals[7] === c ? 'selected' : ''}>${c}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" list="mem-hours" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" list="mem-notes" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 9, this.value)"></td>
+            `;
+        }
+
+        function handleSelectChange(selectEl) {
+            if (selectEl.value !== "") {
+                selectEl.classList.add('has-selection');
+            } else {
+                selectEl.classList.remove('has-selection');
+            }
+        }
+
+        function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
+            const monthData = getMonthDataCache(monthIdx);
+            if (side === 'north') {
+                monthData.north[cacheIndex].values[fieldIndex] = value;
+            } else {
+                monthData.south[cacheIndex].values[fieldIndex] = value;
+            }
+
+            const allVals = side === 'north' ? monthData.north[cacheIndex].values : monthData.south[cacheIndex].values;
+            extractMemory(allVals);
+            rebuildDatalists();
+
+            const saveData = {
+                north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values })),
+                south: monthData.south.map(item => ({ dayNum: item.dayNum, values: item.values }))
+            };
+            localStorage.setItem(`gorilla_sheet_${currentYear}_${monthIdx}`, JSON.stringify(saveData));
+        }
+
+        function sendTomorrowReminder(side) {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            const mIdx = tomorrow.getMonth();
+            const dNum = tomorrow.getDate();
+            const monthData = getMonthDataCache(mIdx);
+            
+            const rows = monthData[side].filter(item => item.dayNum === dNum);
+            if (!rows || rows.length === 0) {
+                alert("לא נמצאו נתונים למחר.");
+                return;
+            }
+
+            const unitTitle = side === 'north' ? 'ניידת 1 צפון' : 'ניידת 2 מרכז/דרום';
+            const dStr = String(dNum).padStart(2, '0');
+            const mStr = String(mIdx + 1).padStart(2, '0');
+            const dayLetter = hebrewDaysShort[tomorrow.getDay()];
+            const dateDisplay = `${dStr}.${mStr} (${dayLetter})`;
+
+            let msg = `📋 *תזכורת אימון למחר (${dateDisplay}) - ${unitTitle}*\n\n`;
+            
+            rows.forEach((rowObj, idx) => {
+                const rowData = rowObj.values;
+                if (rows.length > 1) {
+                    msg += `--- *משמרת ${idx + 1}* ---\n`;
+                }
+                msg += `• מדריך: ${rowData[1] || 'לא צויין'}\n`;
+                msg += `• כוח מתאמן: ${rowData[2] || 'לא צויין'}\n`;
+                msg += `• מיקום: ${rowData[3] || 'לא צויין'}\n`;
+                msg += `• מערכת: ${rowData[4] || 'לא צויין'}\n`;
+                msg += `• איש קשר: ${rowData[5] || 'לא צויין'}\n`;
+                msg += `• מס' מתאמנים: ${rowData[6] || 'לא צויין'}\n`;
+                msg += `• חיוב: ${rowData[7] || 'לא צויין'}\n`;
+                msg += `• שעות: ${rowData[8] || 'לא צויין'}\n`;
+                if (rowData[9]) msg += `• הערות: ${rowData[9]}\n`;
+                msg += `\n`;
+            });
+
+            const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
 
         function updateRowStatus(selectElement) {
             const row = selectElement.closest('tr');
             const nameCell = row.querySelector('.gorilla-name-cell');
             const notesInput = row.querySelector('.notes-input');
-            const tbody = document.getElementById('statusTableBody');
-            const rowIndex = Array.from(tbody.children).indexOf(row);
 
             if (selectElement.value === 'לא תקין') {
                 let faultNotes = prompt("אנא הזן את פירוט התקלה החדשה:");
                 if (faultNotes !== null && faultNotes.trim() !== "") {
                     let currentVal = notesInput.value.trim();
-                    if (currentVal) {
-                        notesInput.value = currentVal + " | " + faultNotes.trim();
-                    } else {
-                        notesInput.value = faultNotes.trim();
-                    }
+                    notesInput.value = currentVal ? currentVal + " | " + faultNotes.trim() : faultNotes.trim();
                 }
                 nameCell.style.background = '#e74c3c';
                 nameCell.style.color = 'white';
@@ -916,15 +1662,11 @@
                 notesInput.style.color = '';
                 notesInput.style.fontWeight = '';
 
-                // Prompt when changing back to תקין
                 if (confirm("האם ברצונך לשנות את הטקסט בתקלה/הערות נוספות ידנית?")) {
                     let editedNotes = prompt("ערוך את ההערות:", notesInput.value);
-                    if (editedNotes !== null) {
-                        notesInput.value = editedNotes.trim();
-                    }
+                    if (editedNotes !== null) notesInput.value = editedNotes.trim();
                 }
             }
-
             saveStatusData();
         }
 
@@ -932,8 +1674,10 @@
             const rows = document.querySelectorAll('#statusTableBody tr');
             rows.forEach((row, index) => {
                 const status = row.querySelector('.status-select').value;
+                const cleaningDate = row.querySelector('.cleaning-date-input').value;
                 const notes = row.querySelector('.notes-input').value;
                 localStorage.setItem(`gorilla_status_${index}`, status);
+                localStorage.setItem(`gorilla_cleaning_${index}`, cleaningDate);
                 localStorage.setItem(`gorilla_notes_${index}`, notes);
             });
         }
@@ -950,24 +1694,14 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
-            
-            if (event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-            
-            if (save) {
-                localStorage.setItem('gorilla_active_tab', tabId);
-            }
-
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+            if (save) localStorage.setItem('gorilla_active_tab', tabId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function filterSchedule() {
-            let inputElement = document.getElementById("scheduleSearch");
-            let input = inputElement.value.toUpperCase();
-            localStorage.setItem('gorilla_search_query', inputElement.value);
-            
-            let rows = document.querySelectorAll(".schedule-table tbody tr");
+            let input = document.getElementById("scheduleSearch").value.toUpperCase();
+            let rows = document.querySelectorAll(".spreadsheet-container table tbody tr");
             rows.forEach(row => {
                 let text = row.innerText.toUpperCase();
                 row.style.display = text.includes(input) ? "" : "none";
@@ -979,11 +1713,7 @@
             let boxes = document.querySelectorAll("#pdf-slides .slide-box");
             boxes.forEach(box => {
                 let text = box.innerText.toUpperCase();
-                if (text.includes(input)) {
-                    box.style.display = "";
-                } else {
-                    box.style.display = "none";
-                }
+                box.style.display = text.includes(input) ? "" : "none";
             });
         }
 
@@ -991,110 +1721,42 @@
             navigator.clipboard.writeText(text).then(() => {
                 let originalText = btnElement.innerText;
                 btnElement.innerText = 'הועתק! ✓';
-                setTimeout(() => {
-                    btnElement.innerText = originalText;
-                }, 2000);
-            }).catch(err => {
-                alert('שגיאה בהעתקת הקישור');
+                setTimeout(() => { btnElement.innerText = originalText; }, 2000);
             });
-        }
-
-        function openUploadModal() { document.getElementById('uploadModal').style.display = 'flex'; }
-        function closeUploadModal() {
-            document.getElementById('uploadModal').style.display = 'none';
-            document.getElementById('imagePreview').style.display = 'none';
-            document.getElementById('imageInput').value = '';
-        }
-
-        function previewImage(event) {
-            const preview = document.getElementById('imagePreview');
-            const file = event.target.files[0];
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-            }
-        }
-
-        function processUploadedImage() {
-            const input = document.getElementById('imageInput');
-            if (input.files.length === 0) {
-                alert('אנא בחר קובץ תמונה תחילה.');
-                return;
-            }
-            alert('התמונה הועלתה בהצלחה! הטבלאות יעודכנו בהתאם לנתונים שבתמונה.');
-            closeUploadModal();
-        }
-
-        function parseContactInfo(contactText) {
-            let phone = contactText.replace(/[^0-9]/g, '');
-            if (phone.startsWith('0')) { phone = '972' + phone.substring(1); }
-            let nameMatch = contactText.match(/^[^(]+/);
-            let name = nameMatch ? nameMatch[0].trim() : 'איש קשר';
-            return { phone, name };
-        }
-
-        function sendRowWhatsApp(btnElement) {
-            const row = btnElement.closest('tr');
-            const day = row.querySelector('.col-day').innerText.trim();
-            const date = row.querySelector('.col-date').innerText.trim();
-            const guide = row.querySelector('.col-guide').innerText.trim();
-            const unit = row.querySelector('.col-unit').innerText.trim();
-            const location = row.querySelector('.col-loc').innerText.trim();
-            const system = row.querySelector('.col-sys').innerText.trim();
-            const contactRaw = row.querySelector('.col-contact').innerText.trim();
-            const hours = row.querySelector('.col-hours').innerText.trim();
-            const notes = row.querySelector('.col-notes').innerText.trim();
-
-            const { phone, name } = parseContactInfo(contactRaw);
-            if (!phone) { alert('לא נמצא מספר טלפון תקין בשורה זו.'); return; }
-
-            let msg = `שלום ${name},\nתזכורת לאימון גורילה מחר (${day}, תאריך ${date}):\n\n`;
-            msg += `📍 *מיקום/יחידה:* ${unit} (${location})\n`;
-            msg += `👤 *מדריך אחראי:* ${guide}\n`;
-            msg += `⏰ *שעות:* ${hours !== '-' ? hours : 'לפי תיאום'}\n`;
-            msg += `🖥️ *מערכת:* ${system}\n`;
-            if (notes && notes !== '-') { msg += `📝 *הערות:* ${notes}\n`; }
-            msg += `\nנתראה באימון! 🦍`;
-
-            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-            window.open(waUrl, '_blank');
-        }
-
-        function sendWhatsAppForTomorrow() {
-            const rows = document.querySelectorAll(".schedule-table tbody tr");
-            let sentCount = 0;
-            rows.forEach(row => {
-                if (row.style.display !== 'none') {
-                    const btn = row.querySelector('.wa-row-btn');
-                    if (btn) {
-                        setTimeout(() => { sendRowWhatsApp(btn); }, sentCount * 800);
-                        sentCount++;
-                    }
-                }
-            });
-            if (sentCount === 0) { alert('לא נמצאו שורות תקינות לשליחה.'); }
         }
 
         function sendGroupWhatsAppSummary() {
-            const rows = document.querySelectorAll(".schedule-table tbody tr");
-            let msg = `📋 *סיכום סידור עבודה - גורילה*\n\n`;
+            if (monthWeeksCache.length === 0) return;
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+
+            let msg = `📋 *סיכום שבועי לקבוצה - שבוע ${currentWeekObj.weekNum}*\n\n`;
             let count = 0;
-            rows.forEach(row => {
-                if (row.style.display !== 'none') {
-                    const day = row.querySelector('.col-day').innerText.trim();
-                    const date = row.querySelector('.col-date').innerText.trim();
-                    const guide = row.querySelector('.col-guide').innerText.trim();
-                    const unit = row.querySelector('.col-unit').innerText.trim();
-                    const location = row.querySelector('.col-loc').innerText.trim();
-                    const hours = row.querySelector('.col-hours').innerText.trim();
-                    msg += `• *${day} (${date})* | ${unit} (${location}) | מדריך: ${guide} | שעות: ${hours}\n`;
-                    count++;
-                }
+
+            currentWeekObj.days.forEach(dayInfo => {
+                const monthData = getMonthDataCache(dayInfo.month);
+                const dStr = String(dayInfo.day).padStart(2, '0');
+                const mStr = String(dayInfo.month + 1).padStart(2, '0');
+                
+                const nRows = monthData.north.filter(item => item.dayNum === dayInfo.day);
+                nRows.forEach(nItem => {
+                    const nVals = nItem.values;
+                    if (nVals[1] || nVals[2]) {
+                        msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ניידת 1: ${nVals[2]} (${nVals[3]}) | מדריך: ${nVals[1]}\n`;
+                        count++;
+                    }
+                });
+
+                const sRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
+                sRows.forEach(sItem => {
+                    const sVals = sItem.values;
+                    if (sVals[1] || sVals[2]) {
+                        msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ניידת 2: ${sVals[2]} (${sVals[3]}) | מדריך: ${sVals[1]}\n`;
+                        count++;
+                    }
+                });
             });
-            if (count === 0) {
-                alert('לא נמצאו נתונים להצגה בסיכום.');
-                return;
-            }
+
+            if (count === 0) { alert(`לא נמצאו נתונים פעילים בשבוע ${currentWeekObj.weekNum}.`); return; }
             const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
             window.open(waUrl, '_blank');
         }
