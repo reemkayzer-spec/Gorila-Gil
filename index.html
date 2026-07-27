@@ -348,6 +348,16 @@
 
         .btn { display: inline-block; background-color: #0284c7; color: white; padding: 8px 12px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 6px; font-size: 0.85em; text-align: center; width: 100%; }
         @media (min-width: 600px) { .btn { width: auto; } }
+
+        .link-table-btn {
+            display: inline-block; background-color: #0284c7; color: white; padding: 6px 10px;
+            border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.8em; text-align: center;
+        }
+        .table-title {
+            background-color: #1e293b; color: white; padding: 10px 12px;
+            border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em;
+            display: flex; justify-content: space-between; align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -605,40 +615,159 @@
 
         <section id="pdf-slides" class="tab-content">
             <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
+            <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
+
             <div class="search-box" style="margin-bottom: 15px;">
-                <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח...">
+                <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
             </div>
+
             <div id="slidesContainer">
                 <div class="slide-box">
                     <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
                     <ol class="step-list">
-                        <li>חיבור כבל קומקום לגורילה והדלקת המתג + המתנה 2 שניות.</li>
-                        <li>הדלקת מחשב ראשי – לחיצה של 2 שניות.</li>
-                        <li>לחיצה על הכפתור הקטן.</li>
-                        <li>חיבור קופסת הממשקים בזמן טעינת התרגיל.</li>
+                        <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
+                        <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
+                        <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
+                        <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
                     </ol>
                 </div>
+
                 <div class="slide-box">
-                    <h3 class="slide-title">💻 בעיות תצוגה / מסח שחור / רזולוציה</h3>
-                    <ol class="step-list">
-                        <li>בדיקת חיבורי כבלי ה-VGA וה-HDMI בקופסת הממשקים.</li>
-                        <li>הפעלת מחדש של תוכנת התצוגה במחשב הראשי.</li>
-                        <li>וידוא הגדרות רזולוציה תקניות בהתאם להנחיות הטכנאי.</li>
-                    </ol>
+                    <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
+                    <div class="step-list">
+                        <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
+                        <ul>
+                            <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
+                            <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
+                            <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
+                            <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
+                            <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
+                        </ul>
+                        <p><strong>2. סידור קומים (Device Manager):</strong></p>
+                        <ul>
+                            <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
+                            <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
+                                <ul>
+                                    <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
+                                    <li><strong>COM3:</strong> USB Serial Port</li>
+                                    <li><strong>COM4:</strong> USB Serial Port</li>
+                                    <li><strong>COM5:</strong> USB-SERIAL CH340</li>
+                                </ul>
+                            </li>
+                            <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
+                        </ul>
+                        <div class="slide-video-container">
+                            <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" loading="lazy" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="slide-box">
-                    <h3 class="slide-title">🎯 תקלת משגר / תקשורת עם קופסת ממשקים</h3>
-                    <ol class="step-list">
-                        <li>ניתוק וחיבור מחדש של חיבורי ה-USB והמתאמים.</li>
-                        <li>בדיקת נוריות חיווי על גבי קופסת הממשקים.</li>
-                        <li>בדיקה מול טכנאי האתר במידה וההצפנה (רפאלו) דורשת איפוס.</li>
-                    </ol>
+                    <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
+                    <div class="step-list">
+                        <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
+                        <ul>
+                            <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
+                        </ul>
+                        <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
+                        <ul>
+                            <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
+                            <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
+                            <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
+                            <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
+                        </ul>
+                        <div class="slide-video-container">
+                            <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" loading="lazy" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="slide-box">
-                    <h3 class="slide-title">🔄 עדכון מפות והצפנה</h3>
+                    <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
+                    <div class="step-list">
+                        <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
+                        <ul>
+                            <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
+                        </ul>
+                        <div class="slide-video-container">
+                            <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" loading="lazy" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                        </div>
+                        <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
+                        <ul>
+                            <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="slide-box">
+                    <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
                     <ol class="step-list">
-                        <li>קבלת קבצי הצפנה מעודכנים מגורמי השליטה.</li>
-                        <li>הטענת המפות החדשות והפעלת בדיקת תקינות מערכת טרם תחילת אימון.</li>
+                        <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
+                        <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
+                        <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
+                    </ol>
+                    <div class="videos-flex-container">
+                        <div class="slide-video-container">
+                            <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" loading="lazy" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                        </div>
+                        <div class="slide-video-container">
+                            <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" loading="lazy" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-box">
+                    <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
+                    <div class="step-list">
+                        <ol>
+                            <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
+                            <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
+                            <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
+                            <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                            <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="slide-box" style="border-right-color: #ef4444;">
+                    <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
+                    <div class="step-list">
+                        <ul>
+                            <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
+                            <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="slide-box">
+                    <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
+                    <ol class="step-list">
+                        <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
+                        <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
+                        <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
+                        <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
+                        <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
+                        <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
                     </ol>
                 </div>
             </div>
@@ -646,15 +775,136 @@
 
         <section id="training-program" class="tab-content">
             <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
-            <p><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
-            <div class="slide-box" style="margin-top: 15px;">
-                <h3 class="slide-title">שלבי ההסמכה המרכזיים</h3>
-                <ul class="step-list">
-                    <li><strong>שלב א':</strong> הכרות עיוורת עם מערכות הגורילה, מרכיבי החומרה ועמדות השליטה.</li>
-                    <li><strong>שלב ב':</strong> תרגול מעשי של סדר פעולות ההדלקה, כיבוי והתחברות לקופסאות הממשקים.</li>
-                    <li><strong>שלב ג':</strong> ניהול תרגיל מדומה, טיפול בתקלות נפוצות ותקשורת שוטפת עם מתאמנים.</li>
-                    <li><strong>שלב ד':</strong> מבחן מעשי והסמכה רשמית כמנהל אתר גיל נייד מוסמך.</li>
-                </ul>
+            <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
+
+            <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>הכרת החברה</td><td>מנהל אתר</td>
+                            <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
+                        </tr>
+                        <tr>
+                            <td>הצגת מוצרים</td><td>מנהל אתר</td>
+                            <td>הצגת מוצרי החברה.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
+                        </tr>
+                        <tr>
+                            <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
+                            <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
+                        </tr>
+                        <tr>
+                            <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
+                            <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>ירי תחושה</td><td>מנהל אתר</td>
+                            <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
+                            <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%20%D7%tt.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
+                        </tr>
+                        <tr>
+                            <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
+                            <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>כיבוי מערכות</td><td>מנהל אתר</td>
+                            <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
+                            <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תרגול תפעול.</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
+                            <td>תפעול תקלות נפוצות במערכת.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%20%D7%92%D7%95%D7%A8%D7%99%D7%9ל%20%D7%92%D7%99%D7%9ל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
+                        </tr>
+                        <tr>
+                            <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
+                            <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
+                            <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>מבחן עיוני</td><td>מנהל אתר</td>
+                            <td>ביצוע מבחן עיוני כתוב.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
+                            <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
+                        </tr>
+                        <tr>
+                            <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
+                            <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -665,17 +915,28 @@
                     <div class="form-card-content">
                         <div class="form-info">
                             <h3>🚗 רשימת ציוד לרכב</h3>
-                            <p style="font-size: 0.85em; color: #64748b;">טופס בדיקת ציוד תקני לניידות האימון.</p>
+                            <p style="font-size: 0.85em; margin-bottom: 8px;">טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
                             <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                        </div>
+                        <div class="form-qr-box">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/YQWDPAaeUe" alt="QR Code" crossorigin="anonymous">
+                            <span class="form-url-text">forms.cloud.microsoft/r/YQWDPAaeUe</span>
+                            <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/YQWDPAaeUe', this)">📋 העתק</button>
                         </div>
                     </div>
                 </div>
+
                 <div class="card">
                     <div class="form-card-content">
                         <div class="form-info">
-                            <h3>📝 משוב מתאמנים / דוח אימון</h3>
-                            <p style="font-size: 0.85em; color: #64748b;">דיווח סיכום אימון ושביעות רצון כוח מתאמן.</p>
-                            <a href="#" onclick="alert('טופס זה זמין בערוצים המוסמכים של היחידה'); return false;" class="btn" style="background-color: #64748b;">לפתיחת הטופס 🔗</a>
+                            <h3>✍️ משוב מתאמנים</h3>
+                            <p style="font-size: 0.85em; margin-bottom: 8px;">טופס איסוף רשמים ומשוב מהמתאמנים.</p>
+                            <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                        </div>
+                        <div class="form-qr-box">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/u1afBRvv3q" alt="QR Code" crossorigin="anonymous">
+                            <span class="form-url-text">forms.cloud.microsoft/r/u1afBRvv3q</span>
+                            <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
                         </div>
                     </div>
                 </div>
@@ -1100,30 +1361,26 @@
 
                     if (rowData) {
                         if (document.activeElement !== statusSelect) statusSelect.value = rowData.status || 'תקין';
-                        if (document.activeElement !== cleaningInput) {
+                        if (document.activeElement !== cleaningInput && cleaningInput) {
                             cleaningInput.value = rowData.cleaning || todayDateStr;
                             updateCleaningButtonText(cleaningBtn, cleaningInput.value);
                         }
-                        if (document.activeElement !== notesInput) {
+                        if (document.activeElement !== notesInput && notesInput) {
                             notesInput.value = rowData.notes !== undefined ? rowData.notes : '';
                         }
                     } else {
-                        if (document.activeElement !== cleaningInput) {
+                        if (document.activeElement !== cleaningInput && cleaningInput) {
                             cleaningInput.value = todayDateStr;
                             updateCleaningButtonText(cleaningBtn, todayDateStr);
                         }
                     }
 
-                    if (statusSelect.value === 'לא תקין') {
-                        nameCell.style.background = '#e74c3c';
-                        nameCell.style.color = 'white';
-                        notesInput.style.color = '#e74c3c';
-                        notesInput.style.fontWeight = 'bold';
+                    if (statusSelect && statusSelect.value === 'לא תקין') {
+                        if (nameCell) { nameCell.style.background = '#e74c3c'; nameCell.style.color = 'white'; }
+                        if (notesInput) { notesInput.style.color = '#e74c3c'; notesInput.style.fontWeight = 'bold'; }
                     } else {
-                        nameCell.style.background = '#27ae60';
-                        nameCell.style.color = 'white';
-                        notesInput.style.color = '';
-                        notesInput.style.fontWeight = '';
+                        if (nameCell) { nameCell.style.background = '#27ae60'; nameCell.style.color = 'white'; }
+                        if (notesInput) { notesInput.style.color = ''; notesInput.style.fontWeight = ''; }
                     }
                 });
             });
@@ -1133,10 +1390,13 @@
             const rows = document.querySelectorAll('#statusTableBody tr');
             let statusesData = {};
             rows.forEach((row, index) => {
+                const statusSelect = row.querySelector('.status-select');
+                const cleaningInput = row.querySelector('.cleaning-date-input');
+                const notesInput = row.querySelector('.notes-input');
                 statusesData[index] = {
-                    status: row.querySelector('.status-select').value,
-                    cleaning: row.querySelector('.cleaning-date-input').value,
-                    notes: row.querySelector('.notes-input').value
+                    status: statusSelect ? statusSelect.value : 'תקין',
+                    cleaning: cleaningInput ? cleaningInput.value : '',
+                    notes: notesInput ? notesInput.value : ''
                 };
             });
             const statusRef = window.fbRef(window.fbDB, 'gorilla_statuses');
@@ -1369,6 +1629,18 @@
 
             if (count === 0) { alert(`לא נמצאו נתונים פעילים בשבוע ${currentWeekObj.weekNum}.`); return; }
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function copyText(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                let originalText = btnElement.innerText;
+                btnElement.innerText = 'הועתק! ✓';
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                }, 2000);
+            }).catch(err => {
+                alert('שגיאה בהעתקת הקישור');
+            });
         }
     </script>
 </body>
