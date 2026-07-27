@@ -125,10 +125,6 @@
             border-radius: 8px; margin-bottom: 15px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             transition: background 0.3s, border-color 0.3s;
         }
-        .slide-badge {
-            display: inline-block; background-color: #0f172a; color: white; font-size: 0.75em;
-            padding: 3px 8px; border-radius: 10px; margin-bottom: 8px; font-weight: bold;
-        }
         .slide-title { margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 6px; font-size: 1.05em; }
         
         .step-list { margin-top: 8px; padding-right: 12px; font-size: 0.9em; }
@@ -373,7 +369,7 @@
             </div>
         </section>
 
-        <!-- סקשן תפעול ותקלות -->
+        <!-- סקשן תפעול ותקלות (עם הסדר החדש וללא כותרות שקופיות) -->
         <section id="pdf-slides" class="tab-content">
             <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
             <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
@@ -383,8 +379,19 @@
             </div>
 
             <div id="slidesContainer">
+                <!-- 1. הדלקת הגורילה (הועבר לראש העמוד) -->
                 <div class="slide-box">
-                    <span class="slide-badge">שקופית 2</span>
+                    <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
+                    <ol class="step-list">
+                        <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
+                        <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
+                        <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
+                        <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
+                    </ol>
+                </div>
+
+                <!-- 2. תקלות משגר וסידור קומים -->
+                <div class="slide-box">
                     <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
                     <div class="step-list">
                         <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
@@ -418,8 +425,8 @@
                     </div>
                 </div>
 
+                <!-- 3. תקלות תצוגה -->
                 <div class="slide-box">
-                    <span class="slide-badge">שקופית 3</span>
                     <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
                     <div class="step-list">
                         <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
@@ -443,8 +450,8 @@
                     </div>
                 </div>
 
+                <!-- 4. תקלות קריסת מערכת -->
                 <div class="slide-box">
-                    <span class="slide-badge">שקופית 4</span>
                     <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
                     <div class="step-list">
                         <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
@@ -465,19 +472,8 @@
                     </div>
                 </div>
 
+                <!-- 5. העברת תרגילים -->
                 <div class="slide-box">
-                    <span class="slide-badge">שקופית 5</span>
-                    <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
-                    <ol class="step-list">
-                        <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
-                        <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
-                        <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
-                        <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
-                    </ol>
-                </div>
-
-                <div class="slide-box">
-                    <span class="slide-badge">שקופית 6</span>
                     <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
                     <ol class="step-list">
                         <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
@@ -502,21 +498,8 @@
                     </div>
                 </div>
 
+                <!-- 6. התקנת דרייברים של NVIDIA -->
                 <div class="slide-box">
-                    <span class="slide-badge">שקופית 7</span>
-                    <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
-                    <ol class="step-list">
-                        <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
-                        <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
-                        <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
-                        <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
-                        <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
-                        <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
-                    </ol>
-                </div>
-
-                <div class="slide-box">
-                    <span class="slide-badge">שקופית 8</span>
                     <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
                     <div class="step-list">
                         <ol>
@@ -529,15 +512,28 @@
                     </div>
                 </div>
 
+                <!-- 7. טיפול בתקלות טיל תקול ובעיות באחוד מבצעי -->
                 <div class="slide-box" style="border-right-color: #ef4444;">
-                    <span class="slide-badge" style="background-color: #ef4444;">שקופית 9 - קריטי</span>
-                    <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול</h3>
+                    <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
                     <div class="step-list">
                         <ul>
                             <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד[cite: 1]</strong></li>
                             <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר[cite: 1]</li>
                         </ul>
                     </div>
+                </div>
+
+                <!-- 8. ניקיון ותחזוקה חודשית (הועבר לתחתית העמוד) -->
+                <div class="slide-box">
+                    <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
+                    <ol class="step-list">
+                        <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
+                        <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
+                        <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
+                        <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
+                        <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
+                        <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
+                    </ol>
                 </div>
             </div>
         </section>
@@ -548,12 +544,11 @@
             <p style="font-size: 0.85em;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
 
             <div class="slide-box" style="border-right-color: #0284c7;">
-                <span class="slide-badge" style="background-color: #0284c7;">📚 קישורים ומשאבי למידה מהירים</span>
                 <h3 class="slide-title">🔗 חומרי הדרכה, מצגות ונהלים במערכת SharePoint</h3>
                 <div class="resource-links-grid">
                     <div class="resource-card">
                         <h4>🏢 מצגת הכרת החברה ומוצרים</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%9AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
                     </div>
                     <div class="resource-card">
                         <h4>👥 מצגת מבנה מחלקה</h4>
@@ -561,7 +556,7 @@
                     </div>
                     <div class="resource-card">
                         <h4>💻 מצגת העלאת מערכת</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%D7%tt.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
+                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%ְל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
                     </div>
                     <div class="resource-card">
                         <h4>🔧 מצגת תקלות ותפעול גורילה</h4>
@@ -583,7 +578,6 @@
             </div>
 
             <div class="slide-box">
-                <span class="slide-badge">יום מס' 1 - כללי</span>
                 <h3 class="slide-title">🏢 הכרת החברה ואופן העבודה</h3>
                 <div class="table-container">
                     <table>
@@ -622,7 +616,6 @@
             </div>
 
             <div class="slide-box">
-                <span class="slide-badge">יום מס' 2 - תפעול</span>
                 <h3 class="slide-title">🔧 שיעורי תפעול והעלאת מערכות</h3>
                 <div class="table-container">
                     <table>
@@ -651,7 +644,6 @@
             </div>
 
             <div class="slide-box">
-                <span class="slide-badge">יום מס' 3+4 - אימון כוון בודד</span>
                 <h3 class="slide-title">🎯 תרגול הרמת מערכות וניהול אימון</h3>
                 <div class="table-container">
                     <table>
@@ -680,7 +672,6 @@
             </div>
 
             <div class="slide-box">
-                <span class="slide-badge">יום מס' 5 - חניכת אימון ומבחנים</span>
                 <h3 class="slide-title">📝 תרגול, תקלות ומבחן עיוני</h3>
                 <div class="table-container">
                     <table>
@@ -704,7 +695,6 @@
             </div>
 
             <div class="slide-box">
-                <span class="slide-badge">יום מס' 6 - ניהול אתר ומבחן מעשי</span>
                 <h3 class="slide-title">🏆 ניהול אתר מלא, נהלים ומבחן מעשי</h3>
                 <div class="table-container">
                     <table>
@@ -728,7 +718,7 @@
             </div>
         </section>
 
-        <!-- סקשן טפסים מעודכן עם QR בצד שמאל, לינק ולחצן העתקה -->
+        <!-- סקשן טפסים -->
         <section id="forms" class="tab-content">
             <h2>📋 טפסים וציוד</h2>
             <div class="cards-container">
