@@ -1252,15 +1252,28 @@
             const unitTitle = side === 'north' ? 'ניידת 1 צפון' : 'ניידת 2 מרכז/דרום';
             let msg = `📋 *תזכורת אימון למחר (${String(dNum).padStart(2,'0')}.${String(mIdx+1).padStart(2,'0')}) - ${unitTitle}*\n\n`;
             
+            let targetPhone = "";
+
             rows.forEach((rowObj, idx) => {
                 const r = rowObj.values;
                 if (rows.length > 1) msg += `--- *משמרת ${idx + 1}* ---\n`;
                 msg += `• מדריך: ${r[1] || 'לא צויין'}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• חיוב: ${r[7] || 'לא צויין'}\n• שעות: ${r[8] || 'לא צויין'}\n`;
                 if (r[9]) msg += `• הערות: ${r[9]}\n`;
                 msg += `\n`;
+
+                if (r[5] && /\d{9,}/.test(r[5])) {
+                    targetPhone = r[5];
+                }
             });
 
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+            let waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+            if (targetPhone) {
+                let cleanPhone = targetPhone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) cleanPhone = '972' + cleanPhone.substring(1);
+                waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+            }
+
+            window.open(waUrl, '_blank');
         }
 
         function updateRowStatus(selectElement) {
