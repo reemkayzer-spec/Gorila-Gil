@@ -104,6 +104,21 @@
         tr:nth-child(even) { background-color: var(--table-even); }
         tr:hover { background-color: rgba(52, 152, 219, 0.05); }
 
+        .status-select, .notes-input {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.9em;
+            font-weight: bold;
+            outline: none;
+            transition: 0.2s;
+        }
+        .status-select { cursor: pointer; }
+        .notes-input { width: 100%; }
+        .status-select:focus, .notes-input:focus { border-color: #3498db; }
+
         .phone-link {
             color: var(--link-color);
             text-decoration: none;
@@ -211,6 +226,7 @@
         </div>
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
+            <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
             <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
             <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
             <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים</button>
@@ -369,7 +385,104 @@
             </div>
         </section>
 
-        <!-- סקשן תפעול ותקלות (עם הסדר החדש וללא כותרות שקופיות) -->
+        <!-- סקשן סטטוס גורילות -->
+        <section id="gorilla-status" class="tab-content">
+            <h2>📊 סטטוס גורילות</h2>
+            <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
+            <div class="table-container">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>גורילה</th>
+                            <th>תקין/תקול</th>
+                            <th>ניקוי אחרון</th>
+                            <th>תקלה/הערות נוספות</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statusTableBody">
+                        <tr data-id="1">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין" selected>תקין</option>
+                                    <option value="לא תקין">לא תקין</option>
+                                </select>
+                            </td>
+                            <td>02/07</td>
+                            <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
+                        </tr>
+                        <tr data-id="2">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין">תקין</option>
+                                    <option value="לא תקין" selected>לא תקין</option>
+                                </select>
+                            </td>
+                            <td>X</td>
+                            <td><input type="text" class="notes-input" value="לא ידוע." onchange="saveStatusData()"></td>
+                        </tr>
+                        <tr data-id="3">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין" selected>תקין</option>
+                                    <option value="לא תקין">לא תקין</option>
+                                </select>
+                            </td>
+                            <td>02/07</td>
+                            <td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" onchange="saveStatusData()"></td>
+                        </tr>
+                        <tr data-id="4">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין">תקין</option>
+                                    <option value="לא תקין" selected>לא תקין</option>
+                                </select>
+                            </td>
+                            <td>X</td>
+                            <td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" onchange="saveStatusData()"></td>
+                        </tr>
+                        <tr data-id="5">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין" selected>תקין</option>
+                                    <option value="לא תקין">לא תקין</option>
+                                </select>
+                            </td>
+                            <td>02/07</td>
+                            <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
+                        </tr>
+                        <tr data-id="6">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין" selected>תקין</option>
+                                    <option value="לא תקין">לא תקין</option>
+                                </select>
+                            </td>
+                            <td>02/07</td>
+                            <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
+                        </tr>
+                        <tr data-id="7">
+                            <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 7</td>
+                            <td>
+                                <select class="status-select" onchange="updateRowStatus(this)">
+                                    <option value="תקין" selected>תקין</option>
+                                    <option value="לא תקין">לא תקין</option>
+                                </select>
+                            </td>
+                            <td>02/07</td>
+                            <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" onchange="saveStatusData()"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- סקשן תפעול ותקלות -->
         <section id="pdf-slides" class="tab-content">
             <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
             <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
@@ -379,7 +492,6 @@
             </div>
 
             <div id="slidesContainer">
-                <!-- 1. הדלקת הגורילה (הועבר לראש העמוד) -->
                 <div class="slide-box">
                     <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
                     <ol class="step-list">
@@ -390,7 +502,6 @@
                     </ol>
                 </div>
 
-                <!-- 2. תקלות משגר וסידור קומים -->
                 <div class="slide-box">
                     <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
                     <div class="step-list">
@@ -425,7 +536,6 @@
                     </div>
                 </div>
 
-                <!-- 3. תקלות תצוגה -->
                 <div class="slide-box">
                     <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
                     <div class="step-list">
@@ -450,7 +560,6 @@
                     </div>
                 </div>
 
-                <!-- 4. תקלות קריסת מערכת -->
                 <div class="slide-box">
                     <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
                     <div class="step-list">
@@ -472,7 +581,6 @@
                     </div>
                 </div>
 
-                <!-- 5. העברת תרגילים -->
                 <div class="slide-box">
                     <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
                     <ol class="step-list">
@@ -498,7 +606,6 @@
                     </div>
                 </div>
 
-                <!-- 6. התקנת דרייברים של NVIDIA -->
                 <div class="slide-box">
                     <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
                     <div class="step-list">
@@ -512,18 +619,16 @@
                     </div>
                 </div>
 
-                <!-- 7. טיפול בתקלות טיל תקול ובעיות באחוד מבצעי -->
                 <div class="slide-box" style="border-right-color: #ef4444;">
                     <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
                     <div class="step-list">
                         <ul>
-                            <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד[cite: 1]</strong></li>
-                            <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר[cite: 1]</li>
+                            <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
+                            <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- 8. ניקיון ותחזוקה חודשית (הועבר לתחתית העמוד) -->
                 <div class="slide-box">
                     <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
                     <ol class="step-list">
@@ -538,183 +643,144 @@
             </div>
         </section>
 
-        <!-- סקשן תוכנית הסמכה -->
+        <!-- סקשן תוכנית הסמכה - מסודר לפי ימים כמו במקור -->
         <section id="training-program" class="tab-content">
             <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
-            <p style="font-size: 0.85em;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
+            <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
 
-            <div class="slide-box" style="border-right-color: #0284c7;">
-                <h3 class="slide-title">🔗 חומרי הדרכה, מצגות ונהלים במערכת SharePoint</h3>
-                <div class="resource-links-grid">
-                    <div class="resource-card">
-                        <h4>🏢 מצגת הכרת החברה ומוצרים</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%9AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-                    </div>
-                    <div class="resource-card">
-                        <h4>👥 מצגת מבנה מחלקה</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-                    </div>
-                    <div class="resource-card">
-                        <h4>💻 מצגת העלאת מערכת</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%ְל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-                    </div>
-                    <div class="resource-card">
-                        <h4>🔧 מצגת תקלות ותפעול גורילה</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%D7%A2%D7%95%D7%9C%20%D7%92%D7%95%D7%A8%D7%99%D7%9C%D7%94%20%D7%92%D7%99%D7%9ל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 פתח מצגת 🔗</a>
-                    </div>
-                    <div class="resource-card">
-                        <h4>📝 מבחן עיוני</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a>
-                    </div>
-                    <div class="resource-card">
-                        <h4>📋 נוהל דיווחים יומיים (ILS003)</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 פתח נוהל ILS003 🔗</a>
-                    </div>
-                    <div class="resource-card">
-                        <h4>📋 נוהל הופעת עובדים (ILS002)</h4>
-                        <a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB43F2CA8-199C-4128-8F14-88102E79E6CD%7D&file=ILS002%20%D7%94%D7%95%D7%A4%D7%A2%D7%AA%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A7%D7%A9%D7%99%D7%97%20%D7%94%D7%AA%D7%A2%D7%95%D7%9ל.doc&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 פתח נוהל ILS002 🔗</a>
-                    </div>
-                </div>
+            <!-- יום מס' 1 - כללי -->
+            <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>הכרת החברה</td><td>מנהל אתר</td>
+                            <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
+                        </tr>
+                        <tr>
+                            <td>הצגת מוצרים</td><td>מנהל אתר</td>
+                            <td>הצגת מוצרי החברה.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
+                        </tr>
+                        <tr>
+                            <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
+                            <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
+                        </tr>
+                        <tr>
+                            <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
+                            <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>ירי תחושה</td><td>מנהל אתר</td>
+                            <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">🏢 הכרת החברה ואופן העבודה</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>הכרת החברה</td><td>מנהל אתר</td>
-                                <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החי''ר, הצהרת האיכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת חברה</a></td>
-                            </tr>
-                            <tr>
-                                <td>הצגת מוצרים</td><td>מנהל אתר</td>
-                                <td>הצגת מוצרי החברה.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת מוצרים</a></td>
-                            </tr>
-                            <tr>
-                                <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
-                                <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חי''ר, מנהלי אזורים.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&file=1.%20%D7%9E%D7%A6%D7%92%D7%AA%20%D7%94%D7%9B%D7%A8%D7%AA%20%D7%94%D7%97%D7%91%D7%A8%D7%94%20%D7%95%D7%9E%D7%95%D7%A6%D7%99%D7%9D.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת מבנה</a></td>
-                            </tr>
-                            <tr>
-                                <td>טיל הגיל בצה"ל</td><td>מנהל אתר</td>
-                                <td>למידה על שימוש טיל הגיל בצה"ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>ירי תחושה</td><td>מנהל אתר</td>
-                                <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה"ל - הכולל משגרים + אמצעי תצפית.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- יום מס' 2 - תפעול -->
+            <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
+                            <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%D7%tt.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
+                        </tr>
+                        <tr>
+                            <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
+                            <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>כיבוי מערכות</td><td>מנהל אתר</td>
+                            <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">🔧 שיעורי תפעול והעלאת מערכות</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
-                                <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%D7%AA%20%D7%92%D7%99%D7%ְל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת העלאה</a></td>
-                            </tr>
-                            <tr>
-                                <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
-                                <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>כיבוי מערכות</td><td>מנהל אתר</td>
-                                <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- יום מס' 3+4 - אימון כוון בודד -->
+            <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
+                            <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תרגול תפעול.</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
+                            <td>תפעול תקלות נפוצות במערכת.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%20%D7%92%D7%95%D7%A8%D7%99%D7%9ל%20%D7%92%D7%99%D7%9ל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
+                        </tr>
+                        <tr>
+                            <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
+                            <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">🎯 תרגול הרמת מערכות וניהול אימון</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
-                                <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תרגול תפעול.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
-                                <td>תפעול תקלות נפוצות במערכת.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&file=%D7%AA%D7%A7%D7%9C%D7%95%D7%AA%20%D7%95%D7%AA%D7%A2%D7%95%D7%9C%20%D7%92%D7%95%D7%A8%D7%99%D7%9C%D7%94%20%D7%92%D7%99%D7%9ל.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">🔗 מצגת תקלות</a></td>
-                            </tr>
-                            <tr>
-                                <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
-                                <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- יום מס' 5 - חניכת אימון ומבחנים -->
+            <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
+                            <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>מבחן עיוני</td><td>מנהל אתר</td>
+                            <td>ביצוע מבחן עיוני כתוב.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">📝 תרגול, תקלות ומבחן עיוני</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
-                                <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>מבחן עיוני</td><td>מנהל אתר</td>
-                                <td>ביצוע מבחן עיוני כתוב.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="slide-box">
-                <h3 class="slide-title">🏆 ניהול אתר מלא, נהלים ומבחן מעשי</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
-                                <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
-                            </tr>
-                            <tr>
-                                <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
-                                <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- יום מס' 6 - ניהול אתר ומבחן מעשי -->
+            <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
+                            <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
+                        </tr>
+                        <tr>
+                            <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
+                            <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -722,7 +788,6 @@
         <section id="forms" class="tab-content">
             <h2>📋 טפסים וציוד</h2>
             <div class="cards-container">
-                <!-- כרטיס רשימת ציוד לרכב -->
                 <div class="card">
                     <div class="form-card-content">
                         <div class="form-info">
@@ -738,7 +803,6 @@
                     </div>
                 </div>
 
-                <!-- כרטיס משוב מתאמנים -->
                 <div class="card">
                     <div class="form-card-content">
                         <div class="form-info">
@@ -772,7 +836,7 @@
     </div>
 
     <script>
-        // Load initial preferences from LocalStorage
+        // Load initial preferences and status selections from LocalStorage
         window.addEventListener('DOMContentLoaded', () => {
             const savedTab = localStorage.getItem('gorilla_active_tab');
             if (savedTab) {
@@ -792,7 +856,87 @@
                 document.body.classList.add('dark-mode');
                 document.getElementById('themeToggleBtn').innerText = '☀️ מצב בהיר';
             }
+
+            // Restore Gorilla Status selections and row background colors / notes
+            const statusRows = document.querySelectorAll('#statusTableBody tr');
+            statusRows.forEach((row, index) => {
+                const savedStatus = localStorage.getItem(`gorilla_status_${index}`);
+                const savedNotes = localStorage.getItem(`gorilla_notes_${index}`);
+                
+                const statusSelect = row.querySelector('.status-select');
+                const notesInput = row.querySelector('.notes-input');
+                const nameCell = row.querySelector('.gorilla-name-cell');
+
+                if (savedStatus) {
+                    statusSelect.value = savedStatus;
+                }
+                if (savedNotes !== null) {
+                    notesInput.value = savedNotes;
+                }
+
+                // Apply color based on current select value
+                if (statusSelect.value === 'לא תקין') {
+                    nameCell.style.background = '#e74c3c';
+                    nameCell.style.color = 'white';
+                    notesInput.style.color = '#e74c3c';
+                    notesInput.style.fontWeight = 'bold';
+                } else {
+                    nameCell.style.background = '#27ae60';
+                    nameCell.style.color = 'white';
+                    notesInput.style.color = '';
+                    notesInput.style.fontWeight = '';
+                }
+            });
         });
+
+        function updateRowStatus(selectElement) {
+            const row = selectElement.closest('tr');
+            const nameCell = row.querySelector('.gorilla-name-cell');
+            const notesInput = row.querySelector('.notes-input');
+            const tbody = document.getElementById('statusTableBody');
+            const rowIndex = Array.from(tbody.children).indexOf(row);
+
+            if (selectElement.value === 'לא תקין') {
+                let faultNotes = prompt("אנא הזן את פירוט התקלה החדשה:");
+                if (faultNotes !== null && faultNotes.trim() !== "") {
+                    let currentVal = notesInput.value.trim();
+                    if (currentVal) {
+                        notesInput.value = currentVal + " | " + faultNotes.trim();
+                    } else {
+                        notesInput.value = faultNotes.trim();
+                    }
+                }
+                nameCell.style.background = '#e74c3c';
+                nameCell.style.color = 'white';
+                notesInput.style.color = '#e74c3c';
+                notesInput.style.fontWeight = 'bold';
+            } else {
+                nameCell.style.background = '#27ae60';
+                nameCell.style.color = 'white';
+                notesInput.style.color = '';
+                notesInput.style.fontWeight = '';
+
+                // Prompt when changing back to תקין
+                if (confirm("האם ברצונך לשנות את הטקסט בתקלה/הערות נוספות ידנית?")) {
+                    let editedNotes = prompt("ערוך את ההערות:", notesInput.value);
+                    if (editedNotes !== null) {
+                        notesInput.value = editedNotes.trim();
+                    }
+                }
+            }
+
+            saveStatusData();
+        }
+
+        function saveStatusData() {
+            const rows = document.querySelectorAll('#statusTableBody tr');
+            rows.forEach((row, index) => {
+                const status = row.querySelector('.status-select').value;
+                const notes = row.querySelector('.notes-input').value;
+                localStorage.setItem(`gorilla_status_${index}`, status);
+                localStorage.setItem(`gorilla_notes_${index}`, notes);
+            });
+        }
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
