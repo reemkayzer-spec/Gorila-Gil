@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תפעול והדרכה - צוות גיל</title>
     
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -32,6 +35,13 @@
 
         // Trigger initial load once Firebase is ready
         window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+
+    <script>
+        // אתחול Supabase עבור אחסון תמונות (Storage Bucket: media)
+        const SUPABASE_URL = 'https://pvtswscsqnymbbzgsafu.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_wlsjLYqz458Ud69TrPR7AA_LB9xvimg';
+        window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     </script>
 
     <style>
@@ -198,11 +208,11 @@
         table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } 
         table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } 
         table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
-        table th:nth-child(6), table td:nth-child(6) { width: 120px; min-width: 120px; } /* איש קשר מורחב */
+        table th:nth-child(6), table td:nth-child(6) { width: 120px; min-width: 120px; }
         table th:nth-child(7), table td:nth-child(7) { width: 50px; min-width: 50px; } 
         table th:nth-child(8), table td:nth-child(8) { width: 55px; min-width: 55px; } 
         table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } 
-        table th:nth-child(10), table td:nth-child(10) { width: 120px; min-width: 120px; } /* הערות מצומצם */
+        table th:nth-child(10), table td:nth-child(10) { width: 120px; min-width: 120px; }
         
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
@@ -370,6 +380,18 @@
             border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em;
             display: flex; justify-content: space-between; align-items: center;
         }
+
+        .slide-img-box {
+            text-align: center;
+            margin: 12px 0;
+        }
+        .slide-img-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -396,7 +418,7 @@
             <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
             <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
             <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
-            <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים</button>
+            <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים והעשרה</button>
         </div>
     </header>
 
@@ -629,7 +651,6 @@
             <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
             <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
 
-            <!-- כפתורי חיוג מהיר שהועברו לעמודת תקלות -->
             <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                 <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
                     <span>📞</span> צלצל לקסה
@@ -652,11 +673,18 @@
                         <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
                         <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
                     </ol>
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/2.jpg.png" alt="הדלקת הגורילה">
+                    </div>
                 </div>
 
                 <div class="slide-box">
                     <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
                     <div class="step-list">
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/1.jpg.png" alt="תקלות משגר וחיבורי SPARTACUS">
+                        </div>
+
                         <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
                         <ul>
                             <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
@@ -666,6 +694,9 @@
                             <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
                         </ul>
                         <p><strong>2. סידור קומים (Device Manager):</strong></p>
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/6.jpg.png" alt="סידור קומים ב-Device Manager">
+                        </div>
                         <ul>
                             <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
                             <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
@@ -691,11 +722,19 @@
                 <div class="slide-box">
                     <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
                     <div class="step-list">
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/5.jpg.png" alt="תקלות תצוגה ומסכים">
+                        </div>
+
                         <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
                         <ul>
                             <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
                         </ul>
                         <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/7.jpg.png" alt="סידור מסכים - הגדרת הרץ" style="margin-bottom: 8px;">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/8.jpg.png" alt="סידור מסכים - רזולוציות">
+                        </div>
                         <ul>
                             <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
                             <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
@@ -735,6 +774,9 @@
 
                 <div class="slide-box">
                     <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/4.jpg.png" alt="העברת תרגילים בין גורילות">
+                    </div>
                     <ol class="step-list">
                         <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
                         <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
@@ -760,6 +802,9 @@
 
                 <div class="slide-box">
                     <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/3.jpg.png" alt="התקנת דרייברים של NVIDIA">
+                    </div>
                     <div class="step-list">
                         <ol>
                             <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
@@ -870,7 +915,7 @@
                     <tbody>
                         <tr>
                             <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
-                            <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תרגול תפעול.</td>
+                            <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תתרגול תפעול.</td>
                             <td>-</td>
                         </tr>
                         <tr>
@@ -931,7 +976,7 @@
         </section>
 
         <section id="forms" class="tab-content">
-            <h2>📋 טפסים וציוד</h2>
+            <h2>📋 טפסים, ציוד והעשרה</h2>
             <div class="cards-container">
                 <div class="card">
                     <div class="form-card-content">
@@ -961,6 +1006,121 @@
                             <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- כרטיס עמוד מידע והעשרה - נתוני הגיל -->
+            <div class="card" style="width: 100%; margin-top: 15px;">
+                <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
+                <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
+                
+                <!-- השוואת דגמים -->
+                <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
+                <div class="table-container" style="margin-bottom: 15px;">
+                    <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                        <thead>
+                            <tr style="background-color: var(--th-bg); color: white;">
+                                <th style="padding: 8px;">פרמטר</th>
+                                <th style="padding: 8px;">גיל 1</th>
+                                <th style="padding: 8px;">גיל 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">זום / הגדלה</td>
+                                <td style="padding: 8px;">10X / 30X</td>
+                                <td style="padding: 8px;">5X / 10X / 20X</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">רדיוס הרג ופציעה</td>
+                                <td style="padding: 8px;">הרג 8 מטרים | פציעה 15 מטרים</td>
+                                <td style="padding: 8px;">הרג 2.5–3 מטרים | פציעה 15 מטרים</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">זמן מעוף לטווח מקסימלי</td>
+                                <td style="padding: 8px;"><span class="code-block">26 שניות</span></td>
+                                <td style="padding: 8px;"><span class="code-block">53 שניות</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- מצבי מרעום / סוגי מטרות -->
+                <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
+                <div class="table-container" style="margin-bottom: 15px;">
+                    <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                        <thead>
+                            <tr style="background-color: var(--th-bg); color: white;">
+                                <th style="padding: 8px;">סוג מטרה</th>
+                                <th style="padding: 8px;">מנגנון יזום ואופן הפעולה</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">קשה</td>
+                                <td style="padding: 8px;">חודר</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">רכה</td>
+                                <td style="padding: 8px;">מתפוצץ 30 ס"מ לפני המטרה</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">רסס</td>
+                                <td style="padding: 8px;">מרעום קרבה – 70 ס"מ לפני המטרה</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- מעטפת שיגור ובטיחות -->
+                <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
+                <div class="table-container">
+                    <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                        <thead>
+                            <tr style="background-color: var(--th-bg); color: white;">
+                                <th style="padding: 8px;">נושא / פרמטר</th>
+                                <th style="padding: 8px;">נתון / פירוט</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">מהירות הטיל</td>
+                                <td style="padding: 8px;"><span class="code-block">150 מטר/שנייה</span></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">טווח ירי מינימלי</td>
+                                <td style="padding: 8px;">450 מטרים</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">מגבלת מזג אוויר</td>
+                                <td style="padding: 8px; color: #ef4444; font-weight: bold;">איסור שיגור ברוח מעל 50 קמ"ש</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">תנאי יזום (מ-150 מטר)</td>
+                                <td style="padding: 8px;">
+                                    טיל יכול ליזום לאחר 150 מטר בהתקיים 3 תנאים:
+                                    <br>
+                                    1. פתיחת כנפיים &nbsp;|&nbsp; 2. מעבר 150 מטר &nbsp;|&nbsp; 3. כוח עומס של 7G
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">TIPP OFF (יציאה מהזביל)</td>
+                                <td style="padding: 8px;">נפילה של 60 ס"מ ב-8 המטרים הראשונים</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">הצתת מנוע ראשי</td>
+                                <td style="padding: 8px;">ניצת רק לאחר 3.5 מטרים (להגנת המפעיל)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">רשף לאחור</td>
+                                <td style="padding: 8px;">2.7 מטרים</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">פרופיל מעוף</td>
+                                <td style="padding: 8px;">הטיל מגיע לשיא הגובה בחצי הדרך למטרה</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
