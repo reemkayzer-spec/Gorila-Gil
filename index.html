@@ -198,6 +198,7 @@
             border: none;
             border-radius: 0; 
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
         table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
         th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
@@ -214,6 +215,16 @@
         table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } 
         table th:nth-child(10), table td:nth-child(10) { width: 120px; min-width: 120px; }
         
+        /* הגדרת רוחב מינימלי לטבלת סטטוס גורילות לרציפות וגלילה בנייד */
+        #gorilla-status table {
+            min-width: 650px;
+            width: 100%;
+        }
+        #gorilla-status table th:nth-child(1), #gorilla-status table td:nth-child(1) { width: 120px; min-width: 120px; }
+        #gorilla-status table th:nth-child(2), #gorilla-status table td:nth-child(2) { width: 100px; min-width: 100px; }
+        #gorilla-status table th:nth-child(3), #gorilla-status table td:nth-child(3) { width: 110px; min-width: 110px; }
+        #gorilla-status table th:nth-child(4), #gorilla-status table td:nth-child(4) { width: auto; min-width: 250px; }
+
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
             color: #64748b;
@@ -293,7 +304,7 @@
             transition: 0.2s;
         }
         .status-select { cursor: pointer; }
-        .notes-input { width: 100%; }
+        .notes-input { width: 100%; min-width: 200px; box-sizing: border-box; }
         .status-select:focus, .notes-input:focus { border-color: #3498db; }
 
         .cleaning-date-wrapper {
