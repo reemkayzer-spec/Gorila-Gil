@@ -104,13 +104,16 @@
         .action-btns-group { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
         .action-btns-group button { flex: 1; min-width: 220px; justify-content: center; }
         
-        .wa-group-btn {
+        .wa-group-btn, .call-btn {
             color: white; border: none; padding: 10px 14px;
             border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.82em;
             display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            background-color: #128c7e;
+            text-decoration: none;
         }
+        .wa-group-btn { background-color: #128c7e; }
         .wa-group-btn:hover { background-color: #0e6f64; }
+        .call-btn { background-color: #27ae60; }
+        .call-btn:hover { background-color: #219653; }
 
         .search-box { width: 100%; }
         .search-box input {
@@ -195,11 +198,11 @@
         table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } 
         table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } 
         table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
-        table th:nth-child(6), table td:nth-child(6) { width: 80px; min-width: 80px; } 
+        table th:nth-child(6), table td:nth-child(6) { width: 120px; min-width: 120px; } /* איש קשר מורחב */
         table th:nth-child(7), table td:nth-child(7) { width: 50px; min-width: 50px; } 
         table th:nth-child(8), table td:nth-child(8) { width: 55px; min-width: 55px; } 
         table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } 
-        table th:nth-child(10), table td:nth-child(10) { min-width: 220px; } 
+        table th:nth-child(10), table td:nth-child(10) { width: 120px; min-width: 120px; } /* הערות מצומצם */
         
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
@@ -626,6 +629,16 @@
             <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
             <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
 
+            <!-- כפתורי חיוג מהיר שהועברו לעמודת תקלות -->
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
+                    <span>📞</span> צלצל לקסה
+                </a>
+                <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
+                    <span>📞</span> צלצל לטכנאי
+                </a>
+            </div>
+
             <div class="search-box" style="margin-bottom: 15px;">
                 <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
             </div>
@@ -905,7 +918,7 @@
                         <tr>
                             <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
                             <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
-                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
+                            <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&file=ILS003%20%D7%93%D7%99%D7%95%D7%95%D7%97%D7%99%D7%9D%20%D7%99%D7%95%D7%99%D7%99%D7%9D%20%D7%95%D7%97%D7%95%D7%93%D7%A9%D7%99%D7%99%D7%9D.docx&action=default&mobileredirect=true" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
                         </tr>
                         <tr>
                             <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
@@ -1027,30 +1040,50 @@
                 const dayOfWeek = dateObj.getDay(); 
                 const hDayName = hebrewDaysShort[dayOfWeek];
                 const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
-                north.push({ dayNum, hDayName, isWeekend, values: ["", "", "", "", "", "", "", "", "", ""] });
-                south.push({ dayNum, hDayName, isWeekend, values: ["", "", "", "", "", "", "", "", "", ""] });
+                
+                let defaultGuideNorth = (!isWeekend) ? "איתי הקר" : "";
+                let defaultGuideSouth = (!isWeekend) ? "עדיאל קסה" : "";
+
+                north.push({ dayNum, hDayName, isWeekend, values: ["", defaultGuideNorth, "", "", "", "", "", "", "", ""] });
+                south.push({ dayNum, hDayName, isWeekend, values: ["", defaultGuideSouth, "", "", "", "", "", "", "", ""] });
             }
 
             if (saved) {
                 if (saved.north && Array.isArray(saved.north)) {
                     north = saved.north.map(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
+                        const dayOfWeek = dateObj.getDay();
+                        const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
+                        let defaultGuideNorth = (!isWeekend) ? "איתי הקר" : "";
+                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", ""];
+                        if (!currentVals[1] && !item.hasUserModifiedGuide1) {
+                            currentVals[1] = defaultGuideNorth;
+                        }
                         return {
                             dayNum: item.dayNum,
                             hDayName: hebrewDaysShort[dateObj.getDay()],
-                            isWeekend: (dateObj.getDay() === 5 || dateObj.getDay() === 6),
-                            values: item.values || ["", "", "", "", "", "", "", "", "", ""]
+                            isWeekend: isWeekend,
+                            hasUserModifiedGuide1: item.hasUserModifiedGuide1,
+                            values: currentVals
                         };
                     });
                 }
                 if (saved.south && Array.isArray(saved.south)) {
                     south = saved.south.map(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
+                        const dayOfWeek = dateObj.getDay();
+                        const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
+                        let defaultGuideSouth = (!isWeekend) ? "עדיאל קסה" : "";
+                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", ""];
+                        if (!currentVals[1] && !item.hasUserModifiedGuide2) {
+                            currentVals[1] = defaultGuideSouth;
+                        }
                         return {
                             dayNum: item.dayNum,
                             hDayName: hebrewDaysShort[dateObj.getDay()],
-                            isWeekend: (dateObj.getDay() === 5 || dateObj.getDay() === 6),
-                            values: item.values || ["", "", "", "", "", "", "", "", "", ""]
+                            isWeekend: isWeekend,
+                            hasUserModifiedGuide2: item.hasUserModifiedGuide2,
+                            values: currentVals
                         };
                     });
                 }
@@ -1217,8 +1250,14 @@
                 const northRows = monthData.north.filter(item => item.dayNum === dayInfo.day);
                 const southRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
 
-                if (northRows.length === 0) northRows.push({ dayNum: dayInfo.day, values: ["", "", "", "", "", "", "", "", "", ""] });
-                if (southRows.length === 0) southRows.push({ dayNum: dayInfo.day, values: ["", "", "", "", "", "", "", "", "", ""] });
+                if (northRows.length === 0) {
+                    let defG = !dayInfo.isWeekend ? "איתי הקר" : "";
+                    northRows.push({ dayNum: dayInfo.day, values: ["", defG, "", "", "", "", "", "", "", ""] });
+                }
+                if (southRows.length === 0) {
+                    let defG = !dayInfo.isWeekend ? "עדיאל קסה" : "";
+                    southRows.push({ dayNum: dayInfo.day, values: ["", defG, "", "", "", "", "", "", "", ""] });
+                }
 
                 northRows.forEach((nData, index) => {
                     const trNorth = document.createElement('tr');
@@ -1283,7 +1322,8 @@
             const dateStr = `${String(dayNum).padStart(2, '0')}.${String(targetMonthIdx + 1).padStart(2, '0')}`;
             const dateObj = new Date(currentYear, targetMonthIdx, dayNum);
             const hDayName = hebrewDaysShort[dateObj.getDay()];
-            const newValues = [`${dateStr} ${hDayName}`, "", "", "", "", "", "", "", "", ""];
+            const defGuide = side === 'north' ? "איתי הקר" : "עדיאל קסה";
+            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", ""];
 
             if (side === 'north') {
                 monthData.north.push({ dayNum, hDayName, isWeekend: false, values: newValues });
@@ -1352,8 +1392,10 @@
             const monthData = getMonthDataCache(monthIdx);
             if (side === 'north' && monthData.north[cacheIndex]) {
                 monthData.north[cacheIndex].values[fieldIndex] = value;
+                if (fieldIndex === 1) monthData.north[cacheIndex].hasUserModifiedGuide1 = true;
             } else if (side === 'south' && monthData.south[cacheIndex]) {
                 monthData.south[cacheIndex].values[fieldIndex] = value;
+                if (fieldIndex === 1) monthData.south[cacheIndex].hasUserModifiedGuide2 = true;
             }
 
             const targetRow = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
@@ -1367,8 +1409,8 @@
 
         function saveMonthDataToCloud(monthIdx, monthData) {
             const saveData = {
-                north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values })),
-                south: monthData.south.map(item => ({ dayNum: item.dayNum, values: item.values }))
+                north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values, hasUserModifiedGuide1: item.hasUserModifiedGuide1 })),
+                south: monthData.south.map(item => ({ dayNum: item.dayNum, values: item.values, hasUserModifiedGuide2: item.hasUserModifiedGuide2 }))
             };
             const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
             window.fbSet(sheetRef, saveData);
@@ -1565,14 +1607,37 @@
                 return;
             }
 
+            const activeRows = rows.filter(item => {
+                const notes = item.values[9] || '';
+                return !notes.includes('בוטל') && !notes.includes('התבטל');
+            });
+
+            if (activeRows.length === 0) {
+                alert("כל האימונים המיועדים למחר מבוטלים.");
+                return;
+            }
+
+            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            let selectedRows = activeRows;
+
+            if (trainer && trainer.firstName) {
+                const matchedRows = activeRows.filter(item => {
+                    const guide = item.values[1] || '';
+                    return guide.includes(trainer.firstName);
+                });
+                if (matchedRows.length > 0) {
+                    selectedRows = matchedRows;
+                }
+            }
+
             const unitTitle = side === 'north' ? 'ניידת 1 צפון' : 'ניידת 2 מרכז/דרום';
             let msg = `📋 *תזכורת אימון למחר (${String(dNum).padStart(2,'0')}.${String(mIdx+1).padStart(2,'0')}) - ${unitTitle}*\n\n`;
             
             let targetPhone = "";
 
-            rows.forEach((rowObj, idx) => {
+            selectedRows.forEach((rowObj, idx) => {
                 const r = rowObj.values;
-                if (rows.length > 1) msg += `--- *משמרת ${idx + 1}* ---\n`;
+                if (selectedRows.length > 1) msg += `--- *משמרת ${idx + 1}* ---\n`;
                 msg += `• מדריך: ${r[1] || 'לא צויין'}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• חיוב: ${r[7] || 'לא צויין'}\n• שעות: ${r[8] || 'לא צויין'}\n`;
                 if (r[9]) msg += `• הערות: ${r[9]}\n`;
                 msg += `\n`;
