@@ -1462,35 +1462,43 @@
             });
         }
 
-        // פונקציית הוספת שורה מתוקנת לחלוטין
+        // פונקציית הוספת שורה מוגנת ומעודכנת (חוסמת ימי שישי ושבת)
         function addExtraRow(side) {
             if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
 
-            let promptMsg = "בחר את התאריך מתוך השבוע הנוכחי להוספת שורה:\n";
-            currentWeekObj.days.forEach((d, idx) => {
-                promptMsg += `${idx + 1}) ${String(d.day).padStart(2, '0')}.${String(d.month + 1).padStart(2, '0')} (${d.hDayName})\n`;
+            // סינון ימי חול בלבד (ללא ימי שישי ושבת)
+            const weekDaysOnly = currentWeekObj.days.filter(d => !d.isWeekend);
+
+            if (weekDaysOnly.length === 0) {
+                alert("אין ימי חול זמינים בשבוע זה.");
+                return;
+            }
+
+            let promptMsg = "בחר תאריך מתוך ימי החול בשבוע הנוכחי להוספת שורה:\n\n";
+            weekDaysOnly.forEach((d, idx) => {
+                promptMsg += `${idx + 1}) יום ${d.hDayName} (${String(d.day).padStart(2, '0')}.${String(d.month + 1).padStart(2, '0')})\n`;
             });
-            promptMsg += "\nהקלד את מספר השורה (1-7) או את הלינק/יום בחודש (למשל 5):";
+            promptMsg += "\nהקלד את מספר היום ברשימה (1-5) או את תאריך היום בחודש:";
 
             let input = prompt(promptMsg);
             if (!input) return;
             input = input.trim();
 
             let targetDayInfo = null;
-
-            // בדיקת מספר שורה ברשימה (1-7)
             let choiceIndex = parseInt(input);
-            if (!isNaN(choiceIndex) && choiceIndex >= 1 && choiceIndex <= currentWeekObj.days.length) {
-                targetDayInfo = currentWeekObj.days[choiceIndex - 1];
+
+            // 1. בדיקת תאימות למספר סידורי ברשימה (1 עד 5)
+            if (!isNaN(choiceIndex) && choiceIndex >= 1 && choiceIndex <= weekDaysOnly.length) {
+                targetDayInfo = weekDaysOnly[choiceIndex - 1];
             } else {
-                // בדיקת יום בחודש
+                // 2. בדיקת תאימות ליום בחודש
                 let dayNumInput = parseInt(input.split('.')[0]);
-                targetDayInfo = currentWeekObj.days.find(d => d.day === dayNumInput);
+                targetDayInfo = weekDaysOnly.find(d => d.day === dayNumInput);
             }
 
             if (!targetDayInfo) {
-                alert("תאריך לא תקין או שאינו נמצא בשבוע הנבחר.");
+                alert("תאריך לא תקין, נבחר סוף שבוע, או שהיום אינו נמצא בשבוע זה.");
                 return;
             }
 
@@ -1505,10 +1513,10 @@
             const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", ""];
 
             if (side === 'north') {
-                monthData.north.push({ dayNum, hDayName, isWeekend: targetDayInfo.isWeekend, values: newValues });
+                monthData.north.push({ dayNum, hDayName, isWeekend: false, values: newValues });
                 monthData.north.sort((a, b) => a.dayNum - b.dayNum);
             } else {
-                monthData.south.push({ dayNum, hDayName, isWeekend: targetDayInfo.isWeekend, values: newValues });
+                monthData.south.push({ dayNum, hDayName, isWeekend: false, values: newValues });
                 monthData.south.sort((a, b) => a.dayNum - b.dayNum);
             }
 
