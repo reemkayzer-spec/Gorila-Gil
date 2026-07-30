@@ -205,15 +205,15 @@
 
         table th:nth-child(1), table td:nth-child(1) { width: 75px; min-width: 75px; } 
         table th:nth-child(2), table td:nth-child(2) { width: 125px; min-width: 125px; } 
-        table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } 
-        table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } 
+        table th:nth-child(3), table td:nth-child(3) { width: 50px; min-width: 50px; } 
+        table th:nth-child(4), table td:nth-child(4) { width: 50px; min-width: 50px; } 
         table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
-        table th:nth-child(6), table td:nth-child(6) { width: 120px; min-width: 120px; }
-        table th:nth-child(7), table td:nth-child(7) { width: 40px; min-width: 40px; } /* מס מתאמנים מצומצם */
-        table th:nth-child(8), table td:nth-child(8) { width: 100px; min-width: 100px; } /* גורילה */
-        table th:nth-child(9), table td:nth-child(9) { width: 80px; min-width: 80px; } /* שעות מצומצם */
-        table th:nth-child(10), table td:nth-child(10) { width: 110px; min-width: 110px; } /* הערות */
-        table th:nth-child(11), table td:nth-child(11) { width: 90px; min-width: 90px; } /* ניידת */
+        table th:nth-child(6), table td:nth-child(6) { width: 130px; min-width: 130px; } 
+        table th:nth-child(7), table td:nth-child(7) { width: 40px; min-width: 40px; } 
+        table th:nth-child(8), table td:nth-child(8) { width: 100px; min-width: 100px; } 
+        table th:nth-child(9), table td:nth-child(9) { width: 50px; min-width: 50px; } 
+        table th:nth-child(10), table td:nth-child(10) { width: 110px; min-width: 110px; } 
+        table th:nth-child(11), table td:nth-child(11) { width: 90px; min-width: 90px; } 
         
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
@@ -1455,10 +1455,10 @@
                 const southRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
 
                 if (northRows.length === 0) {
-                    northRows.push({ dayNum: dayInfo.day, values: ["", "איתי הקר", "", "", "", "", "", "", "", "", "", ""] });
+                    northRows.push({ dayNum: dayInfo.day, values: ["", "איתי הקר", "", "", "", "", "", "", "", "", ""] });
                 }
                 if (southRows.length === 0) {
-                    southRows.push({ dayNum: dayInfo.day, values: ["", "עדיאל קסה", "", "", "", "", "", "", "", "", "", ""] });
+                    southRows.push({ dayNum: dayInfo.day, values: ["", "עדיאל קסה", "", "", "", "", "", "", "", "", ""] });
                 }
 
                 northRows.forEach((nData, index) => {
@@ -1542,7 +1542,7 @@
             const dateObj = new Date(currentYear, targetMonthIdx, dayNum);
             const hDayName = hebrewDaysShort[dateObj.getDay()];
             const defGuide = side === 'north' ? "איתי הקר" : "עדיאל קסה";
-            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", "", "", ""];
+            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", "", ""];
 
             const newRow = {
                 dayNum: dayNum,
@@ -2085,8 +2085,13 @@
                         if (vals[1] || vals[2]) {
                             let guideStr = vals[1] || 'לא צויין';
                             if (vals[10]) guideStr += ` + ${vals[10]}`;
-                            
-                            msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ${side === 'north' ? 'ניידת 1' : 'ניידת 2'}: ${vals[2]} (${vals[3]}) | מדריך: ${guideStr}\n`;
+
+                            let gorillaStr = vals[7] || 'לא צויין';
+                            if (vals[11]) gorillaStr += ` + ${vals[11]}`;
+
+                            let truckStr = vals[12] ? ` | ניידת: ${vals[12]}` : '';
+
+                            msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ${side === 'north' ? 'ניידת 1' : 'ניידת 2'}: ${vals[2]} (${vals[3]}) | מדריך: ${guideStr} | גורילה: ${gorillaStr}${truckStr}\n`;
                             count++;
                         }
                     });
