@@ -198,7 +198,6 @@
             border: none;
             border-radius: 0; 
             -webkit-overflow-scrolling: touch;
-            width: 100%;
         }
         table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
         th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
@@ -215,16 +214,6 @@
         table th:nth-child(9), table td:nth-child(9) { width: 130px; min-width: 130px; } 
         table th:nth-child(10), table td:nth-child(10) { width: 120px; min-width: 120px; }
         
-        /* הגדרת רוחב מינימלי לטבלת סטטוס גורילות לרציפות וגלילה בנייד */
-        #gorilla-status table {
-            min-width: 650px;
-            width: 100%;
-        }
-        #gorilla-status table th:nth-child(1), #gorilla-status table td:nth-child(1) { width: 120px; min-width: 120px; }
-        #gorilla-status table th:nth-child(2), #gorilla-status table td:nth-child(2) { width: 100px; min-width: 100px; }
-        #gorilla-status table th:nth-child(3), #gorilla-status table td:nth-child(3) { width: 110px; min-width: 110px; }
-        #gorilla-status table th:nth-child(4), #gorilla-status table td:nth-child(4) { width: auto; min-width: 250px; }
-
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
             color: #64748b;
@@ -304,7 +293,7 @@
             transition: 0.2s;
         }
         .status-select { cursor: pointer; }
-        .notes-input { width: 100%; min-width: 200px; box-sizing: border-box; }
+        .notes-input { width: 100%; }
         .status-select:focus, .notes-input:focus { border-color: #3498db; }
 
         .cleaning-date-wrapper {
@@ -1146,6 +1135,7 @@
         const currentYear = 2026;
         let activeMonth = 6; 
         let activeWeekIndex = 0; 
+        let isUpdatingCloud = false;
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי"];
         const systemsOptions = ["", "אחוד", "ישלט", "אחוד סימולטיבי"];
@@ -1196,6 +1186,7 @@
         function loadMonthDataFromCloud(monthIdx) {
             const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
             window.fbOnValue(sheetRef, (snapshot) => {
+                if (isUpdatingCloud) return; 
                 const saved = snapshot.val();
                 processLoadedMonthData(monthIdx, saved);
                 renderCurrentWeekTables();
@@ -1273,8 +1264,8 @@
         function setupWeeksCache(monthIdx) {
             for (let m = 0; m < 12; m++) {
                 const mData = getMonthDataCache(m);
-                mData.north.forEach(item => extractMemory(item.values));
-                mData.south.forEach(item => extractMemory(item.values));
+                if (mData && mData.north) mData.north.forEach(item => extractMemory(item.values));
+                if (mData && mData.south) mData.south.forEach(item => extractMemory(item.values));
             }
 
             const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
@@ -1324,7 +1315,7 @@
         }
 
         function extractMemory(vals) {
-            if (!vals) return;
+            if (!vals || !Array.isArray(vals)) return;
             if (vals[2] && vals[2].trim()) memoryData.units.add(vals[2].trim());
             if (vals[3] && vals[3].trim()) memoryData.locations.add(vals[3].trim());
             if (vals[5] && vals[5].trim()) memoryData.contacts.add(vals[5].trim());
@@ -1335,6 +1326,7 @@
 
         function rebuildDatalists() {
             let container = document.getElementById('datalistsContainer');
+            if (!container) return;
             container.innerHTML = `
                 <datalist id="mem-units">${Array.from(memoryData.units).map(v => `<option value="${v}">`).join('')}</datalist>
                 <datalist id="mem-locations">${Array.from(memoryData.locations).map(v => `<option value="${v}">`).join('')}</datalist>
@@ -1347,6 +1339,7 @@
 
         function initMonthFolders() {
             const bar = document.getElementById('monthFoldersBar');
+            if (!bar) return;
             bar.innerHTML = '';
             monthNames.forEach((mName, idx) => {
                 const btn = document.createElement('button');
@@ -1365,6 +1358,7 @@
 
         function initWeekTabs() {
             const bar = document.getElementById('weekTabsBar');
+            if (!bar) return;
             bar.innerHTML = '';
             const today = new Date();
 
@@ -1395,21 +1389,24 @@
         }
 
         function updateActionButtonsText() {
-            if (monthWeeksCache.length === 0) return;
+            if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
-            if (!currentWeekObj) return;
-            document.getElementById('waShiftsBtn').innerHTML = `<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;flex-shrink:0;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg> שלח משמרות שבוע ${currentWeekObj.weekNum} לוואטסאפ`;
+            const btn = document.getElementById('waShiftsBtn');
+            if (btn) {
+                btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;flex-shrink:0;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg> שלח משמרות שבוע ${currentWeekObj.weekNum} לוואטסאפ`;
+            }
         }
 
         function renderCurrentWeekTables() {
             const northBody = document.getElementById('northTableBody');
             const southBody = document.getElementById('southTableBody');
+            if (!northBody || !southBody) return;
+
             northBody.innerHTML = '';
             southBody.innerHTML = '';
 
-            if (monthWeeksCache.length === 0) return;
+            if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
-            if (!currentWeekObj) return;
 
             updateActionButtonsText();
             const today = new Date();
@@ -1465,29 +1462,40 @@
             });
         }
 
+        // פונקציית הוספת שורה מתוקנת לחלוטין
         function addExtraRow(side) {
-            if (monthWeeksCache.length === 0) return;
+            if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
-            const weekdays = currentWeekObj.days.filter(d => !d.isWeekend);
 
-            let promptMsg = "בחר את התאריך מתוך השבוע הנוכחי להוספת שורה (ימי חול בלבד):\n";
-            weekdays.forEach((d, idx) => {
+            let promptMsg = "בחר את התאריך מתוך השבוע הנוכחי להוספת שורה:\n";
+            currentWeekObj.days.forEach((d, idx) => {
                 promptMsg += `${idx + 1}) ${String(d.day).padStart(2, '0')}.${String(d.month + 1).padStart(2, '0')} (${d.hDayName})\n`;
             });
-            promptMsg += "\nהקלד את מספר השורה או התאריך:";
+            promptMsg += "\nהקלד את מספר השורה (1-7) או את הלינק/יום בחודש (למשל 5):";
 
             let input = prompt(promptMsg);
             if (!input) return;
-            let dayNum = parseInt(input.trim());
-            if (dayNum >= 1 && dayNum <= weekdays.length && input.trim().length <= 2) {
-                dayNum = weekdays[dayNum - 1].day;
+            input = input.trim();
+
+            let targetDayInfo = null;
+
+            // בדיקת מספר שורה ברשימה (1-7)
+            let choiceIndex = parseInt(input);
+            if (!isNaN(choiceIndex) && choiceIndex >= 1 && choiceIndex <= currentWeekObj.days.length) {
+                targetDayInfo = currentWeekObj.days[choiceIndex - 1];
+            } else {
+                // בדיקת יום בחודש
+                let dayNumInput = parseInt(input.split('.')[0]);
+                targetDayInfo = currentWeekObj.days.find(d => d.day === dayNumInput);
             }
 
-            if (isNaN(dayNum) || dayNum < 1 || dayNum > 31) return;
+            if (!targetDayInfo) {
+                alert("תאריך לא תקין או שאינו נמצא בשבוע הנבחר.");
+                return;
+            }
 
-            let targetMonthIdx = activeMonth;
-            const matchedDayInfo = currentWeekObj.days.find(d => d.day === dayNum);
-            if (matchedDayInfo) targetMonthIdx = matchedDayInfo.month;
+            let dayNum = targetDayInfo.day;
+            let targetMonthIdx = targetDayInfo.month;
 
             const monthData = getMonthDataCache(targetMonthIdx);
             const dateStr = `${String(dayNum).padStart(2, '0')}.${String(targetMonthIdx + 1).padStart(2, '0')}`;
@@ -1497,10 +1505,10 @@
             const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", ""];
 
             if (side === 'north') {
-                monthData.north.push({ dayNum, hDayName, isWeekend: false, values: newValues });
+                monthData.north.push({ dayNum, hDayName, isWeekend: targetDayInfo.isWeekend, values: newValues });
                 monthData.north.sort((a, b) => a.dayNum - b.dayNum);
             } else {
-                monthData.south.push({ dayNum, hDayName, isWeekend: false, values: newValues });
+                monthData.south.push({ dayNum, hDayName, isWeekend: targetDayInfo.isWeekend, values: newValues });
                 monthData.south.sort((a, b) => a.dayNum - b.dayNum);
             }
 
@@ -1579,12 +1587,17 @@
         }
 
         function saveMonthDataToCloud(monthIdx, monthData) {
+            isUpdatingCloud = true;
             const saveData = {
                 north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values, hasUserModifiedGuide1: item.hasUserModifiedGuide1 })),
                 south: monthData.south.map(item => ({ dayNum: item.dayNum, values: item.values, hasUserModifiedGuide2: item.hasUserModifiedGuide2 }))
             };
             const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
-            window.fbSet(sheetRef, saveData);
+            window.fbSet(sheetRef, saveData).then(() => {
+                setTimeout(() => { isUpdatingCloud = false; }, 500);
+            }).catch(() => {
+                isUpdatingCloud = false;
+            });
         }
 
         function initCloudStatusSync() {
@@ -1673,6 +1686,7 @@
             const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
             const display = document.getElementById('trainerInfoDisplay');
             const inputsArea = document.getElementById('trainerInputsArea');
+            if (!display || !inputsArea) return;
 
             if (trainer) {
                 display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email} | ${trainer.phone || 'אין טלפון'}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
@@ -1720,7 +1734,7 @@
                 return;
             }
 
-            if (monthWeeksCache.length === 0) return;
+            if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
             const nextWeekObj = monthWeeksCache[activeWeekIndex + 1];
 
@@ -1873,7 +1887,7 @@
         }
 
         function sendGroupWhatsAppSummary() {
-            if (monthWeeksCache.length === 0) return;
+            if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
             let msg = `📋 *סיכום שבועי לקבוצה - שבוע ${currentWeekObj.weekNum}*\n\n`;
             let count = 0;
@@ -1899,15 +1913,37 @@
         }
 
         function copyText(text, btnElement) {
-            navigator.clipboard.writeText(text).then(() => {
-                let originalText = btnElement.innerText;
-                btnElement.innerText = 'הועתק! ✓';
-                setTimeout(() => {
-                    btnElement.innerText = originalText;
-                }, 2000);
-            }).catch(err => {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopiedFeedback(btnElement);
+                }).catch(() => {
+                    fallbackCopyText(text, btnElement);
+                });
+            } else {
+                fallbackCopyText(text, btnElement);
+            }
+        }
+
+        function fallbackCopyText(text, btnElement) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopiedFeedback(btnElement);
+            } catch (err) {
                 alert('שגיאה בהעתקת הקישור');
-            });
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showCopiedFeedback(btnElement) {
+            let originalText = btnElement.innerText;
+            btnElement.innerText = 'הועתק! ✓';
+            setTimeout(() => {
+                btnElement.innerText = originalText;
+            }, 2000);
         }
     </script>
 </body>
