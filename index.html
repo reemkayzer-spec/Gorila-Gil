@@ -204,7 +204,7 @@
         th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; font-size: 0.82em; }
 
         table th:nth-child(1), table td:nth-child(1) { width: 75px; min-width: 75px; } 
-        table th:nth-child(2), table td:nth-child(2) { width: 100px; min-width: 100px; } 
+        table th:nth-child(2), table td:nth-child(2) { width: 125px; min-width: 125px; } 
         table th:nth-child(3), table td:nth-child(3) { width: 90px; min-width: 90px; } 
         table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } 
         table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
@@ -258,6 +258,32 @@
             text-align-last: center;
             font-weight: bold;
         }
+
+        /* עיצוב ייעודי למערך שני המדריכים */
+        .guides-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            width: 100%;
+        }
+        .guide-row-flex {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            width: 100%;
+        }
+        .add-guide-btn, .remove-guide-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0 2px;
+            line-height: 1;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .add-guide-btn:hover { transform: scale(1.2); }
+        .remove-guide-btn:hover { transform: scale(1.2); }
 
         .month-folders-bar {
             display: flex; gap: 6px; overflow-x: auto; padding: 14px 6px; margin-top: 20px;
@@ -1206,8 +1232,8 @@
                 let defaultGuideNorth = (!isWeekend) ? "איתי הקר" : "";
                 let defaultGuideSouth = (!isWeekend) ? "עדיאל קסה" : "";
 
-                north.push({ dayNum, hDayName, isWeekend, values: ["", defaultGuideNorth, "", "", "", "", "", "", "", ""] });
-                south.push({ dayNum, hDayName, isWeekend, values: ["", defaultGuideSouth, "", "", "", "", "", "", "", ""] });
+                north.push({ dayNum, hDayName, isWeekend, values: ["", defaultGuideNorth, "", "", "", "", "", "", "", "", ""] });
+                south.push({ dayNum, hDayName, isWeekend, values: ["", defaultGuideSouth, "", "", "", "", "", "", "", "", ""] });
             }
 
             if (saved) {
@@ -1217,7 +1243,7 @@
                         const dayOfWeek = dateObj.getDay();
                         const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
                         let defaultGuideNorth = (!isWeekend) ? "איתי הקר" : "";
-                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", ""];
+                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", ""];
                         if (!currentVals[1] && !item.hasUserModifiedGuide1) {
                             currentVals[1] = defaultGuideNorth;
                         }
@@ -1236,7 +1262,7 @@
                         const dayOfWeek = dateObj.getDay();
                         const isWeekend = (dayOfWeek === 5 || dayOfWeek === 6);
                         let defaultGuideSouth = (!isWeekend) ? "עדיאל קסה" : "";
-                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", ""];
+                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", ""];
                         if (!currentVals[1] && !item.hasUserModifiedGuide2) {
                             currentVals[1] = defaultGuideSouth;
                         }
@@ -1420,11 +1446,11 @@
 
                 if (northRows.length === 0) {
                     let defG = !dayInfo.isWeekend ? "איתי הקר" : "";
-                    northRows.push({ dayNum: dayInfo.day, values: ["", defG, "", "", "", "", "", "", "", ""] });
+                    northRows.push({ dayNum: dayInfo.day, values: ["", defG, "", "", "", "", "", "", "", "", ""] });
                 }
                 if (southRows.length === 0) {
                     let defG = !dayInfo.isWeekend ? "עדיאל קסה" : "";
-                    southRows.push({ dayNum: dayInfo.day, values: ["", defG, "", "", "", "", "", "", "", ""] });
+                    southRows.push({ dayNum: dayInfo.day, values: ["", defG, "", "", "", "", "", "", "", "", ""] });
                 }
 
                 northRows.forEach((nData, index) => {
@@ -1462,12 +1488,10 @@
             });
         }
 
-        // פונקציית הוספת שורה מתוקנת ומאובטחת לחלוטין
         function addExtraRow(side) {
             if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
 
-            // סינון מוחלט של ימי שישי ושבת (index 5 ו-6 במערך)
             const weekDaysOnly = currentWeekObj.days.filter(d => {
                 const dateObj = new Date(currentYear, d.month, d.day);
                 const dayOfWeek = dateObj.getDay();
@@ -1492,11 +1516,9 @@
             let targetDayInfo = null;
             let choiceIndex = parseInt(input);
 
-            // 1. בדיקה לפי מספר סידורי ברשימה המוצגת (1-5)
             if (!isNaN(choiceIndex) && choiceIndex >= 1 && choiceIndex <= weekDaysOnly.length) {
                 targetDayInfo = weekDaysOnly[choiceIndex - 1];
             } else {
-                // 2. בדיקה לפי יום בחודש
                 let dayNumInput = parseInt(input.split('.')[0]);
                 targetDayInfo = weekDaysOnly.find(d => d.day === dayNumInput);
             }
@@ -1514,9 +1536,8 @@
             const dateObj = new Date(currentYear, targetMonthIdx, dayNum);
             const hDayName = hebrewDaysShort[dateObj.getDay()];
             const defGuide = side === 'north' ? "איתי הקר" : "עדיאל קסה";
-            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", ""];
+            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", "", ""];
 
-            // יצירת אובייקט תקין ללא שדות undefined שיכולים להכשיל את Firebase
             const newRow = {
                 dayNum: dayNum,
                 hDayName: hDayName,
@@ -1548,21 +1569,60 @@
             renderCurrentWeekTables();
         }
 
+        function showSecondGuideSelect(side, monthIdx, cacheIndex) {
+            const monthData = getMonthDataCache(monthIdx);
+            const rowData = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
+            if (rowData) {
+                if (!rowData.values[10]) {
+                    rowData.values[10] = guidesOptions[1] || "";
+                    updateCacheAndSave(side, monthIdx, cacheIndex, 10, rowData.values[10]);
+                }
+            }
+            renderCurrentWeekTables();
+        }
+
+        function removeSecondGuideSelect(side, monthIdx, cacheIndex) {
+            updateCacheAndSave(side, monthIdx, cacheIndex, 10, "");
+            renderCurrentWeekTables();
+        }
+
         function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex, isExtra) {
             const dateStr = `${String(dayNum).padStart(2, '0')}.${String(monthIdx + 1).padStart(2, '0')}`;
             const currentVal = vals[0] || `${dateStr} ${hDayName}`;
             const extraBadge = isExtra ? `<div style="font-size:0.7em; color:#e74c3c; font-weight:600; margin-top:1px; cursor:pointer;" onclick="removeExtraRow('${side}', ${monthIdx}, ${cacheIndex})" title="לחץ למחיקת השורה">❌ (נוסף)</div>` : '';
+
+            const guide1Val = vals[1] || '';
+            const guide2Val = vals[10] || '';
+            const hasGuide1 = guide1Val.trim() !== '';
+            const hasGuide2 = guide2Val.trim() !== '';
+
+            let guideCellHTML = `
+                <td>
+                    <div class="guides-container">
+                        <div class="guide-row-flex">
+                            <select class="cell-select ${guide1Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 1, this.value)">
+                                ${guidesOptions.map(g => `<option value="${g}" ${guide1Val === g ? 'selected' : ''}>${g}</option>`).join('')}
+                            </select>
+                            ${hasGuide1 && !hasGuide2 ? `<button type="button" class="add-guide-btn" onclick="showSecondGuideSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הוסף מדריך נוסף">➕</button>` : ''}
+                        </div>
+                        ${hasGuide2 ? `
+                        <div class="guide-row-flex">
+                            <select class="cell-select ${guide2Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 10, this.value)">
+                                ${guidesOptions.map(g => `<option value="${g}" ${guide2Val === g ? 'selected' : ''}>${g}</option>`).join('')}
+                            </select>
+                            <button type="button" class="remove-guide-btn" onclick="removeSecondGuideSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הסר מדריך שני">❌</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                </td>
+            `;
 
             return `
                 <td>
                     <input type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
                     ${extraBadge}
                 </td>
-                <td>
-                    <select class="cell-select ${vals[1] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 1, this.value)">
-                        ${guidesOptions.map(g => `<option value="${g}" ${vals[1] === g ? 'selected' : ''}>${g}</option>`).join('')}
-                    </select>
-                </td>
+                ${guideCellHTML}
                 <td><input type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח מתאמן" list="mem-units" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
                 <td><input type="text" class="cell-input" value="${vals[3] || ''}" placeholder="מיקום" list="mem-locations" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 3, this.value)"></td>
                 <td>
@@ -1611,12 +1671,12 @@
             const saveData = {
                 north: monthData.north.map(item => ({ 
                     dayNum: item.dayNum, 
-                    values: item.values || ["", "", "", "", "", "", "", "", "", ""], 
+                    values: item.values || ["", "", "", "", "", "", "", "", "", "", ""], 
                     hasUserModifiedGuide1: !!item.hasUserModifiedGuide1 
                 })),
                 south: monthData.south.map(item => ({ 
                     dayNum: item.dayNum, 
-                    values: item.values || ["", "", "", "", "", "", "", "", "", ""], 
+                    values: item.values || ["", "", "", "", "", "", "", "", "", "", ""], 
                     hasUserModifiedGuide2: !!item.hasUserModifiedGuide2 
                 }))
             };
@@ -1780,8 +1840,9 @@
                 const sRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
 
                 [...nRows, ...sRows].forEach(item => {
-                    const guide = item.values[1];
-                    if (guide && trainer.firstName && guide.includes(trainer.firstName)) {
+                    const guide1 = item.values[1] || '';
+                    const guide2 = item.values[10] || '';
+                    if (trainer.firstName && (guide1.includes(trainer.firstName) || guide2.includes(trainer.firstName))) {
                         trainerShifts.push({ date: dayInfo.day, month: dayInfo.month + 1, unit: item.values[2], loc: item.values[3], sys: item.values[4], hours: item.values[8] });
                     }
                 });
@@ -1835,8 +1896,9 @@
 
             if (trainer && trainer.firstName) {
                 const matchedRows = activeRows.filter(item => {
-                    const guide = item.values[1] || '';
-                    return guide.includes(trainer.firstName);
+                    const guide1 = item.values[1] || '';
+                    const guide2 = item.values[10] || '';
+                    return guide1.includes(trainer.firstName) || guide2.includes(trainer.firstName);
                 });
                 if (matchedRows.length > 0) {
                     selectedRows = matchedRows;
@@ -1850,8 +1912,11 @@
 
             selectedRows.forEach((rowObj, idx) => {
                 const r = rowObj.values;
+                let guideStr = r[1] || 'לא צויין';
+                if (r[10]) guideStr += ` + ${r[10]}`;
+
                 if (selectedRows.length > 1) msg += `--- *משמרת ${idx + 1}* ---\n`;
-                msg += `• מדריך: ${r[1] || 'לא צויין'}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• חיוב: ${r[7] || 'לא צויין'}\n• שעות: ${r[8] || 'לא צויין'}\n`;
+                msg += `• מדריך/ים: ${guideStr}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• חיוב: ${r[7] || 'לא צויין'}\n• שעות: ${r[8] || 'לא צויין'}\n`;
                 if (r[9]) msg += `• הערות: ${r[9]}\n`;
                 msg += `\n`;
 
@@ -1929,7 +1994,10 @@
                     monthData[side].filter(item => item.dayNum === dayInfo.day).forEach(item => {
                         const vals = item.values;
                         if (vals[1] || vals[2]) {
-                            msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ${side === 'north' ? 'ניידת 1' : 'ניידת 2'}: ${vals[2]} (${vals[3]}) | מדריך: ${vals[1]}\n`;
+                            let guideStr = vals[1] || 'לא צויין';
+                            if (vals[10]) guideStr += ` + ${vals[10]}`;
+                            
+                            msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ${side === 'north' ? 'ניידת 1' : 'ניידת 2'}: ${vals[2]} (${vals[3]}) | מדריך: ${guideStr}\n`;
                             count++;
                         }
                     });
