@@ -1462,13 +1462,17 @@
             });
         }
 
-        // פונקציית הוספת שורה מוגנת ומעודכנת (חוסמת ימי שישי ושבת)
+        // פונקציית הוספת שורה מתוקנת ומאובטחת לחלוטין
         function addExtraRow(side) {
             if (monthWeeksCache.length === 0 || !monthWeeksCache[activeWeekIndex]) return;
             const currentWeekObj = monthWeeksCache[activeWeekIndex];
 
-            // סינון ימי חול בלבד (ללא ימי שישי ושבת)
-            const weekDaysOnly = currentWeekObj.days.filter(d => !d.isWeekend);
+            // סינון מוחלט של ימי שישי ושבת (index 5 ו-6 במערך)
+            const weekDaysOnly = currentWeekObj.days.filter(d => {
+                const dateObj = new Date(currentYear, d.month, d.day);
+                const dayOfWeek = dateObj.getDay();
+                return dayOfWeek !== 5 && dayOfWeek !== 6;
+            });
 
             if (weekDaysOnly.length === 0) {
                 alert("אין ימי חול זמינים בשבוע זה.");
@@ -1488,17 +1492,17 @@
             let targetDayInfo = null;
             let choiceIndex = parseInt(input);
 
-            // 1. בדיקת תאימות למספר סידורי ברשימה (1 עד 5)
+            // 1. בדיקה לפי מספר סידורי ברשימה המוצגת (1-5)
             if (!isNaN(choiceIndex) && choiceIndex >= 1 && choiceIndex <= weekDaysOnly.length) {
                 targetDayInfo = weekDaysOnly[choiceIndex - 1];
             } else {
-                // 2. בדיקת תאימות ליום בחודש
+                // 2. בדיקה לפי יום בחודש
                 let dayNumInput = parseInt(input.split('.')[0]);
                 targetDayInfo = weekDaysOnly.find(d => d.day === dayNumInput);
             }
 
             if (!targetDayInfo) {
-                alert("תאריך לא תקין, נבחר סוף שבוע, או שהיום אינו נמצא בשבוע זה.");
+                alert("תאריך לא תקין, נבחר יום בסוף שבוע, או שהיום אינו מופיע בשבוע זה.");
                 return;
             }
 
@@ -1512,11 +1516,19 @@
             const defGuide = side === 'north' ? "איתי הקר" : "עדיאל קסה";
             const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", ""];
 
+            // יצירת אובייקט תקין ללא שדות undefined שיכולים להכשיל את Firebase
+            const newRow = {
+                dayNum: dayNum,
+                hDayName: hDayName,
+                isWeekend: false,
+                values: newValues
+            };
+
             if (side === 'north') {
-                monthData.north.push({ dayNum, hDayName, isWeekend: false, values: newValues });
+                monthData.north.push(newRow);
                 monthData.north.sort((a, b) => a.dayNum - b.dayNum);
             } else {
-                monthData.south.push({ dayNum, hDayName, isWeekend: false, values: newValues });
+                monthData.south.push(newRow);
                 monthData.south.sort((a, b) => a.dayNum - b.dayNum);
             }
 
@@ -1597,8 +1609,16 @@
         function saveMonthDataToCloud(monthIdx, monthData) {
             isUpdatingCloud = true;
             const saveData = {
-                north: monthData.north.map(item => ({ dayNum: item.dayNum, values: item.values, hasUserModifiedGuide1: item.hasUserModifiedGuide1 })),
-                south: monthData.south.map(item => ({ dayNum: item.dayNum, values: item.values, hasUserModifiedGuide2: item.hasUserModifiedGuide2 }))
+                north: monthData.north.map(item => ({ 
+                    dayNum: item.dayNum, 
+                    values: item.values || ["", "", "", "", "", "", "", "", "", ""], 
+                    hasUserModifiedGuide1: !!item.hasUserModifiedGuide1 
+                })),
+                south: monthData.south.map(item => ({ 
+                    dayNum: item.dayNum, 
+                    values: item.values || ["", "", "", "", "", "", "", "", "", ""], 
+                    hasUserModifiedGuide2: !!item.hasUserModifiedGuide2 
+                }))
             };
             const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
             window.fbSet(sheetRef, saveData).then(() => {
