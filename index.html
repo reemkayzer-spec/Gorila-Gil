@@ -1234,8 +1234,8 @@
                 let defaultGuideNorth = "איתי הקר";
                 let defaultGuideSouth = "עדיאל קסה";
 
-                north.push({ dayNum, hDayName, isWeekend: false, values: ["", defaultGuideNorth, "", "", "", "", "", "", "", "", "", ""] });
-                south.push({ dayNum, hDayName, isWeekend: false, values: ["", defaultGuideSouth, "", "", "", "", "", "", "", "", "", ""] });
+                north.push({ dayNum, hDayName, isWeekend: false, values: ["", defaultGuideNorth, "", "", "", "", "", "", "", "", "", "", ""] });
+                south.push({ dayNum, hDayName, isWeekend: false, values: ["", defaultGuideSouth, "", "", "", "", "", "", "", "", "", "", ""] });
             }
 
             if (saved) {
@@ -1247,7 +1247,7 @@
                     }).map(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
                         let defaultGuideNorth = "איתי הקר";
-                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", "", ""];
+                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
                         if (!currentVals[1] && !item.hasUserModifiedGuide1) {
                             currentVals[1] = defaultGuideNorth;
                         }
@@ -1268,7 +1268,7 @@
                     }).map(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
                         let defaultGuideSouth = "עדיאל קסה";
-                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", "", ""];
+                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
                         if (!currentVals[1] && !item.hasUserModifiedGuide2) {
                             currentVals[1] = defaultGuideSouth;
                         }
@@ -1455,10 +1455,10 @@
                 const southRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
 
                 if (northRows.length === 0) {
-                    northRows.push({ dayNum: dayInfo.day, values: ["", "איתי הקר", "", "", "", "", "", "", "", "", ""] });
+                    northRows.push({ dayNum: dayInfo.day, values: ["", "איתי הקר", "", "", "", "", "", "", "", "", "", "", ""] });
                 }
                 if (southRows.length === 0) {
-                    southRows.push({ dayNum: dayInfo.day, values: ["", "עדיאל קסה", "", "", "", "", "", "", "", "", ""] });
+                    southRows.push({ dayNum: dayInfo.day, values: ["", "עדיאל קסה", "", "", "", "", "", "", "", "", "", "", ""] });
                 }
 
                 northRows.forEach((nData, index) => {
@@ -1542,7 +1542,7 @@
             const dateObj = new Date(currentYear, targetMonthIdx, dayNum);
             const hDayName = hebrewDaysShort[dateObj.getDay()];
             const defGuide = side === 'north' ? "איתי הקר" : "עדיאל קסה";
-            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", "", ""];
+            const newValues = [`${dateStr} ${hDayName}`, defGuide, "", "", "", "", "", "", "", "", "", "", ""];
 
             const newRow = {
                 dayNum: dayNum,
