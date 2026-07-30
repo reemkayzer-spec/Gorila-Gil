@@ -209,11 +209,11 @@
         table th:nth-child(4), table td:nth-child(4) { width: 90px; min-width: 90px; } 
         table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
         table th:nth-child(6), table td:nth-child(6) { width: 120px; min-width: 120px; }
-        table th:nth-child(7), table td:nth-child(7) { width: 50px; min-width: 50px; } 
-        table th:nth-child(8), table td:nth-child(8) { width: 55px; min-width: 55px; } 
-        table th:nth-child(9), table td:nth-child(9) { width: 110px; min-width: 110px; }
-        table th:nth-child(10), table td:nth-child(10) { width: 120px; min-width: 120px; }
-        table th:nth-child(11), table td:nth-child(11) { width: 110px; min-width: 110px; }
+        table th:nth-child(7), table td:nth-child(7) { width: 40px; min-width: 40px; } /* מס מתאמנים מצומצם */
+        table th:nth-child(8), table td:nth-child(8) { width: 100px; min-width: 100px; } /* גורילה */
+        table th:nth-child(9), table td:nth-child(9) { width: 80px; min-width: 80px; } /* שעות מצומצם */
+        table th:nth-child(10), table td:nth-child(10) { width: 110px; min-width: 110px; } /* הערות */
+        table th:nth-child(11), table td:nth-child(11) { width: 90px; min-width: 90px; } /* ניידת */
         
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
@@ -496,9 +496,9 @@
                                     <th>ישלט/אחוד</th>
                                     <th>איש קשר</th>
                                     <th>מס מתאמנים</th>
-                                    <th>חיוב</th>
                                     <th>גורילה</th>
                                     <th>שעות</th>
+                                    <th>הערות</th>
                                     <th>ניידת</th>
                                 </tr>
                             </thead>
@@ -529,9 +529,9 @@
                                     <th>ישלט/אחוד</th>
                                     <th>איש קשר</th>
                                     <th>מס מתאמנים</th>
-                                    <th>חיוב</th>
                                     <th>גורילה</th>
                                     <th>שעות</th>
+                                    <th>הערות</th>
                                     <th>ניידת</th>
                                 </tr>
                             </thead>
@@ -1168,14 +1168,14 @@
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6"];
         const systemsOptions = ["", "אחוד", "ישלט", "אחוד סימולטיבי"];
-        const chargesOptions = ["", "4", "9", "12", "15"];
 
         let memoryData = {
             units: new Set(),
             locations: new Set(),
             contacts: new Set(),
             traineesCount: new Set(["10", "15", "20", "25", "30", "40"]),
-            hours: new Set(["08:00 - 13:00", "09:00 - 14:00", "12:00 - 17:00", "08:30 - 15:30"])
+            hours: new Set(["08:00 - 13:00", "09:00 - 14:00", "12:00 - 17:00", "08:30 - 15:30"]),
+            notes: new Set(["אימון שגרתי תקין", "בוצע שיגור מוצלח", "תדרוך קצינים", "נדרש רענון למשגר", "טיפול חודשי"])
         };
 
         function getAirForceWeek(date) {
@@ -1228,7 +1228,7 @@
             for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
                 const dateObj = new Date(currentYear, monthIdx, dayNum);
                 const dayOfWeek = dateObj.getDay(); 
-                if (dayOfWeek === 5 || dayOfWeek === 6) continue; // סינון ימי שישי ושבת
+                if (dayOfWeek === 5 || dayOfWeek === 6) continue;
 
                 const hDayName = hebrewDaysShort[dayOfWeek];
                 let defaultGuideNorth = "איתי הקר";
@@ -1305,7 +1305,7 @@
 
             for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
                 const date = new Date(currentYear, monthIdx, dayNum);
-                if (date.getDay() === 5 || date.getDay() === 6) continue; // סינון ימי שישי ושבת מגבולות השבועות
+                if (date.getDay() === 5 || date.getDay() === 6) continue;
 
                 const wNum = getAirForceWeek(date);
                 const dayOfWeek = date.getDay();
@@ -1356,7 +1356,8 @@
             if (vals[3] && vals[3].trim()) memoryData.locations.add(vals[3].trim());
             if (vals[5] && vals[5].trim()) memoryData.contacts.add(vals[5].trim());
             if (vals[6] && vals[6].trim()) memoryData.traineesCount.add(vals[6].trim());
-            if (vals[9] && vals[9].trim()) memoryData.hours.add(vals[9].trim());
+            if (vals[8] && vals[8].trim()) memoryData.hours.add(vals[8].trim());
+            if (vals[9] && vals[9].trim()) memoryData.notes.add(vals[9].trim());
         }
 
         function rebuildDatalists() {
@@ -1368,6 +1369,7 @@
                 <datalist id="mem-contacts">${Array.from(memoryData.contacts).map(v => `<option value="${v}">`).join('')}</datalist>
                 <datalist id="mem-count">${Array.from(memoryData.traineesCount).map(v => `<option value="${v}">`).join('')}</datalist>
                 <datalist id="mem-hours">${Array.from(memoryData.hours).map(v => `<option value="${v}">`).join('')}</datalist>
+                <datalist id="mem-notes">${Array.from(memoryData.notes).map(v => `<option value="${v}">`).join('')}</datalist>
             `;
         }
 
@@ -1461,7 +1463,7 @@
 
                 northRows.forEach((nData, index) => {
                     const trNorth = document.createElement('tr');
-                    const notes = nData.values[10] || '';
+                    const notes = nData.values[9] || '';
                     const isCanceled = notes.includes('בוטל') || notes.includes('התבטל');
 
                     if (isToday) trNorth.className = 'today-row';
@@ -1474,7 +1476,7 @@
 
                 southRows.forEach((sData, index) => {
                     const trSouth = document.createElement('tr');
-                    const notes = sData.values[10] || '';
+                    const notes = sData.values[9] || '';
                     const isCanceled = notes.includes('בוטל') || notes.includes('התבטל');
 
                     if (isToday) trSouth.className = 'today-row';
@@ -1666,8 +1668,8 @@
                 </td>
             `;
 
-            // גורילות (אינדקס 8 לגורילה 1, אינדקס 11 לגורילה 2)
-            const gorilla1Val = vals[8] || '';
+            // גורילות (אינדקס 7 לגורילה 1, אינדקס 11 לגורילה 2)
+            const gorilla1Val = vals[7] || '';
             const gorilla2Val = vals[11] || '';
             const hasGorilla1 = gorilla1Val.trim() !== '';
             const hasGorilla2 = gorilla2Val.trim() !== '';
@@ -1676,7 +1678,7 @@
                 <td>
                     <div class="gorillas-container">
                         <div class="gorilla-row-flex">
-                            <select class="cell-select ${gorilla1Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value); renderCurrentWeekTables();">
+                            <select class="cell-select ${gorilla1Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value); renderCurrentWeekTables();">
                                 ${gorillaOptions.map(g => `<option value="${g}" ${gorilla1Val === g ? 'selected' : ''}>${g}</option>`).join('')}
                             </select>
                             ${hasGorilla1 && !hasGorilla2 ? `<button type="button" class="add-gorilla-btn" onclick="showSecondGorillaSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הוסף גורילה נוספת">➕</button>` : ''}
@@ -1708,14 +1710,10 @@
                 </td>
                 <td><input type="text" class="cell-input" value="${vals[5] || ''}" placeholder="איש קשר" list="mem-contacts" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 5, this.value)"></td>
                 <td><input type="text" class="cell-input" value="${vals[6] || ''}" placeholder="מס'" list="mem-count" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 6, this.value)"></td>
-                <td>
-                    <select class="cell-select ${vals[7] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value)">
-                        ${chargesOptions.map(c => `<option value="${c}" ${vals[7] === c ? 'selected' : ''}>${c}</option>`).join('')}
-                    </select>
-                </td>
                 ${gorillaCellHTML}
-                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="שעות" list="mem-hours" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 9, this.value)"></td>
-                <td><input type="text" class="cell-input" value="${vals[10] || ''}" placeholder="ניידת" onchange="handleTruckNoteChange('${side}', ${monthIdx}, ${cacheIndex}, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" list="mem-hours" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" list="mem-notes" onchange="handleNotesChange('${side}', ${monthIdx}, ${cacheIndex}, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[12] || ''}" placeholder="ניידת" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 12, this.value)"></td>
             `;
         }
 
@@ -1724,8 +1722,8 @@
             else selectEl.classList.remove('has-selection');
         }
 
-        function handleTruckNoteChange(side, monthIdx, cacheIndex, value) {
-            updateCacheAndSave(side, monthIdx, cacheIndex, 10, value);
+        function handleNotesChange(side, monthIdx, cacheIndex, value) {
+            updateCacheAndSave(side, monthIdx, cacheIndex, 9, value);
             
             if (value && value.trim().includes("טיפול חודשי")) {
                 updateCacheAndSave(side, monthIdx, cacheIndex, 2, "טיפול חודשי");
@@ -1758,12 +1756,12 @@
             const saveData = {
                 north: monthData.north.map(item => ({ 
                     dayNum: item.dayNum, 
-                    values: item.values || ["", "", "", "", "", "", "", "", "", "", "", ""], 
+                    values: item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""], 
                     hasUserModifiedGuide1: !!item.hasUserModifiedGuide1 
                 })),
                 south: monthData.south.map(item => ({ 
                     dayNum: item.dayNum, 
-                    values: item.values || ["", "", "", "", "", "", "", "", "", "", "", ""], 
+                    values: item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""], 
                     hasUserModifiedGuide2: !!item.hasUserModifiedGuide2 
                 }))
             };
@@ -1930,7 +1928,7 @@
                     const guide1 = item.values[1] || '';
                     const guide2 = item.values[10] || '';
                     if (trainer.firstName && (guide1.includes(trainer.firstName) || guide2.includes(trainer.firstName))) {
-                        trainerShifts.push({ date: dayInfo.day, month: dayInfo.month + 1, unit: item.values[2], loc: item.values[3], sys: item.values[4], hours: item.values[9] });
+                        trainerShifts.push({ date: dayInfo.day, month: dayInfo.month + 1, unit: item.values[2], loc: item.values[3], sys: item.values[4], hours: item.values[8] });
                     }
                 });
             });
@@ -1969,7 +1967,7 @@
             }
 
             const activeRows = rows.filter(item => {
-                const notes = item.values[10] || '';
+                const notes = item.values[9] || '';
                 return !notes.includes('בוטל') && !notes.includes('התבטל');
             });
 
@@ -2002,12 +2000,13 @@
                 let guideStr = r[1] || 'לא צויין';
                 if (r[10]) guideStr += ` + ${r[10]}`;
 
-                let gorillaStr = r[8] || 'לא צויין';
+                let gorillaStr = r[7] || 'לא צויין';
                 if (r[11]) gorillaStr += ` + ${r[11]}`;
 
                 if (selectedRows.length > 1) msg += `--- *משמרת ${idx + 1}* ---\n`;
-                msg += `• מדריך/ים: ${guideStr}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• חיוב: ${r[7] || 'לא צויין'}\n• גורילה: ${gorillaStr}\n• שעות: ${r[9] || 'לא צויין'}\n`;
-                if (r[10]) msg += `• ניידת: ${r[10]}\n`;
+                msg += `• מדריך/ים: ${guideStr}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• גורילה: ${gorillaStr}\n• שעות: ${r[8] || 'לא צויין'}\n`;
+                if (r[9]) msg += `• הערות: ${r[9]}\n`;
+                if (r[12]) msg += `• ניידת: ${r[12]}\n`;
                 msg += `\n`;
 
                 if (r[5] && /\d{9,}/.test(r[5])) {
