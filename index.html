@@ -200,31 +200,38 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* גלילה אופקית רציפה לטבלת סטטוס גורילות */
+        /* גלילה אופקית והגדרת רוחב עמודות בטבלת סטטוס גורילות */
         .status-table-container {
             overflow-x: auto;
             width: 100%;
             -webkit-overflow-scrolling: touch;
         }
         .status-table-container table {
-            min-width: 650px;
+            width: 100%;
+            min-width: 600px;
         }
+
+        /* צמצום עמודות קצרות והרחבת עמודת ההערות */
+        .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } /* גורילה */
+        .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   /* תקין/תקול */
+        .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 95px; min-width: 95px; }   /* ניקוי אחרון */
+        .status-table-container th:nth-child(4), .status-table-container td:nth-child(4) { width: auto; }                    /* תקלה/הערות נוספות תפוס את היתרה */
 
         table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
         th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
         th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; font-size: 0.82em; }
 
-        table th:nth-child(1), table td:nth-child(1) { width: 75px; min-width: 75px; } 
-        table th:nth-child(2), table td:nth-child(2) { width: 125px; min-width: 125px; } 
-        table th:nth-child(3), table td:nth-child(3) { width: 50px; min-width: 50px; } 
-        table th:nth-child(4), table td:nth-child(4) { width: 50px; min-width: 50px; } 
-        table th:nth-child(5), table td:nth-child(5) { width: 65px; min-width: 65px; } 
-        table th:nth-child(6), table td:nth-child(6) { width: 130px; min-width: 130px; } 
-        table th:nth-child(7), table td:nth-child(7) { width: 40px; min-width: 40px; } 
-        table th:nth-child(8), table td:nth-child(8) { width: 100px; min-width: 100px; } 
-        table th:nth-child(9), table td:nth-child(9) { width: 50px; min-width: 50px; } 
-        table th:nth-child(10), table td:nth-child(10) { width: 110px; min-width: 110px; } 
-        table th:nth-child(11), table td:nth-child(11) { width: 90px; min-width: 90px; } 
+        .spreadsheet-container table th:nth-child(1), .spreadsheet-container table td:nth-child(1) { width: 75px; min-width: 75px; } 
+        .spreadsheet-container table th:nth-child(2), .spreadsheet-container table td:nth-child(2) { width: 125px; min-width: 125px; } 
+        .spreadsheet-container table th:nth-child(3), .spreadsheet-container table td:nth-child(3) { width: 50px; min-width: 50px; } 
+        .spreadsheet-container table th:nth-child(4), .spreadsheet-container table td:nth-child(4) { width: 50px; min-width: 50px; } 
+        .spreadsheet-container table th:nth-child(5), .spreadsheet-container table td:nth-child(5) { width: 65px; min-width: 65px; } 
+        .spreadsheet-container table th:nth-child(6), .spreadsheet-container table td:nth-child(6) { width: 130px; min-width: 130px; } 
+        .spreadsheet-container table th:nth-child(7), .spreadsheet-container table td:nth-child(7) { width: 40px; min-width: 40px; } 
+        .spreadsheet-container table th:nth-child(8), .spreadsheet-container table td:nth-child(8) { width: 100px; min-width: 100px; } 
+        .spreadsheet-container table th:nth-child(9), .spreadsheet-container table td:nth-child(9) { width: 50px; min-width: 50px; } 
+        .spreadsheet-container table th:nth-child(10), .spreadsheet-container table td:nth-child(10) { width: 110px; min-width: 110px; } 
+        .spreadsheet-container table th:nth-child(11), .spreadsheet-container table td:nth-child(11) { width: 90px; min-width: 90px; } 
         
         .weekend-row td {
             background-color: rgba(100, 116, 139, 0.1);
@@ -1184,7 +1191,6 @@
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6"];
-        // הוספת אופציית "ללא" לחלונית בחירת המערכת
         const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
 
         let memoryData = {
@@ -1663,7 +1669,6 @@
             let localGuides2 = [...guidesOptions];
             if (guide2Val && !localGuides2.includes(guide2Val)) {
                 localGuides2.splice(localGuides2.length - 1, 0, guide2Val);
-            LocalGuides2 = [...guidesOptions];
             }
 
             let guideCellHTML = `
