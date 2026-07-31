@@ -1564,7 +1564,7 @@
         }
 
         function removeExtraRow(side, monthIdx, cacheIndex) {
-            if (!confirm("האם אתה בטוח שברצונך למחוק שורה זו?")) return;
+            if (!confirm("האם אתה בטוח שברצונך למחוק שורה נוספת זו?")) return;
             const monthData = getMonthDataCache(monthIdx);
             if (side === 'north') {
                 monthData.north.splice(cacheIndex, 1);
@@ -2078,6 +2078,7 @@
                 const monthData = getMonthDataCache(dayInfo.month);
                 const dStr = String(dayInfo.day).padStart(2, '0');
                 const mStr = String(dayInfo.month + 1).padStart(2, '0');
+                let hasDayEntries = false;
                 
                 ['north', 'south'].forEach(side => {
                     monthData[side].filter(item => item.dayNum === dayInfo.day).forEach(item => {
@@ -2093,9 +2094,14 @@
 
                             msg += `• *יום ${dayInfo.hDayName} (${dStr}.${mStr})* | ${side === 'north' ? 'ניידת 1' : 'ניידת 2'}: ${vals[2]} (${vals[3]}) | מדריך: ${guideStr} | גורילה: ${gorillaStr}${truckStr}\n`;
                             count++;
+                            hasDayEntries = true;
                         }
                     });
                 });
+
+                if (hasDayEntries) {
+                    msg += `\n`; // רווח של שורה מפרידה לאחר כל יום
+                }
             });
 
             if (count === 0) { alert(`לא נמצאו נתונים פעילים בשבוע ${currentWeekObj.weekNum}.`); return; }
