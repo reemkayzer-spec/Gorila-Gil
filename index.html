@@ -199,6 +199,17 @@
             border-radius: 0; 
             -webkit-overflow-scrolling: touch;
         }
+
+        /* גלילה אופקית רציפה לטבלת סטטוס גורילות */
+        .status-table-container {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        .status-table-container table {
+            min-width: 650px;
+        }
+
         table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
         th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
         th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; font-size: 0.82em; }
@@ -547,7 +558,7 @@
         <section id="gorilla-status" class="tab-content">
             <h2>📊 סטטוס גורילות</h2>
             <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
-            <div class="table-container">
+            <div class="status-table-container">
                 <table class="schedule-table">
                     <thead>
                         <tr>
@@ -1005,8 +1016,14 @@
 
         <section id="forms" class="tab-content">
             <h2>📋 טפסים, ציוד והעשרה</h2>
+            
+            <!-- מנוע חיפוש בלשונית טפסים והעשרה -->
+            <div class="search-box" style="margin-bottom: 15px;">
+                <input type="text" id="formsSearch" onkeyup="filterFormsTab()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
+            </div>
+
             <div class="cards-container">
-                <div class="card">
+                <div class="card form-item">
                     <div class="form-card-content">
                         <div class="form-info">
                             <h3>🚗 רשימת ציוד לרכב</h3>
@@ -1021,7 +1038,7 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card form-item">
                     <div class="form-card-content">
                         <div class="form-info">
                             <h3>✍️ משוב מתאמנים</h3>
@@ -1038,7 +1055,7 @@
             </div>
 
             <!-- כרטיס עמוד מידע והעשרה - נתוני הגיל -->
-            <div class="card" style="width: 100%; margin-top: 15px;">
+            <div class="card form-item" style="width: 100%; margin-top: 15px;">
                 <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
                 <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
                 
@@ -1167,7 +1184,8 @@
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6"];
-        const systemsOptions = ["", "אחוד", "ישלט", "אחוד סימולטיבי"];
+        // הוספת אופציית "ללא" לחלונית בחירת המערכת
+        const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
 
         let memoryData = {
             units: new Set(),
@@ -1645,6 +1663,7 @@
             let localGuides2 = [...guidesOptions];
             if (guide2Val && !localGuides2.includes(guide2Val)) {
                 localGuides2.splice(localGuides2.length - 1, 0, guide2Val);
+            LocalGuides2 = [...guidesOptions];
             }
 
             let guideCellHTML = `
@@ -2065,6 +2084,13 @@
             let input = document.getElementById("slidesSearch").value.toUpperCase();
             document.querySelectorAll("#pdf-slides .slide-box").forEach(box => {
                 box.style.display = box.innerText.toUpperCase().includes(input) ? "" : "none";
+            });
+        }
+
+        function filterFormsTab() {
+            let input = document.getElementById("formsSearch").value.toUpperCase();
+            document.querySelectorAll("#forms .form-item").forEach(item => {
+                item.style.display = item.innerText.toUpperCase().includes(input) ? "" : "none";
             });
         }
 
