@@ -1516,6 +1516,9 @@
                 if (sel.value !== "") sel.classList.add('has-selection');
                 else sel.classList.remove('has-selection');
             });
+
+            // הפעלת סריקת החיפוש לאחר שחזור/רנדור הטבלאות
+            filterSchedule();
         }
 
         function addExtraRow(side) {
@@ -2078,10 +2081,19 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // מנוע חיפוש בסידור העבודה
         function filterSchedule() {
-            let input = document.getElementById("scheduleSearch").value.toUpperCase();
+            let input = document.getElementById("scheduleSearch").value.trim().toUpperCase();
             document.querySelectorAll(".spreadsheet-container table tbody tr").forEach(row => {
-                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
+                if (!input) {
+                    row.style.display = "";
+                    return;
+                }
+                let textToSearch = row.innerText.toUpperCase();
+                row.querySelectorAll("input, select").forEach(el => {
+                    if (el.value) textToSearch += " " + el.value.toUpperCase();
+                });
+                row.style.display = textToSearch.includes(input) ? "" : "none";
             });
         }
 
@@ -2131,7 +2143,7 @@
                 });
 
                 if (hasDayEntries) {
-                    msg += `\n`; // רווח של שורה מפרידה לאחר כל יום
+                    msg += `\n`;
                 }
             });
 
