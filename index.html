@@ -1181,11 +1181,12 @@
     <div id="datalistsContainer"></div>
 
     <script>
-        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
+        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "功"];
         const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
         
         const currentYear = 2026;
-        let activeMonth = 6; 
+        // הגדרת אוטומטית של החודש הנוכחי בזמן אמת לפי תאריך המערכת
+        let activeMonth = new Date().getMonth(); 
         let activeWeekIndex = 0; 
         let isUpdatingCloud = false;
 
@@ -1362,7 +1363,18 @@
             monthWeeksCache = [];
             weeksMap.forEach((wObj) => monthWeeksCache.push(wObj));
 
-            if (activeWeekIndex >= monthWeeksCache.length) {
+            // זיהוי אוטומטי של השבוע הנוכחי (השבוע של היום)
+            const today = new Date();
+            let foundTodayIndex = -1;
+            if (currentYear === today.getFullYear()) {
+                foundTodayIndex = monthWeeksCache.findIndex(weekObj => 
+                    weekObj.days.some(d => d.month === today.getMonth() && d.day === today.getDate())
+                );
+            }
+
+            if (foundTodayIndex !== -1) {
+                activeWeekIndex = foundTodayIndex;
+            } else if (activeWeekIndex >= monthWeeksCache.length) {
                 activeWeekIndex = 0;
             }
 
@@ -1427,9 +1439,6 @@
                 let isTodayWeek = false;
                 if (currentYear === today.getFullYear()) {
                     isTodayWeek = weekObj.days.some(d => d.month === today.getMonth() && d.day === today.getDate());
-                    if (isTodayWeek && activeWeekIndex === 0) {
-                        activeWeekIndex = idx;
-                    }
                 }
 
                 const startD = weekObj.days[0];
@@ -1517,7 +1526,6 @@
                 else sel.classList.remove('has-selection');
             });
 
-            // הפעלת סריקת החיפוש לאחר שחזור/רנדור הטבלאות
             filterSchedule();
         }
 
@@ -1695,7 +1703,6 @@
                 </td>
             `;
 
-            // גורילות (אינדקס 7 לגורילה 1, אינדקס 11 לגורילה 2)
             const gorilla1Val = vals[7] || '';
             const gorilla2Val = vals[11] || '';
             const hasGorilla1 = gorilla1Val.trim() !== '';
@@ -2081,7 +2088,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // מנוע חיפוש בסידור העבודה
         function filterSchedule() {
             let input = document.getElementById("scheduleSearch").value.trim().toUpperCase();
             document.querySelectorAll(".spreadsheet-container table tbody tr").forEach(row => {
