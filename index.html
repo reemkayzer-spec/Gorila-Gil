@@ -1181,17 +1181,16 @@
     <div id="datalistsContainer"></div>
 
     <script>
-        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "功"];
+        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
         const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
         
         const currentYear = 2026;
-        // הגדרת אוטומטית של החודש הנוכחי בזמן אמת לפי תאריך המערכת
         let activeMonth = new Date().getMonth(); 
         let activeWeekIndex = 0; 
         let isUpdatingCloud = false;
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
-        const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6"];
+        const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
         const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
 
         let memoryData = {
@@ -1363,7 +1362,6 @@
             monthWeeksCache = [];
             weeksMap.forEach((wObj) => monthWeeksCache.push(wObj));
 
-            // זיהוי אוטומטי של השבוע הנוכחי (השבוע של היום)
             const today = new Date();
             let foundTodayIndex = -1;
             if (currentYear === today.getFullYear()) {
@@ -1987,6 +1985,7 @@
             window.open(waUrl, '_blank');
         }
 
+        // עדכון פונקציית תזכורת האימון למתאמנים לפי הטקסט המבוקש
         function sendTomorrowReminder(side) {
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
@@ -2024,29 +2023,17 @@
                 }
             }
 
-            const unitTitle = side === 'north' ? 'ניידת 1 צפון' : 'ניידת 2 מרכז/דרום';
-            let msg = `📋 *תזכורת אימון למחר (${String(dNum).padStart(2,'0')}.${String(mIdx+1).padStart(2,'0')}) - ${unitTitle}*\n\n`;
-            
+            let hoursStr = selectedRows.map(r => r.values[8] || 'לפי תיאום').join(' | ');
             let targetPhone = "";
 
-            selectedRows.forEach((rowObj, idx) => {
+            selectedRows.forEach(rowObj => {
                 const r = rowObj.values;
-                let guideStr = r[1] || 'לא צויין';
-                if (r[10]) guideStr += ` + ${r[10]}`;
-
-                let gorillaStr = r[7] || 'לא צויין';
-                if (r[11]) gorillaStr += ` + ${r[11]}`;
-
-                if (selectedRows.length > 1) msg += `--- *משמרת ${idx + 1}* ---\n`;
-                msg += `• מדריך/ים: ${guideStr}\n• כוח מתאמן: ${r[2] || 'לא צויין'}\n• מיקום: ${r[3] || 'לא צויין'}\n• מערכת: ${r[4] || 'לא צויין'}\n• איש קשר: ${r[5] || 'לא צויין'}\n• מס' מתאמנים: ${r[6] || 'לא צויין'}\n• גורילה: ${gorillaStr}\n• שעות: ${r[8] || 'לא צויין'}\n`;
-                if (r[9]) msg += `• הערות: ${r[9]}\n`;
-                if (r[12]) msg += `• ניידת: ${r[12]}\n`;
-                msg += `\n`;
-
                 if (r[5] && /\d{9,}/.test(r[5])) {
                     targetPhone = r[5];
                 }
             });
+
+            let msg = `מה המצב?\nמחר אנחנו מגיעים אליך לאימון\nשעות: ${hoursStr}\nנתראה מחר!`;
 
             let waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
             if (targetPhone) {
