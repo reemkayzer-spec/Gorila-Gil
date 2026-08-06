@@ -200,7 +200,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* גלילה אופקית והגדרת רוחב עמודות בטבלת סטטוס גורילות */
         .status-table-container {
             overflow-x: auto;
             width: 100%;
@@ -211,11 +210,10 @@
             min-width: 600px;
         }
 
-        /* צמצום עמודות קצרות והרחבת עמודת ההערות */
-        .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } /* גורילה */
-        .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   /* תקין/תקול */
-        .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 95px; min-width: 95px; }   /* ניקוי אחרון */
-        .status-table-container th:nth-child(4), .status-table-container td:nth-child(4) { width: auto; }                    /* תקלה/הערות נוספות תפוס את היתרה */
+        .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } 
+        .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   
+        .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 95px; min-width: 95px; }   
+        .status-table-container th:nth-child(4), .status-table-container td:nth-child(4) { width: auto; }                    
 
         table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
         th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
@@ -278,7 +276,6 @@
             font-weight: bold;
         }
 
-        /* עיצוב מערך המדריכים והגורילות */
         .guides-container, .gorillas-container {
             display: flex;
             flex-direction: column;
@@ -476,7 +473,7 @@
             <div class="schedule-header-action">
                 <h2 style="margin: 0; font-size: 1.15em;">📅 אימוני גורילות גיל - סידור עבודה חודשי ושבועי</h2>
                 <div class="search-box">
-                    <input type="text" id="scheduleSearch" onkeyup="filterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
+                    <input type="text" id="scheduleSearch" oninput="filterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
                 </div>
                 <div class="action-btns-group">
                     <button class="wa-group-btn" id="waShiftsBtn" onclick="exportWeeklyShiftsToCalendar()">
@@ -1024,7 +1021,6 @@
         <section id="forms" class="tab-content">
             <h2>📋 טפסים, ציוד והעשרה</h2>
             
-            <!-- מנוע חיפוש בלשונית טפסים והעשרה -->
             <div class="search-box" style="margin-bottom: 15px;">
                 <input type="text" id="formsSearch" onkeyup="filterFormsTab()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
             </div>
@@ -1061,12 +1057,10 @@
                 </div>
             </div>
 
-            <!-- כרטיס עמוד מידע והעשרה - נתוני הגיל -->
             <div class="card form-item" style="width: 100%; margin-top: 15px;">
                 <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
                 <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
                 
-                <!-- השוואת דגמים -->
                 <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
                 <div class="table-container" style="margin-bottom: 15px;">
                     <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
@@ -1097,7 +1091,6 @@
                     </table>
                 </div>
 
-                <!-- מצבי מרעום / סוגי מטרות -->
                 <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
                 <div class="table-container" style="margin-bottom: 15px;">
                     <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
@@ -1124,7 +1117,6 @@
                     </table>
                 </div>
 
-                <!-- מעטפת שיגור ובטיחות -->
                 <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
                 <div class="table-container">
                     <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
@@ -2074,18 +2066,35 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // מנוע חיפוש משופר בזמן אמת בסידור העבודה
         function filterSchedule() {
-            let input = document.getElementById("scheduleSearch").value.trim().toUpperCase();
+            const searchEl = document.getElementById("scheduleSearch");
+            if (!searchEl) return;
+            
+            const rawInput = searchEl.value.trim().toUpperCase();
+            const terms = rawInput.split(/\s+/).filter(t => t.length > 0);
+
             document.querySelectorAll(".spreadsheet-container table tbody tr").forEach(row => {
-                if (!input) {
+                if (terms.length === 0) {
                     row.style.display = "";
                     return;
                 }
-                let textToSearch = row.innerText.toUpperCase();
+
+                let contextText = "";
+                if (row.closest("#sheetNorthTable")) {
+                    contextText = " צפון ניידת 1 ";
+                } else if (row.closest("#sheetSouthTable")) {
+                    contextText = " דרום מרכז ניידת 2 ";
+                }
+
+                let textToSearch = (row.innerText + contextText).toUpperCase();
+                
                 row.querySelectorAll("input, select").forEach(el => {
                     if (el.value) textToSearch += " " + el.value.toUpperCase();
                 });
-                row.style.display = textToSearch.includes(input) ? "" : "none";
+
+                const matchesAll = terms.every(term => textToSearch.includes(term));
+                row.style.display = matchesAll ? "" : "none";
             });
         }
 
