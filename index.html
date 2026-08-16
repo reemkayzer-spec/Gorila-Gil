@@ -38,7 +38,6 @@
     </script>
 
     <script>
-        // אתחול Supabase עבור אחסון תמונות (Storage Bucket: media)
         const SUPABASE_URL = 'https://pvtswscsqnymbbzgsafu.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_wlsjLYqz458Ud69TrPR7AA_LB9xvimg';
         window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -200,6 +199,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* גלילה אופקית והגדרת רוחב עמודות בטבלת סטטוס גורילות */
         .status-table-container {
             overflow-x: auto;
             width: 100%;
@@ -212,7 +212,7 @@
 
         .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } 
         .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   
-        .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 95px; min-width: 95px; }   
+        .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 125px; min-width: 125px; } 
         .status-table-container th:nth-child(4), .status-table-container td:nth-child(4) { width: auto; }                    
 
         table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
@@ -276,6 +276,7 @@
             font-weight: bold;
         }
 
+        /* עיצוב מערך המדריכים והגורילות */
         .guides-container, .gorillas-container {
             display: flex;
             flex-direction: column;
@@ -568,7 +569,7 @@
                         <tr>
                             <th>גורילה</th>
                             <th>תקין/תקול</th>
-                            <th>ניקוי אחרון</th>
+                            <th>טיפול חודשי אחרון</th>
                             <th>תקלה/הערות נוספות</th>
                         </tr>
                     </thead>
@@ -1117,6 +1118,44 @@
                     </table>
                 </div>
 
+                <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">☁️ ירי בעננות, ניהוג וסחיפת נעילה</h4>
+                <div class="table-container" style="margin-bottom: 15px;">
+                    <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                        <thead>
+                            <tr style="background-color: var(--th-bg); color: white;">
+                                <th style="padding: 8px; width: 30%;">תרחיש / מצב</th>
+                                <th style="padding: 8px;">אופן פעולה והנחיות</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">עננות נמוכה</td>
+                                <td style="padding: 8px;">נשגר במעוף נמוך.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">מטרת NLOS (ללא אפשרות למעוף נמוך)</td>
+                                <td style="padding: 8px;">נשגר בניהוג.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">כניסה לעננות במצב נעילה</td>
+                                <td style="padding: 8px;">עלולה להתרחש סחיפת נעילה שעלולה להוביל לניהוג זמני.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 1</td>
+                                <td style="padding: 8px;">סחיפת נעילה ועדכון רציף של הכוון תכניס אותנו למצב זה.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 2</td>
+                                <td style="padding: 8px;">המערכת יודעת להתגבר לבד על סחיפת נעילה, ובגלל זה <strong>אין מצב מוגדר של ניהוג זמני</strong>.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; font-weight: bold; color: #ef4444;">חריגה ממשפך בטיחות</td>
+                                <td style="padding: 8px;">במידה והטיל נסחף ועובר את משפך הבטיחות (<span class="code-block">2500 לצדדים</span>) – הטיל יפיל את עצמו.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
                 <div class="table-container">
                     <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
@@ -1403,6 +1442,7 @@
             const bar = document.getElementById('monthFoldersBar');
             if (!bar) return;
             bar.innerHTML = '';
+            // סידור החודשים כהלכה בסדר כרונולוגי מינואר עד דצמבר
             monthNames.forEach((mName, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `month-folder-btn ${idx === activeMonth ? 'active' : ''}`;
@@ -1589,7 +1629,7 @@
         }
 
         function removeExtraRow(side, monthIdx, cacheIndex) {
-            if (!confirm("האם אתה בטוח שברצונך למחוק שורה נוספת זו?")) return;
+            if (!confirm("האם אתה בטוח שברצונך למחוק שורה זו?")) return;
             const monthData = getMonthDataCache(monthIdx);
             if (side === 'north') {
                 monthData.north.splice(cacheIndex, 1);
@@ -2024,7 +2064,7 @@
                 }
             });
 
-            let msg = `מה המצב?\nמחר אנחנו מגיעים אליך לאימון\nשעות: ${hoursStr}\nנתראה מחר!`;
+            let msg = `מה המצב?\nזה מהצוות גיל של בגירה\nמחר אנחנו מגיעים אליך לאימון\nבשעות: ${hoursStr}\nנתראה!`;
 
             let waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
             if (targetPhone) {
@@ -2066,7 +2106,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // מנוע חיפוש משופר בזמן אמת בסידור העבודה
         function filterSchedule() {
             const searchEl = document.getElementById("scheduleSearch");
             if (!searchEl) return;
@@ -2087,12 +2126,29 @@
                     contextText = " דרום מרכז ניידת 2 ";
                 }
 
-                let textToSearch = (row.innerText + contextText).toUpperCase();
+                let rowValues = [contextText];
                 
-                row.querySelectorAll("input, select").forEach(el => {
-                    if (el.value) textToSearch += " " + el.value.toUpperCase();
+                row.querySelectorAll("input").forEach(inp => {
+                    if (inp.value && inp.value.trim()) {
+                        rowValues.push(inp.value.trim());
+                    }
                 });
 
+                row.querySelectorAll("select").forEach(sel => {
+                    if (sel.value && sel.value.trim()) {
+                        rowValues.push(sel.value.trim());
+                    }
+                });
+
+                row.querySelectorAll("td").forEach(td => {
+                    Array.from(td.childNodes).forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                            rowValues.push(node.textContent.trim());
+                        }
+                    });
+                });
+
+                const textToSearch = rowValues.join(" ").toUpperCase();
                 const matchesAll = terms.every(term => textToSearch.includes(term));
                 row.style.display = matchesAll ? "" : "none";
             });
