@@ -8,7 +8,7 @@
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Firebase SDKs & Auth Integration -->
+    <!-- Firebase SDKs & Auth Integration with Whitelist -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -36,7 +36,17 @@
         window.fbOnValue = onValue;
         window.fbGet = get;
 
-        // הגדרת פונקציות גלובליות להתחברות והתנתקות
+        // רשימת האימיילים המורשים בלבד להיכנס לאתר
+        const allowedEmails = [
+            "NadavYichye@gmail.com",
+            "reemkayzer@gmail.com",
+            "itayhaker19@gmail.com",
+            "netashatzberg@gmail.com",
+            "idolevko2@gmail.com",
+            "adielkassa@gmail.com",
+            "tomerk2001@gmail.com"
+        ];
+
         window.loginWithGoogle = function() {
             signInWithPopup(auth, provider).catch((error) => {
                 const errEl = document.getElementById("error-msg");
@@ -48,14 +58,28 @@
             signOut(auth);
         };
 
-        // בדיקת סטטוס חיבור האם לאפשר גישה
+        // בדיקה האם המשתמש מחובר ונמצא ברשימת המורשים
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
+            const errEl = document.getElementById("error-msg");
+
             if (user) {
-                if(authScreen) authScreen.style.display = "none";
-                if(mainContent) mainContent.style.display = "block";
-                window.dispatchEvent(new Event('firebase-ready'));
+                // המרת האימייל לאותיות קטנות כדי למנוע בעיות של אותיות גדולות
+                const userEmail = user.email ? user.email.toLowerCase() : "";
+                const isAllowed = allowedEmails.some(email => email.toLowerCase() === userEmail);
+
+                if (isAllowed) {
+                    if(authScreen) authScreen.style.display = "none";
+                    if(mainContent) mainContent.style.display = "block";
+                    window.dispatchEvent(new Event('firebase-ready'));
+                } else {
+                    signOut(auth).then(() => {
+                        if(authScreen) authScreen.style.display = "flex";
+                        if(mainContent) mainContent.style.display = "none";
+                        if(errEl) errEl.innerText = "הגישה דורשת אימייל מורשה בלבד. חשבונך אינו מורשה להיכנס.";
+                    });
+                }
             } else {
                 if(authScreen) authScreen.style.display = "flex";
                 if(mainContent) mainContent.style.display = "none";
@@ -101,7 +125,6 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
-        /* עיצוב מסך ההתחברות */
         #auth-screen {
             display: none;
             flex-direction: column;
@@ -741,7 +764,7 @@
                                 <td>
                                     <div class="cleaning-date-wrapper">
                                         <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
+                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateInput(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
                                     </div>
                                 </td>
                                 <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td>
