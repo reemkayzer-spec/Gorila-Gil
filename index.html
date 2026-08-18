@@ -8,10 +8,10 @@
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Firebase SDKs & Auth Integration with Whitelist -->
+    <!-- Firebase SDKs & Auth Integration with Redirect for Mobile Support -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -48,7 +48,7 @@
         ];
 
         window.loginWithGoogle = function() {
-            signInWithPopup(auth, provider).catch((error) => {
+            signInWithRedirect(auth, provider).catch((error) => {
                 const errEl = document.getElementById("error-msg");
                 if(errEl) errEl.innerText = "שגיאה בהתחברות: " + error.message;
             });
@@ -517,7 +517,7 @@
         <p id="error-msg" style="color: #ff6b6b; margin-top: 10px;"></p>
     </div>
 
-    <!-- תוכן האתר המלא (יוצג רק לאחר אימות מוצלח) -->
+    <!-- תוכן האתר המלא -->
     <div id="main-content">
         <header>
             <div class="header-top">
