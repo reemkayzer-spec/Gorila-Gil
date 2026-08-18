@@ -8,7 +8,7 @@
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Firebase SDKs & Auth Integration with Mobile & Redirect Fix -->
+    <!-- Firebase SDKs & Auth Integration with Redirect Fix -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -64,10 +64,10 @@
             signOut(auth);
         };
 
-        // בדיקת תוצאת ה-Redirect בעליית העמוד למניעת תקיעות בלופים
+        // טיפול קריטי בתוצאת ההפניה כדי שהדפדפן ישמור את סשן ההתחברות
         getRedirectResult(auth).catch((error) => {
             const errEl = document.getElementById("error-msg");
-            if(errEl) errEl.innerText = "שגיאה בתהליך האימות: " + error.message;
+            if(errEl) errEl.innerText = "שגיאה באימות ההפניה: " + error.message;
         });
 
         onAuthStateChanged(auth, (user) => {
@@ -94,7 +94,6 @@
                     signOut(auth).then(() => {
                         if(authScreen) authScreen.style.display = "flex";
                         if(mainContent) mainContent.style.display = "none";
-                        // מציג בדיוק איזה מייל ניסה להיכנס כדי שנדע אם יש פער
                         if(errEl) errEl.innerText = `הגישה נדחתה. המייל (${userEmail}) אינו מורשה להיכנס.`;
                     });
                 }
@@ -846,7 +845,7 @@
                                 <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
                                 <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
                                 <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                                <li>בחלוני Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                                <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
                                 <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
                             </ol>
                         </div>
@@ -1697,10 +1696,6 @@
                         updateCacheAndSave(side, monthIdx, cacheIndex, 11, defaults[1]);
                     }
                 }
-            }
-
-            if (val && !guidesOptions.includes(val) && val !== "אחר...") {
-                renderCurrentWeekTables();
             }
 
             // ריענון מידי של הטבלה להצגת העדכון בעמודת הגורילות באותו רגע
