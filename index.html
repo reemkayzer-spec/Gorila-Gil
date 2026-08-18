@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תפעול והדרכה - צוות גיל</title>
     
-    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Firebase SDKs & Auth Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -28,54 +26,30 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-        const db = getDatabase(app);
+        window.fbDB = getDatabase(app);
+        window.fbRef = ref; window.fbSet = set; window.fbOnValue = onValue; window.fbGet = get;
 
-        window.fbDB = db;
-        window.fbRef = ref;
-        window.fbSet = set;
-        window.fbOnValue = onValue;
-        window.fbGet = get;
-
-        // מיפוי גורילות למדריכים
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
         };
 
-        const allowedEmails = [
-            "NadavYichye@gmail.com", "reemkayzer@gmail.com", "itayhaker19@gmail.com",
-            "netashatzberg@gmail.com", "idolevko2@gmail.com", "adielkassa@gmail.com", "tomerk2001@gmail.com"
-        ];
+        const allowedEmails = ["NadavYichye@gmail.com", "reemkayzer@gmail.com", "itayhaker19@gmail.com", "netashatzberg@gmail.com", "idolevko2@gmail.com", "adielkassa@gmail.com", "tomerk2001@gmail.com"];
 
-        window.loginWithGoogle = function() {
-            signInWithRedirect(auth, provider).catch((error) => {
-                const errEl = document.getElementById("error-msg");
-                if(errEl) errEl.innerText = "שגיאה בהתחברות: " + error.message;
-            });
-        };
+        window.loginWithGoogle = () => signInWithRedirect(auth, provider);
+        window.logout = () => signOut(auth);
 
-        window.logout = function() { signOut(auth); };
-
-        // תיקון הבעיה של הלופ בהתחברות
-        getRedirectResult(auth).catch((error) => {
-            console.error("Auth error:", error);
-        });
+        getRedirectResult(auth).catch(console.error);
 
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
-
-            if (user) {
-                const isAllowed = allowedEmails.some(email => email.toLowerCase() === user.email.toLowerCase());
-                if (isAllowed) {
-                    authScreen.style.display = "none";
-                    mainContent.style.display = "block";
-                    window.dispatchEvent(new Event('firebase-ready'));
-                } else {
-                    signOut(auth);
-                    document.getElementById("error-msg").innerText = "אין לך הרשאת גישה.";
-                }
+            if (user && allowedEmails.some(email => email.toLowerCase() === user.email.toLowerCase())) {
+                authScreen.style.display = "none";
+                mainContent.style.display = "block";
+                window.dispatchEvent(new Event('firebase-ready'));
             } else {
+                if (user) signOut(auth);
                 authScreen.style.display = "flex";
                 mainContent.style.display = "none";
             }
@@ -93,13 +67,10 @@
         .tab-btn { background-color: #34495e; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
         .tab-btn.active { background-color: #3498db; }
         main { max-width: 1400px; margin: 20px auto; padding: 20px; background: var(--main-bg); border-radius: 10px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
         table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
         th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; }
         .cell-input { width: 100%; border: none; background: transparent; text-align: center; }
         .cell-select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
-        .wa-group-btn { background-color: #128c7e; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -114,7 +85,6 @@
             <h1>תפעול והדרכה - צוות גיל</h1>
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
-                <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
             </div>
         </header>
         <main>
@@ -125,33 +95,76 @@
                     </div>
                 </div>
             </section>
-            <section id="gorilla-status" class="tab-content"><h2>📊 סטטוס גורילות</h2></section>
         </main>
     </div>
 
     <script>
-        // לוגיקה מעודכנת עם ריענון מסך מידי
+        // המנוע הראשי
+        let allMonthsData = {};
+        window.activeMonth = new Date().getMonth();
+
+        window.addEventListener('firebase-ready', () => {
+            loadMonthDataFromCloud(window.activeMonth);
+        });
+
+        function loadMonthDataFromCloud(monthIdx) {
+            const sheetRef = window.fbRef(window.fbDB, `sheets/2026_${monthIdx}`);
+            window.fbOnValue(sheetRef, (snapshot) => {
+                allMonthsData[monthIdx] = snapshot.val() || { north: [] };
+                renderCurrentWeekTables();
+            });
+        }
+
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
+            // שמירה ל-Firebase
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
             
-            // לוגיקה למילוי גורילות
+            // מילוי אוטומטי של גורילות
             if (fieldIndex === 1 && window.trainerGorillaMap[val]) {
                 const defaults = window.trainerGorillaMap[val];
-                const monthData = getMonthDataCache(monthIdx);
-                const row = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
-                
-                if (row) {
-                    if (!row.values[4] || row.values[4] === "") {
-                        updateCacheAndSave(side, monthIdx, cacheIndex, 4, defaults[0]);
-                    }
+                const monthData = allMonthsData[monthIdx];
+                if (monthData.north[cacheIndex] && (!monthData.north[cacheIndex].values[4] || monthData.north[cacheIndex].values[4] === "")) {
+                     updateCacheAndSave(side, monthIdx, cacheIndex, 4, defaults[0]);
                 }
             }
-            // הריענון שחיכית לו:
-            renderCurrentWeekTables();
+            renderCurrentWeekTables(); // ריענון מידי
         };
 
-        // פונקציות העזר (תוודא ששאר הפונקציות: renderCurrentWeekTables, updateCacheAndSave, וכו' נמצאות כאן)
+        function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
+            if (!allMonthsData[monthIdx]) allMonthsData[monthIdx] = { north: [] };
+            if (!allMonthsData[monthIdx].north[cacheIndex]) allMonthsData[monthIdx].north[cacheIndex] = { values: Array(5).fill("") };
+            allMonthsData[monthIdx].north[cacheIndex].values[fieldIndex] = value;
+            window.fbSet(window.fbRef(window.fbDB, `sheets/2026_${monthIdx}`), allMonthsData[monthIdx]);
+        }
+
+        function renderCurrentWeekTables() {
+            const body = document.getElementById('northTableBody');
+            body.innerHTML = '';
+            const data = allMonthsData[window.activeMonth]?.north || [];
+            data.forEach((row, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input class="cell-input" value="${row.values[0] || ''}" onchange="updateCacheAndSave('north', ${window.activeMonth}, ${idx}, 0, this.value)"></td>
+                    <td>
+                        <select class="cell-select" onchange="handleGuideSelection('north', ${window.activeMonth}, ${idx}, 1, this)">
+                            ${['', 'איתי הקר', 'עדיאל קסה'].map(g => `<option value="${g}" ${row.values[1] === g ? 'selected' : ''}>${g}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td><input class="cell-input" value="${row.values[2] || ''}" onchange="updateCacheAndSave('north', ${window.activeMonth}, ${idx}, 2, this.value)"></td>
+                    <td><input class="cell-input" value="${row.values[3] || ''}" onchange="updateCacheAndSave('north', ${window.activeMonth}, ${idx}, 3, this.value)"></td>
+                    <td><input class="cell-input" value="${row.values[4] || ''}" onchange="updateCacheAndSave('north', ${window.activeMonth}, ${idx}, 4, this.value)"></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+        
+        function switchTab(id, e) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            e.currentTarget.classList.add('active');
+        }
     </script>
 </body>
 </html>
