@@ -205,10 +205,8 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* עיצובי דשבורד חדשים */
-        .dashboard-header {
-            margin-bottom: 20px;
-        }
+        /* עיצובי דשבורד */
+        .dashboard-header { margin-bottom: 20px; }
         .dashboard-header h2 { margin: 0 0 4px 0; font-size: 1.3em; display: flex; align-items: center; gap: 8px; }
         .dashboard-header p { margin: 0; font-size: 0.85em; color: #64748b; }
 
@@ -228,7 +226,7 @@
             transition: transform 0.2s;
         }
         .kpi-card:hover { transform: translateY(-2px); }
-        .kpi-value { font-size: 2em; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.9em; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
         .kpi-title { font-size: 0.85em; font-weight: 600; color: #64748b; }
 
         .dashboard-main-grid {
@@ -261,69 +259,31 @@
             align-items: center;
         }
 
-        .stats-items-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .stats-items-list { display: flex; flex-direction: column; gap: 12px; }
         .stat-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--main-bg);
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--main-bg); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color);
         }
         .stat-item-label { font-size: 0.9em; font-weight: 600; }
         .stat-item-value { font-size: 1.1em; font-weight: 800; color: #0284c7; }
 
-        .badges-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 6px;
-        }
+        .badges-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
         .info-tag {
-            background: rgba(2, 132, 199, 0.1);
-            color: #0284c7;
-            border: 1px solid rgba(2, 132, 199, 0.2);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.78em;
-            font-weight: bold;
+            background: rgba(2, 132, 199, 0.1); color: #0284c7; border: 1px solid rgba(2, 132, 199, 0.2);
+            padding: 3px 8px; border-radius: 12px; font-size: 0.78em; font-weight: bold;
         }
-        body.dark-mode .info-tag {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
-            border-color: rgba(56, 189, 248, 0.3);
-        }
+        body.dark-mode .info-tag { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
 
         .faults-section {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-right: 4px solid #ef4444;
-            border-radius: 10px;
-            padding: 16px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-right: 4px solid #ef4444;
+            border-radius: 10px; padding: 16px; margin-bottom: 20px;
         }
         .fault-row-item {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #f87171;
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9em;
-            font-weight: 600;
+            background: #fee2e2; color: #991b1b; border: 1px solid #f87171; padding: 10px 14px;
+            border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9em; font-weight: 600;
         }
-        body.dark-mode .fault-row-item {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border-color: #ef4444;
-        }
+        body.dark-mode .fault-row-item { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: #ef4444; }
 
         /* סגנונות כלליים */
         .trainer-profile-bar {
@@ -669,9 +629,6 @@
                     <p>תמונת מצב חיה של פעילות החודש, זמינות המאמנים ותקלות פתוחות. מתעדכן אוטומטית בכל שינוי.</p>
                 </div>
 
-                <!-- סרגל חודשים ייעודי לדשבורד -->
-                <div class="week-tabs-bar" id="dashboardMonthTabs" style="margin-bottom: 20px;"></div>
-
                 <!-- 4 כרטיסי KPI עליונים -->
                 <div class="dashboard-kpi-grid">
                     <div class="kpi-card">
@@ -687,14 +644,17 @@
                         <div class="kpi-title">⚠️ לא תקינות</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-value" id="kpiMonthTrainingDays" style="color: #0284c7;">0</div>
-                        <div class="kpi-title">📅 ימי אימון חודשי</div>
+                        <div class="kpi-value" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <span id="kpiMonthTrainingDays" style="color: #0284c7;">0</span>
+                            <span style="color: #64748b; font-size: 0.8em;">/</span>
+                            <span id="kpiMonthCanceledDays" style="color: #ef4444;">0</span>
+                        </div>
+                        <div class="kpi-title">📅 ימי אימון חודשי <span style="color: #ef4444; font-size: 0.9em;">(ימים שבוטלו)</span></div>
                     </div>
                 </div>
 
-                <!-- גריד מרכזי: נתוני פעילות חודשית + נתוני גורילות (גרף עמודות) -->
+                <!-- גריד מרכזי: נתוני פעילות חודשית + נתוני גורילות -->
                 <div class="dashboard-main-grid">
-                    <!-- צד ימין: נתוני גורילות וגרף עמודות -->
                     <div class="dashboard-box">
                         <div class="dashboard-box-title">
                             <span>📊 נתוני גורילות (ימים מאז טיפול מול ימי אימון)</span>
@@ -705,7 +665,6 @@
                         </div>
                     </div>
 
-                    <!-- צד שמאל: סיכום פעילות חודשית (מתאמנים, שעות, יחידות, מיקומים) -->
                     <div class="dashboard-box">
                         <div class="dashboard-box-title">
                             <span>📋 סיכום פעילות - <span id="statsMonthTitle"></span></span>
@@ -731,7 +690,7 @@
                     </div>
                 </div>
 
-                <!-- חלק תחתון: תקלות פתוחות כרגע -->
+                <!-- ריכוז תקלות פתוחות -->
                 <div class="faults-section">
                     <div class="dashboard-box-title" style="border-bottom-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
                         <span>🔧 תקלות פתוחות כרגע</span>
@@ -739,6 +698,9 @@
                     </div>
                     <div id="openFaultsContainer"></div>
                 </div>
+
+                <!-- סרגל חודשים בתחתית הדשבורד -->
+                <div class="month-folders-bar" id="dashboardMonthTabs"></div>
             </section>
 
             <!-- לשונית סטטוס גורילות -->
@@ -1563,7 +1525,7 @@
                 btn.className = `month-folder-btn ${idx === activeMonth ? 'active' : ''}`;
                 btn.innerText = mName;
                 btn.onclick = () => {
-                    document.querySelectorAll('.month-folder-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('#monthFoldersBar .month-folder-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     activeMonth = idx;
                     activeWeekIndex = 0;
@@ -1579,10 +1541,10 @@
             bar.innerHTML = '';
             monthNames.forEach((mName, idx) => {
                 const btn = document.createElement('button');
-                btn.className = `week-tab-btn ${idx === activeDashboardMonth ? 'active' : ''}`;
+                btn.className = `month-folder-btn ${idx === activeDashboardMonth ? 'active' : ''}`;
                 btn.innerText = mName;
                 btn.onclick = () => {
-                    document.querySelectorAll('#dashboardMonthTabs .week-tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('#dashboardMonthTabs .month-folder-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     activeDashboardMonth = idx;
                     loadMonthDataFromCloud(activeDashboardMonth);
@@ -1716,7 +1678,6 @@
             if (titleEl) titleEl.innerText = `${monthName} ${currentYear}`;
             if (chartMonthLabel) chartMonthLabel.innerText = `(חודש ${monthName})`;
 
-            // 1. נתוני סטטוס גורילות ותקלות מ-latestStatusData
             let healthyCount = 0;
             let faultyCount = 0;
             let faultsList = [];
@@ -1735,14 +1696,13 @@
                     });
                 }
 
-                // חישוב ימים מאז טיפול אחרון
                 let daysSince = 0;
                 if (row.cleaning) {
                     const cleanDate = new Date(row.cleaning);
                     const diffTime = today - cleanDate;
                     daysSince = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
                 } else {
-                    daysSince = 16; // ברירת מחדל
+                    daysSince = 16;
                 }
                 cleaningDaysArray.push(daysSince);
             }
@@ -1752,7 +1712,6 @@
             if (kpiHealthy) kpiHealthy.innerText = healthyCount;
             if (kpiFaulty) kpiFaulty.innerText = faultyCount;
 
-            // 2. ריכוז תקלות פתוחות
             const faultsContainer = document.getElementById('openFaultsContainer');
             const faultsBadge = document.getElementById('faultsCountBadge');
             if (faultsBadge) faultsBadge.innerText = `${faultyCount} תקלות פתוחות`;
@@ -1770,27 +1729,39 @@
                 }
             }
 
-            // 3. איסוף נתונים מסידור העבודה של החודש
+            // חישוב ימי אימון, ביטולים ופעילות
             const monthData = getMonthDataCache(monthIdx);
             let activeTrainingDays = new Set();
+            let canceledTrainingDays = new Set();
             let totalTrainees = 0;
             let totalHours = 0;
             let uniqueLocations = new Set();
             let uniqueUnits = new Set();
-            let gorillaTrainingDays = [0, 0, 0, 0, 0, 0, 0]; // גורילה 1 עד 7
+            let gorillaTrainingDays = [0, 0, 0, 0, 0, 0, 0];
 
             const processRows = (rows) => {
                 rows.forEach(item => {
                     const vals = item.values || [];
                     const notes = vals[9] || '';
-                    if (notes.includes('בוטל') || notes.includes('התבטל')) return;
+                    const isCanceled = notes.includes('בוטל') || notes.includes('התבטל');
 
-                    const hasActivity = (vals[1] && vals[1].trim()) || (vals[2] && vals[2].trim()) || (vals[7] && vals[7].trim());
-                    if (hasActivity) {
+                    if (isCanceled) {
+                        canceledTrainingDays.add(item.dayNum);
+                        return;
+                    }
+
+                    // תנאי: ספירת יום אימון רק כאשר כל 3 שדות המפתח מלאים
+                    const hasGuide = vals[1] && vals[1].trim() !== "";
+                    const hasUnit = vals[2] && vals[2].trim() !== "" && vals[2].trim() !== "ללא";
+                    const hasGorilla = vals[7] && vals[7].trim() !== "";
+
+                    const isFullTrainingDay = hasGuide && hasUnit && hasGorilla;
+
+                    if (isFullTrainingDay) {
                         activeTrainingDays.add(item.dayNum);
                     }
 
-                    if (vals[2] && vals[2].trim() && vals[2].trim() !== "ללא") uniqueUnits.add(vals[2].trim());
+                    if (hasUnit) uniqueUnits.add(vals[2].trim());
                     if (vals[3] && vals[3].trim()) uniqueLocations.add(vals[3].trim());
 
                     if (vals[6] && !isNaN(parseInt(vals[6]))) {
@@ -1798,16 +1769,18 @@
                     }
 
                     if (vals[8] && vals[8].trim()) {
-                        totalHours += 5; // חישוב משוער של 5 שעות פר אימון
+                        totalHours += 5;
                     }
 
-                    // ספירת ימי אימון לגורילות
+                    // ספירת ימי אימון לגורילות לפי שיבוץ בפועל
                     for (let g = 1; g <= 7; g++) {
                         const gName = `גורילה ${g}`;
                         const gNameAlt = `גורילה מס ${g}`;
                         if ((vals[7] && (vals[7].includes(gName) || vals[7].includes(gNameAlt))) ||
                             (vals[11] && (vals[11].includes(gName) || vals[11].includes(gNameAlt)))) {
-                            gorillaTrainingDays[g - 1]++;
+                            if (isFullTrainingDay) {
+                                gorillaTrainingDays[g - 1]++;
+                            }
                         }
                     }
                 });
@@ -1816,8 +1789,11 @@
             processRows(monthData.north);
             processRows(monthData.south);
 
+            // עדכון ה-KPI עם ימי אימון / ימים שבוטלו באדום
             const kpiDays = document.getElementById('kpiMonthTrainingDays');
+            const kpiCanceled = document.getElementById('kpiMonthCanceledDays');
             if (kpiDays) kpiDays.innerText = activeTrainingDays.size;
+            if (kpiCanceled) kpiCanceled.innerText = canceledTrainingDays.size;
 
             const dashTrainees = document.getElementById('dashTotalTrainees');
             if (dashTrainees) dashTrainees.innerText = `${totalTrainees} מתאמנים`;
@@ -1839,7 +1815,6 @@
                     : '<span style="color:#64748b; font-size:0.85em;">אין יחידות רשומות</span>';
             }
 
-            // 4. עדכון גרף עמודות אינטראקטיבי (Chart.js)
             updateGorillaBarChart(cleaningDaysArray, gorillaTrainingDays);
         }
 
@@ -1878,10 +1853,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: {
                             position: 'bottom',
