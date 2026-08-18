@@ -14,7 +14,6 @@
         import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // הגדרות Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAToYjAaMRBYXYjPnPorSLjnAapN5IBqsQ",
             authDomain: "gorilla-training.firebaseapp.com",
@@ -37,7 +36,6 @@
         window.fbOnValue = onValue;
         window.fbGet = get;
 
-        // מיפוי גורילות למדריכים (גלובלי)
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
@@ -91,6 +89,9 @@
         th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; }
         .cell-input { width: 100%; border: none; background: transparent; text-align: center; }
         .cell-select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
+        .slide-box { background: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #3498db; }
+        .slide-img-box img { max-width: 100%; border-radius: 8px; }
+        .wa-group-btn { background-color: #128c7e; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -99,34 +100,41 @@
         <button class="login-btn" onclick="loginWithGoogle()">התחבר עם Google</button>
         <p id="error-msg"></p>
     </div>
+
     <div id="main-content">
         <header>
             <h1>תפעול והדרכה - צוות גיל</h1>
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
+                <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
             </div>
         </header>
+
         <main>
-            <section id="schedule" class="tab-content active"></section>
+            <section id="schedule" class="tab-content active">
+                 <div class="schedule-header-action">
+                    <button class="wa-group-btn" id="waGroupBtn" onclick="sendGroupWhatsAppSummary()">
+                        <span>📋</span> סיכום שבועי לקבוצה
+                    </button>
+                </div>
+                <!-- שאר תוכן הסידור -->
+            </section>
             <section id="gorilla-status" class="tab-content"></section>
+            <section id="pdf-slides" class="tab-content"></section>
         </main>
     </div>
 
     <script>
-        // לוגיקה לעדכון אוטומטי של גורילות
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
-            // שמירת המדריך שנבחר
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
             
-            // בדיקת המיפוי (לפי הקבוע שהגדרנו למעלה)
             if (fieldIndex === 1 && window.trainerGorillaMap[val]) {
                 const defaults = window.trainerGorillaMap[val];
                 const monthData = getMonthDataCache(monthIdx);
                 const row = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
                 
-                // עדכון רק אם התא ריק
                 if (row && (!row.values[7] || row.values[7] === "")) {
                     updateCacheAndSave(side, monthIdx, cacheIndex, 7, defaults[0]);
                 }
@@ -134,8 +142,6 @@
                     if (defaults[1]) updateCacheAndSave(side, monthIdx, cacheIndex, 11, defaults[1]);
                 }
             }
-            // הרינדור מחדש יקרא את הנתונים המעודכנים ששמרנו, 
-            // וזה יתעדכן בכל הכפתורים (וואטסאפ וכו') שקוראים את monthData.
             renderCurrentWeekTables();
         };
     </script>
