@@ -36,6 +36,7 @@
         window.fbOnValue = onValue;
         window.fbGet = get;
 
+        // מיפוי ברירת מחדל של גורילות למדריכים
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
@@ -71,39 +72,86 @@
     </script>
 
     <style>
-        :root { --bg-color: #f4f6f9; --main-bg: #ffffff; --text-color: #2c3e50; --header-bg: #1a252f; --card-bg: #f8fafc; --border-color: #e2e8f0; --input-bg: #ffffff; --th-bg: #334155; --code-bg: #f1f5f9; --link-color: #3498db; }
-        body.dark-mode { --bg-color: #0b0f19; --main-bg: #1e293b; --text-color: #f8fafc; --header-bg: #0f172a; --card-bg: #1e293b; --border-color: #334155; --input-bg: #0f172a; --th-bg: #0f172a; --code-bg: #0f172a; --link-color: #58a6ff; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background-color: var(--bg-color); color: var(--text-color); }
-        #auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #121212; color: white; position: fixed; width: 100%; z-index: 9999; }
-        .login-btn { background-color: #4285F4; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; }
+        :root {
+            --bg-color: #f4f6f9; --main-bg: #ffffff; --text-color: #2c3e50; --header-bg: #1a252f;
+            --card-bg: #f8fafc; --border-color: #e2e8f0; --input-bg: #ffffff; --th-bg: #334155; --code-bg: #f1f5f9; --link-color: #3498db;
+        }
+        body.dark-mode {
+            --bg-color: #0b0f19; --main-bg: #1e293b; --text-color: #f8fafc; --header-bg: #0f172a;
+            --card-bg: #1e293b; --border-color: #334155; --input-bg: #0f172a; --th-bg: #0f172a; --code-bg: #0f172a; --link-color: #58a6ff;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s; }
+        
+        #auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #121212; color: #ffffff; position: fixed; top: 0; left: 0; width: 100%; z-index: 99999; }
+        .login-btn { background-color: #4285F4; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; margin-top: 15px; font-weight: bold; }
         #main-content { display: none; }
-        header { background-color: var(--header-bg); color: white; padding: 10px; text-align: center; }
-        .nav-tabs { display: flex; justify-content: center; gap: 10px; overflow-x: auto; padding: 10px; }
-        .tab-btn { background-color: #34495e; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-        .tab-btn.active { background-color: #3498db; }
-        main { max-width: 1400px; margin: 20px auto; padding: 20px; background: var(--main-bg); border-radius: 10px; }
+
+        header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
+        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
+        
+        .header-actions-left { display: flex; gap: 8px; align-items: center; }
+        .theme-toggle-btn, .logout-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.78em; font-weight: bold; }
+        .logout-btn { background-color: #e74c3c; }
+
+        .nav-tabs { display: flex; justify-content: center; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+        .tab-btn { background-color: #34495e; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em; white-space: nowrap; }
+        .tab-btn:hover, .tab-btn.active { background-color: #3498db; }
+
+        main { max-width: 1400px; margin: 12px auto; padding: 16px; background: var(--main-bg); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
-        th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; }
-        .cell-input { width: 100%; border: none; background: transparent; text-align: center; }
-        .cell-select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
-        .slide-box { background: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #3498db; }
-        .slide-img-box img { max-width: 100%; border-radius: 8px; }
-        .wa-group-btn { background-color: #128c7e; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        .schedule-header-action { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .wa-group-btn { color: white; border: none; padding: 10px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.82em; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background-color: #128c7e; text-decoration: none; }
+        
+        .search-box input { width: 100%; padding: 10px 14px; border: 2px solid var(--border-color); border-radius: 25px; font-size: 0.95em; outline: none; background: var(--input-bg); color: var(--text-color); }
+        
+        .week-tabs-bar { display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .week-tab-btn { background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85em; cursor: pointer; }
+        .week-tab-btn.active { background-color: #0284c7; color: white; border-color: #0284c7; }
+
+        .spreadsheet-container { display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; }
+        .sheet-box { background: var(--main-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .sheet-side-header { background-color: #1e293b; color: white; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.95em; font-weight: bold; }
+        
+        .unit-add-btn { background-color: #0284c7; color: white; border: none; padding: 5px 10px; border-radius: 20px; font-size: 0.78em; font-weight: bold; cursor: pointer; }
+        
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; }
+        th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
+        th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; }
+
+        .cell-input { width: 100%; border: none; background: transparent; text-align: center; font-size: 0.88em; color: var(--text-color); outline: none; }
+        .cell-select { width: 100%; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-size: 0.78em; border-radius: 4px; padding: 2px; }
+
+        .guides-container, .gorillas-container { display: flex; flex-direction: column; gap: 3px; width: 100%; }
+        .guide-row-flex, .gorilla-row-flex { display: flex; align-items: center; gap: 2px; width: 100%; }
+        .add-guide-btn, .remove-guide-btn, .add-gorilla-btn, .remove-gorilla-btn { background: none; border: none; cursor: pointer; font-size: 0.85em; }
+
+        .month-folders-bar { display: flex; gap: 6px; overflow-x: auto; padding: 14px 6px; margin-top: 20px; border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px; justify-content: center; flex-wrap: wrap; }
+        .month-folder-btn { background-color: #475569; color: white; border: none; padding: 9px 16px; border-radius: 6px 6px 0 0; cursor: pointer; font-weight: bold; }
+        .month-folder-btn.active { background-color: #0284c7; color: #ffffff; transform: translateY(-4px); }
     </style>
 </head>
 <body>
+
     <div id="auth-screen">
         <h2>הגישה לדף זה מוגבלת למורשים בלבד</h2>
         <button class="login-btn" onclick="loginWithGoogle()">התחבר עם Google</button>
-        <p id="error-msg"></p>
+        <p id="error-msg" style="color: #ff6b6b; margin-top: 10px;"></p>
     </div>
 
     <div id="main-content">
         <header>
-            <h1>תפעול והדרכה - צוות גיל</h1>
+            <div class="header-top">
+                <h1>תפעול והדרכה - צוות גיל</h1>
+                <div class="header-actions-left">
+                    <button class="theme-toggle-btn" onclick="toggleTheme()">🌙 מצב כהה</button>
+                    <button class="logout-btn" onclick="logout()">התנתק 🚪</button>
+                </div>
+            </div>
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
@@ -113,19 +161,225 @@
 
         <main>
             <section id="schedule" class="tab-content active">
-                 <div class="schedule-header-action">
-                    <button class="wa-group-btn" id="waGroupBtn" onclick="sendGroupWhatsAppSummary()">
-                        <span>📋</span> סיכום שבועי לקבוצה
-                    </button>
+                <div class="schedule-header-action">
+                    <h2 style="margin: 0; font-size: 1.15em;">📅 אימוני גורילות גיל - סידור עבודה חודשי ושבועי</h2>
+                    <div class="search-box">
+                        <input type="text" id="scheduleSearch" oninput="filterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
+                    </div>
+                    <div>
+                        <button class="wa-group-btn" id="waGroupBtn" onclick="sendGroupWhatsAppSummary()">
+                            <span>📋</span> סיכום שבועי לקבוצה
+                        </button>
+                    </div>
                 </div>
-                <!-- שאר תוכן הסידור -->
+
+                <div class="week-tabs-bar" id="weekTabsBar"></div>
+
+                <div class="spreadsheet-container">
+                    <div class="sheet-box">
+                        <div class="sheet-side-header">
+                            <span>ניידת 1 צפון</span>
+                            <button class="unit-add-btn" onclick="addExtraRow('north')">➕ הוסף שורה</button>
+                        </div>
+                        <div class="table-container">
+                            <table id="sheetNorthTable">
+                                <thead>
+                                    <tr>
+                                        <th>תאריך</th><th>מדריך</th><th>כוח מתאמן</th><th>מיקום</th>
+                                        <th>ישלט/אחוד</th><th>איש קשר</th><th>מס מתאמנים</th><th>גורילה</th>
+                                        <th>שעות</th><th>הערות</th><th>ניידת</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="northTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="sheet-box">
+                        <div class="sheet-side-header">
+                            <span>ניידת 2 מרכז/דרום</span>
+                            <button class="unit-add-btn" onclick="addExtraRow('south')">➕ הוסף שורה</button>
+                        </div>
+                        <div class="table-container">
+                            <table id="sheetSouthTable">
+                                <thead>
+                                    <tr>
+                                        <th>תאריך</th><th>מדריך</th><th>כוח מתאמן</th><th>מיקום</th>
+                                        <th>ישלט/אחוד</th><th>איש קשר</th><th>מס מתאמנים</th><th>גורילה</th>
+                                        <th>שעות</th><th>הערות</th><th>ניידת</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="southTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="month-folders-bar" id="monthFoldersBar"></div>
             </section>
-            <section id="gorilla-status" class="tab-content"></section>
-            <section id="pdf-slides" class="tab-content"></section>
+
+            <section id="gorilla-status" class="tab-content">
+                <h2>📊 סטטוס גורילות</h2>
+            </section>
+
+            <section id="pdf-slides" class="tab-content">
+                <h2>🔧 מדריך תפעול ופתרון תקלות</h2>
+            </section>
         </main>
     </div>
 
+    <div id="datalistsContainer"></div>
+
     <script>
+        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
+        const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+        
+        const currentYear = 2026;
+        let activeMonth = new Date().getMonth(); 
+        let activeWeekIndex = 0; 
+        let isUpdatingCloud = false;
+
+        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
+        const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
+        const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
+
+        window.trainerGorillaMap = {
+            "איתי הקר": ["גורילה 3", "גורילה 7"],
+            "עדיאל קסה": ["גורילה 1", "גורילה 5"]
+        };
+
+        let monthWeeksCache = [];
+        let allMonthsDataCache = {};
+
+        window.addEventListener('firebase-ready', () => {
+            initMonthFolders();
+            loadMonthDataFromCloud(activeMonth);
+        });
+
+        function loadMonthDataFromCloud(monthIdx) {
+            const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
+            window.fbOnValue(sheetRef, (snapshot) => {
+                if (isUpdatingCloud) return; 
+                const saved = snapshot.val();
+                processLoadedMonthData(monthIdx, saved);
+                renderCurrentWeekTables();
+            });
+        }
+
+        function processLoadedMonthData(monthIdx, saved) {
+            const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+            let north = [], south = [];
+            for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+                const dateObj = new Date(currentYear, monthIdx, dayNum);
+                const dayOfWeek = dateObj.getDay(); 
+                if (dayOfWeek === 5 || dayOfWeek === 6) continue;
+
+                const hDayName = hebrewDaysShort[dayOfWeek];
+                north.push({ dayNum, hDayName, values: ["", "איתי הקר", "", "", "", "", "", "", "", "", "", "", ""] });
+                south.push({ dayNum, hDayName, values: ["", "עדיאל קסה", "", "", "", "", "", "", "", "", "", "", ""] });
+            }
+
+            if (saved) {
+                if (saved.north && Array.isArray(saved.north)) north = saved.north;
+                if (saved.south && Array.isArray(saved.south)) south = saved.south;
+            }
+            allMonthsDataCache[monthIdx] = { north, south };
+            setupWeeksCache(monthIdx);
+        }
+
+        function getMonthDataCache(monthIdx) {
+            if (!allMonthsDataCache[monthIdx]) processLoadedMonthData(monthIdx, null);
+            return allMonthsDataCache[monthIdx];
+        }
+
+        function setupWeeksCache(monthIdx) {
+            const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+            const weeksMap = new Map();
+
+            for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+                const date = new Date(currentYear, monthIdx, dayNum);
+                if (date.getDay() === 5 || date.getDay() === 6) continue;
+
+                const wNum = 27; // דוגמה פשוטה לשבוע
+                if (!weeksMap.has(wNum)) {
+                    let weekDays = [];
+                    for (let d = new Date(date); d <= new Date(date.getTime() + 6*86400000); d.setDate(d.getDate() + 1)) {
+                        if (d.getMonth() === monthIdx && d.getDay() !== 5 && d.getDay() !== 6) {
+                            weekDays.push({ month: d.getMonth(), day: d.getDate(), hDayName: hebrewDaysShort[d.getDay()] });
+                        }
+                    }
+                    if (weekDays.length > 0) weeksMap.set(wNum, { weekNum: wNum, days: weekDays });
+                }
+            }
+            monthWeeksCache = [];
+            weeksMap.forEach((wObj) => monthWeeksCache.push(wObj));
+            initWeekTabs();
+        }
+
+        function initMonthFolders() {
+            const bar = document.getElementById('monthFoldersBar');
+            if (!bar) return;
+            bar.innerHTML = '';
+            monthNames.forEach((mName, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `month-folder-btn ${idx === activeMonth ? 'active' : ''}`;
+                btn.innerText = mName;
+                btn.onclick = () => {
+                    document.querySelectorAll('.month-folder-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeMonth = idx;
+                    activeWeekIndex = 0;
+                    loadMonthDataFromCloud(activeMonth);
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        function initWeekTabs() {
+            const bar = document.getElementById('weekTabsBar');
+            if (!bar) return;
+            bar.innerHTML = '';
+            monthWeeksCache.forEach((weekObj, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `week-tab-btn ${idx === activeWeekIndex ? 'active' : ''}`;
+                btn.innerText = `שבוע ${weekObj.weekNum}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.week-tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeWeekIndex = idx;
+                    renderCurrentWeekTables();
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        function renderCurrentWeekTables() {
+            const northBody = document.getElementById('northTableBody');
+            const southBody = document.getElementById('southTableBody');
+            if (!northBody || !southBody || monthWeeksCache.length === 0) return;
+
+            northBody.innerHTML = '';
+            southBody.innerHTML = '';
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+
+            currentWeekObj.days.forEach(dayInfo => {
+                const monthData = getMonthDataCache(dayInfo.month);
+                const nRows = monthData.north.filter(item => item.dayNum === dayInfo.day);
+                const sRows = monthData.south.filter(item => item.dayNum === dayInfo.day);
+
+                nRows.forEach((nData, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, nData.values, 'north', dayInfo.month, monthData.north.indexOf(nData));
+                    northBody.appendChild(tr);
+                });
+                sRows.forEach((sData, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, sData.values, 'south', dayInfo.month, monthData.south.indexOf(sData));
+                    southBody.appendChild(tr);
+                });
+            });
+        }
+
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
@@ -144,6 +398,82 @@
             }
             renderCurrentWeekTables();
         };
+
+        function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex) {
+            const dateStr = `${String(dayNum).padStart(2, '0')}.${String(monthIdx + 1).padStart(2, '0')}`;
+            const currentVal = vals[0] || `${dateStr} ${hDayName}`;
+
+            return `
+                <td><input type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)"></td>
+                <td>
+                    <select class="cell-select" onchange="handleGuideSelection('${side}', ${monthIdx}, ${cacheIndex}, 1, this)">
+                        ${guidesOptions.map(g => `<option value="${g}" ${vals[1] === g ? 'selected' : ''}>${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[3] || ''}" placeholder="מיקום" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 3, this.value)"></td>
+                <td>
+                    <select class="cell-select" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 4, this.value)">
+                        ${systemsOptions.map(s => `<option value="${s}" ${vals[4] === s ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[5] || ''}" placeholder="איש קשר" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 5, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[6] || ''}" placeholder="מס'" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 6, this.value)"></td>
+                <td>
+                    <select class="cell-select" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value)">
+                        ${gorillaOptions.map(g => `<option value="${g}" ${vals[7] === g ? 'selected' : ''}>${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 9, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[12] || ''}" placeholder="ניידת" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 12, this.value)"></td>
+            `;
+        }
+
+        function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
+            const monthData = getMonthDataCache(monthIdx);
+            if (side === 'north' && monthData.north[cacheIndex]) monthData.north[cacheIndex].values[fieldIndex] = value;
+            else if (side === 'south' && monthData.south[cacheIndex]) monthData.south[cacheIndex].values[fieldIndex] = value;
+            saveMonthDataToCloud(monthIdx, monthData);
+        }
+
+        function saveMonthDataToCloud(monthIdx, monthData) {
+            isUpdatingCloud = true;
+            const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
+            window.fbSet(sheetRef, monthData).then(() => {
+                setTimeout(() => { isUpdatingCloud = false; }, 500);
+            }).catch(() => { isUpdatingCloud = false; });
+        }
+
+        function addExtraRow(side) {
+            const monthData = getMonthDataCache(activeMonth);
+            const newRow = { dayNum: 1, hDayName: "א'", values: ["", "", "", "", "", "", "", "", "", "", "", "", ""] };
+            monthData[side].push(newRow);
+            saveMonthDataToCloud(activeMonth, monthData);
+            renderCurrentWeekTables();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+        }
+
+        function filterSchedule() {
+            let input = document.getElementById("scheduleSearch").value.toUpperCase();
+            document.querySelectorAll(".spreadsheet-container table tbody tr").forEach(row => {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
+            });
+        }
+
+        function sendGroupWhatsAppSummary() {
+            alert("סיכום שבועי לקבוצה");
+        }
     </script>
 </body>
 </html>
