@@ -36,31 +36,44 @@
 
         const allowedEmails = ["NadavYichye@gmail.com", "reemkayzer@gmail.com", "itayhaker19@gmail.com", "netashatzberg@gmail.com", "idolevko2@gmail.com", "adielkassa@gmail.com", "tomerk2001@gmail.com"];
 
-        window.loginWithGoogle = () => signInWithRedirect(auth, provider);
+        window.loginWithGoogle = () => {
+            signInWithRedirect(auth, provider).catch((error) => {
+                document.getElementById("error-msg").innerText = "שגיאת התחברות: " + error.message;
+            });
+        };
+
         window.logout = () => signOut(auth);
 
-        getRedirectResult(auth).catch(console.error);
+        // בדיקת תוצאת ההפניה והצגת שגיאה במידה ויש
+        getRedirectResult(auth).catch((error) => {
+            document.getElementById("error-msg").innerText = "שגיאת אימות: " + error.message;
+        });
 
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
-            if (user && allowedEmails.some(email => email.toLowerCase() === user.email.toLowerCase())) {
-                authScreen.style.display = "none";
-                mainContent.style.display = "block";
-                window.dispatchEvent(new Event('firebase-ready'));
+            if (user) {
+                const userEmail = user.email ? user.email.toLowerCase() : "";
+                const isAllowed = allowedEmails.some(email => email.toLowerCase() === userEmail);
+                if (isAllowed) {
+                    authScreen.style.display = "none";
+                    mainContent.style.display = "block";
+                    window.dispatchEvent(new Event('firebase-ready'));
+                } else {
+                    signOut(auth);
+                    document.getElementById("error-msg").innerText = `הגישה נדחתה עבור המייל: ${userEmail}`;
+                }
             } else {
-                if (user) signOut(auth);
                 authScreen.style.display = "flex";
                 mainContent.style.display = "none";
             }
         });
     </script>
-
     <style>
         :root { --bg-color: #f4f6f9; --main-bg: #ffffff; --text-color: #2c3e50; --header-bg: #1a252f; --border-color: #e2e8f0; }
         body { margin: 0; background-color: var(--bg-color); color: var(--text-color); font-family: sans-serif; }
-        #auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #121212; color: white; position: fixed; width: 100%; z-index: 9999; }
-        .login-btn { background-color: #4285F4; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; }
+        #auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #121212; color: white; position: fixed; width: 100%; z-index: 9999; text-align: center; padding: 20px; }
+        .login-btn { background-color: #4285F4; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
         #main-content { display: none; }
         header { background-color: var(--header-bg); color: white; padding: 10px; text-align: center; }
         .nav-tabs { display: flex; justify-content: center; gap: 10px; padding: 10px; }
@@ -71,11 +84,13 @@
         th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; }
         .cell-input { width: 100%; border: none; background: transparent; text-align: center; }
         .cell-select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
+        #error-msg { color: #ff6b6b; margin-top: 15px; font-size: 0.9em; max-width: 400px; word-break: break-word; }
     </style>
 </head>
 <body>
     <div id="auth-screen">
         <h2>הגישה לדף זה מוגבלת למורשים בלבד</h2>
+        <p>אנא התחבר באמצעות חשבון ה-Google המאושר שלך:</p>
         <button class="login-btn" onclick="loginWithGoogle()">התחבר עם Google</button>
         <p id="error-msg"></p>
     </div>
@@ -99,28 +114,20 @@
     </div>
 
     <script>
-        // המנוע הראשי
-        let allMonthsData = {};
+        let allMonthsData = { [new Date().getMonth()]: { north: Array.from({length: 30}, (_, i) => ({ dayNum: i+1, values: ["", "", "", "", ""] })) } };
         window.activeMonth = new Date().getMonth();
 
         window.addEventListener('firebase-ready', () => {
-            loadMonthDataFromCloud(window.activeMonth);
-        });
-
-        function loadMonthDataFromCloud(monthIdx) {
-            const sheetRef = window.fbRef(window.fbDB, `sheets/2026_${monthIdx}`);
+            const sheetRef = window.fbRef(window.fbDB, `sheets/2026_${window.activeMonth}`);
             window.fbOnValue(sheetRef, (snapshot) => {
-                allMonthsData[monthIdx] = snapshot.val() || { north: [] };
+                allMonthsData[window.activeMonth] = snapshot.val() || { north: Array.from({length: 30}, (_, i) => ({ dayNum: i+1, values: ["", "", "", "", ""] })) };
                 renderCurrentWeekTables();
             });
-        }
+        });
 
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
-            // שמירה ל-Firebase
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
-            
-            // מילוי אוטומטי של גורילות
             if (fieldIndex === 1 && window.trainerGorillaMap[val]) {
                 const defaults = window.trainerGorillaMap[val];
                 const monthData = allMonthsData[monthIdx];
@@ -128,7 +135,7 @@
                      updateCacheAndSave(side, monthIdx, cacheIndex, 4, defaults[0]);
                 }
             }
-            renderCurrentWeekTables(); // ריענון מידי
+            renderCurrentWeekTables();
         };
 
         function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
@@ -141,7 +148,7 @@
         function renderCurrentWeekTables() {
             const body = document.getElementById('northTableBody');
             body.innerHTML = '';
-            const data = allMonthsData[window.activeMonth]?.north || [];
+            const data = allMonthsData[window.activeMonth].north;
             data.forEach((row, idx) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
