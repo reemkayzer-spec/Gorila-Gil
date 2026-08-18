@@ -15,7 +15,7 @@
         import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyAToYjAaMRBYXYjPnPorSLjnAapN5IBqsQ",
+            apiKey: "AIzaSyAToYjAaMRBYXYjPnPorSLJnAapN5IBqsQ",
             authDomain: "gorilla-training.firebaseapp.com",
             databaseURL: "https://gorilla-training-default-rtdb.firebaseio.com",
             projectId: "gorilla-training",
@@ -65,7 +65,6 @@
             const errEl = document.getElementById("error-msg");
 
             if (user) {
-                // המרת האימייל לאותיות קטנות כדי למנוע בעיות של אותיות גדולות
                 const userEmail = user.email ? user.email.toLowerCase() : "";
                 const isAllowed = allowedEmails.some(email => email.toLowerCase() === userEmail);
 
@@ -281,6 +280,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* גלילה אופקית והגדרת רוחב עמודות בטבלת סטטוס גורילות */
         .status-table-container {
             overflow-x: auto;
             width: 100%;
@@ -292,7 +292,7 @@
         }
 
         .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } 
-        .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }    
+        .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   
         .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 125px; min-width: 125px; } 
         .status-table-container th:nth-child(4), .status-table-container td:nth-child(4) { width: auto; }                    
 
@@ -357,6 +357,7 @@
             font-weight: bold;
         }
 
+        /* עיצוב מערך המדריכים והגורילות */
         .guides-container, .gorillas-container {
             display: flex;
             flex-direction: column;
@@ -657,118 +658,13 @@
                             </tr>
                         </thead>
                         <tbody id="statusTableBody">
-                            <tr data-id="0">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין" selected>תקין</option>
-                                        <option value="לא תקין">לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td>
-                            </tr>
-                            <tr data-id="1">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין">תקין</option>
-                                        <option value="לא תקין" selected>לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td>
-                            </tr>
-                            <tr data-id="2">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין" selected>תקין</option>
-                                        <option value="לא תקין">לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td>
-                            </tr>
-                            <tr data-id="3">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין">תקין</option>
-                                        <option value="לא תקין" selected>לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td>
-                            </tr>
-                            <tr data-id="4">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין" selected>תקין</option>
-                                        <option value="לא תקין">לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td>
-                            </tr>
-                            <tr data-id="5">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין" selected>תקין</option>
-                                        <option value="לא תקין">לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td>
-                            </tr>
-                            <tr data-id="6">
-                                <td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td>
-                                <td>
-                                    <select class="status-select" onchange="updateRowStatus(this)">
-                                        <option value="תקין">תקין</option>
-                                        <option value="לא תקין" selected>לא תקין</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="cleaning-date-wrapper">
-                                        <button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button>
-                                        <input type="date" class="cleaning-date-input" onchange="onCleaningDateInput(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;">
-                                    </div>
-                                </td>
-                                <td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td>
-                            </tr>
+                            <tr data-id="0"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="1"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td></tr>
+                            <tr data-id="2"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="3"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="4"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="5"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="6"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -937,7 +833,7 @@
                                 <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
                                 <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
                                 <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                                <li>בחלוני Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                                <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
                                 <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
                             </ol>
                         </div>
@@ -1017,7 +913,7 @@
                             <tr>
                                 <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
                                 <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%95%D7%9B%20%D7%tt.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&file=%D7%94%D7%A1%D7%9B%D7%91%D7%AA%20%D7%9E%D7%93%D7%99%D7%9B%D7%95%20%D7%tt.pptx&action=edit&mobileredirect=true" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
                             </tr>
                             <tr>
                                 <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
@@ -1307,6 +1203,12 @@
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
         const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
+
+        // מיפוי אוטומטי של גורילות לפי מדריך נבחר
+        const trainerGorillaMap = {
+            "איתי הקר": ["גורילה 3", "גורילה 7"],
+            "עדיאל קסה": ["גורילה 1", "גורילה 5"]
+        };
 
         let memoryData = {
             units: new Set(),
@@ -1767,6 +1669,23 @@
             }
             handleSelectChange(selectEl);
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
+            
+            // אוטומציה: בחירת גורילות לפי מדריך מועדף במידה והשדה ריק
+            if (fieldIndex === 1 && trainerGorillaMap[val]) {
+                const defaults = trainerGorillaMap[val];
+                const monthData = getMonthDataCache(monthIdx);
+                const row = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
+                
+                if (!row.values[7]) {
+                    updateCacheAndSave(side, monthIdx, cacheIndex, 7, defaults[0]);
+                }
+                if (!row.values[11]) {
+                    if (defaults[1]) {
+                        updateCacheAndSave(side, monthIdx, cacheIndex, 11, defaults[1]);
+                    }
+                }
+            }
+
             if (val && !guidesOptions.includes(val) && val !== "אחר...") {
                 renderCurrentWeekTables();
             }
@@ -1868,9 +1787,11 @@
 
         function handleNotesChange(side, monthIdx, cacheIndex, value) {
             updateCacheAndSave(side, monthIdx, cacheIndex, 9, value);
+            
             if (value && value.trim().includes("טיפול חודשי")) {
                 updateCacheAndSave(side, monthIdx, cacheIndex, 2, "טיפול חודשי");
             }
+            
             renderCurrentWeekTables();
         }
 
