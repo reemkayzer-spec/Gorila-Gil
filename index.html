@@ -8,13 +8,12 @@
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs & Auth Integration with Redirect for Mobile Support -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // מפתח ה-API המדויק ששלחת
         const firebaseConfig = {
             apiKey: "AIzaSyAToYjAaMRBYXYjPnPorSLjnAapN5IBqsQ",
             authDomain: "gorilla-training.firebaseapp.com",
@@ -37,35 +36,61 @@
         window.fbOnValue = onValue;
         window.fbGet = get;
 
-        // מיפוי גורילות למדריכים
+        // מיפוי גורילות אוטומטי למדריכים
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
         };
 
+        // רשימת האימיילים המורשים בלבד להיכנס לאתר
         const allowedEmails = [
-            "NadavYichye@gmail.com", "reemkayzer@gmail.com", "itayhaker19@gmail.com",
-            "netashatzberg@gmail.com", "idolevko2@gmail.com", "adielkassa@gmail.com", "tomerk2001@gmail.com"
+            "NadavYichye@gmail.com",
+            "reemkayzer@gmail.com",
+            "itayhaker19@gmail.com",
+            "netashatzberg@gmail.com",
+            "idolevko2@gmail.com",
+            "adielkassa@gmail.com",
+            "tomerk2001@gmail.com"
         ];
 
-        window.loginWithGoogle = () => signInWithRedirect(auth, provider);
-        window.logout = () => signOut(auth);
+        window.loginWithGoogle = function() {
+            signInWithRedirect(auth, provider).catch((error) => {
+                const errEl = document.getElementById("error-msg");
+                if(errEl) errEl.innerText = "שגיאה בהתחברות: " + error.message;
+            });
+        };
+
+        window.logout = function() {
+            signOut(auth);
+        };
 
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
-            if (user && allowedEmails.some(email => email.toLowerCase() === user.email.toLowerCase())) {
-                authScreen.style.display = "none";
-                mainContent.style.display = "block";
-                window.dispatchEvent(new Event('firebase-ready'));
+            const errEl = document.getElementById("error-msg");
+
+            if (user) {
+                const userEmail = user.email ? user.email.toLowerCase() : "";
+                const isAllowed = allowedEmails.some(email => email.toLowerCase() === userEmail);
+
+                if (isAllowed) {
+                    if(authScreen) authScreen.style.display = "none";
+                    if(mainContent) mainContent.style.display = "block";
+                    window.dispatchEvent(new Event('firebase-ready'));
+                } else {
+                    signOut(auth).then(() => {
+                        if(authScreen) authScreen.style.display = "flex";
+                        if(mainContent) mainContent.style.display = "none";
+                        if(errEl) errEl.innerText = "הגישה דורשת אימייל מורשה בלבד. חשבונך אינו מורשה להיכנס.";
+                    });
+                }
             } else {
-                if (user) signOut(auth);
-                authScreen.style.display = "flex";
-                mainContent.style.display = "none";
+                if(authScreen) authScreen.style.display = "flex";
+                if(mainContent) mainContent.style.display = "none";
             }
         });
     </script>
-    
+
     <script>
         const SUPABASE_URL = 'https://pvtswscsqnymbbzgsafu.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_wlsjLYqz458Ud69TrPR7AA_LB9xvimg';
@@ -73,68 +98,770 @@
     </script>
 
     <style>
-        :root { --bg-color: #f4f6f9; --main-bg: #ffffff; --text-color: #2c3e50; --header-bg: #1a252f; --card-bg: #f8fafc; --border-color: #e2e8f0; --input-bg: #ffffff; --th-bg: #334155; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background-color: var(--bg-color); color: var(--text-color); }
-        #auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #121212; color: white; position: fixed; width: 100%; z-index: 9999; }
-        .login-btn { background-color: #4285F4; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; }
+        :root {
+            --bg-color: #f4f6f9;
+            --main-bg: #ffffff;
+            --text-color: #2c3e50;
+            --header-bg: #1a252f;
+            --card-bg: #f8fafc;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --table-even: #f8fafc;
+            --th-bg: #334155;
+            --code-bg: #f1f5f9;
+            --link-color: #3498db;
+        }
+
+        body.dark-mode {
+            --bg-color: #0b0f19;
+            --main-bg: #1e293b;
+            --text-color: #f8fafc;
+            --header-bg: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --table-even: #172033;
+            --th-bg: #0f172a;
+            --code-bg: #0f172a;
+            --link-color: #58a6ff;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+        
+        #auth-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 99999;
+        }
+        .login-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .login-btn:hover { background-color: #357ae8; }
         #main-content { display: none; }
-        header { background-color: var(--header-bg); color: white; padding: 10px; text-align: center; }
-        .nav-tabs { display: flex; justify-content: center; gap: 10px; padding: 10px; }
-        .tab-btn { background-color: #34495e; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-        .tab-btn.active { background-color: #3498db; }
-        main { max-width: 1400px; margin: 20px auto; padding: 20px; background: var(--main-bg); border-radius: 10px; }
+
+        header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
+        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
+        
+        .header-actions-left { display: flex; gap: 8px; align-items: center; }
+        .theme-toggle-btn, .logout-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.78em; font-weight: bold; transition: 0.2s; }
+        .theme-toggle-btn:hover, .logout-btn:hover { background: #475569; }
+        .logout-btn { background-color: #e74c3c; }
+        .logout-btn:hover { background-color: #c0392b; }
+
+        .nav-tabs { display: flex; justify-content: center; gap: 6px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background-color: #34495e; color: white; border: none; padding: 8px 14px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: 0.3s;
+        }
+        .tab-btn:hover, .tab-btn.active { background-color: #3498db; }
+
+        main { max-width: 1400px; margin: 12px auto; padding: 16px; background: var(--main-bg); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: background 0.3s; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
-        th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; }
-        .cell-input { width: 100%; border: none; background: transparent; text-align: center; }
-        .cell-select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
-        .wa-group-btn { background-color: #128c7e; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        .trainer-profile-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .trainer-info-text { font-size: 0.9em; font-weight: bold; }
+        .trainer-inputs-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .trainer-inputs-group input {
+            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85em; background: var(--input-bg); color: var(--text-color);
+        }
+        .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
+        .trainer-save-btn:hover { background: #0369a1; }
+
+        .schedule-header-action {
+            display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--card-bg);
+            padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);
+        }
+        .action-btns-group { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
+        .action-btns-group button { flex: 1; min-width: 220px; justify-content: center; }
+        
+        .wa-group-btn, .call-btn {
+            color: white; border: none; padding: 10px 14px;
+            border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.82em;
+            display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-decoration: none;
+        }
+        .wa-group-btn { background-color: #128c7e; }
+        .wa-group-btn:hover { background-color: #0e6f64; }
+        .call-btn { background-color: #27ae60; }
+        .call-btn:hover { background-color: #219653; }
+
+        .search-box { width: 100%; }
+        .search-box input {
+            width: 100%; padding: 10px 14px; border: 2px solid var(--border-color);
+            border-radius: 25px; font-size: 0.95em; outline: none; transition: 0.3s; background: var(--input-bg); color: var(--text-color);
+        }
+        .search-box input:focus { border-color: #3498db; }
+
+        .week-tabs-bar {
+            display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap;
+        }
+        .week-tab-btn {
+            background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
+            padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85em; cursor: pointer; transition: 0.3s;
+        }
+        .week-tab-btn:hover, .week-tab-btn.active {
+            background-color: #0284c7; color: white; border-color: #0284c7;
+        }
+        .week-tab-btn.today-week-tab {
+            background-color: #fef08a !important;
+            color: #854d0e !important;
+            border-color: #facc15 !important;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
+        }
+        body.dark-mode .week-tab-btn.today-week-tab {
+            background-color: #713f12 !important;
+            color: #fef08a !important;
+            border-color: #ca8a04 !important;
+        }
+
+        .spreadsheet-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .sheet-box {
+            background: var(--main-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .sheet-side-header {
+            background-color: #1e293b; color: white; padding: 10px 14px;
+            display: flex; justify-content: space-between; align-items: center; font-size: 0.95em; font-weight: bold; flex-wrap: wrap; gap: 8px;
+        }
+        .header-btns-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .unit-wa-btn, .unit-add-btn {
+            color: white; border: none; padding: 5px 10px;
+            border-radius: 20px; font-size: 0.78em; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            white-space: nowrap;
+        }
+        .unit-wa-btn { background-color: #25d366; }
+        .unit-wa-btn:hover { background-color: #20ba5a; }
+        .unit-wa-btn svg { width: 14px; height: 14px; fill: white; flex-shrink: 0; }
+
+        .unit-add-btn { background-color: #0284c7; }
+        .unit-add-btn:hover { background-color: #0369a1; }
+
+        .table-container { 
+            overflow-x: auto; 
+            margin: 0; 
+            border: none;
+            border-radius: 0; 
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .status-table-container {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        .status-table-container table {
+            width: 100%;
+            min-width: 600px;
+        }
+
+        .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } 
+        .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   
+        .status-table-container th:nth-child(3), .status-table-container td:nth-child(3) { width: 125px; min-width: 125px; } 
+        .status-table-container th:nth-child(4), .status-table-container td:nth-child(4) { width: auto; }                    
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.78em; text-align: center; table-layout: auto; }
+        th, td { border: 1px solid var(--border-color); padding: 6px 3px; vertical-align: middle; }
+        th { background-color: var(--th-bg); color: white; font-weight: 600; white-space: nowrap; font-size: 0.82em; }
+
+        .spreadsheet-container table th:nth-child(1), .spreadsheet-container table td:nth-child(1) { width: 75px; min-width: 75px; } 
+        .spreadsheet-container table th:nth-child(2), .spreadsheet-container table td:nth-child(2) { width: 125px; min-width: 125px; } 
+        .spreadsheet-container table th:nth-child(3), .spreadsheet-container table td:nth-child(3) { width: 50px; min-width: 50px; } 
+        .spreadsheet-container table th:nth-child(4), .spreadsheet-container table td:nth-child(4) { width: 50px; min-width: 50px; } 
+        .spreadsheet-container table th:nth-child(5), .spreadsheet-container table td:nth-child(5) { width: 65px; min-width: 65px; } 
+        .spreadsheet-container table th:nth-child(6), .spreadsheet-container table td:nth-child(6) { width: 130px; min-width: 130px; } 
+        .spreadsheet-container table th:nth-child(7), .spreadsheet-container table td:nth-child(7) { width: 40px; min-width: 40px; } 
+        .spreadsheet-container table th:nth-child(8), .spreadsheet-container table td:nth-child(8) { width: 100px; min-width: 100px; } 
+        .spreadsheet-container table th:nth-child(9), .spreadsheet-container table td:nth-child(9) { width: 50px; min-width: 50px; } 
+        .spreadsheet-container table th:nth-child(10), .spreadsheet-container table td:nth-child(10) { width: 110px; min-width: 110px; } 
+        .spreadsheet-container table th:nth-child(11), .spreadsheet-container table td:nth-child(11) { width: 90px; min-width: 90px; } 
+        
+        .weekend-row td {
+            background-color: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+        }
+
+        .today-row td {
+            background-color: #fef08a !important;
+            border-color: #facc15 !important;
+            font-weight: bold;
+        }
+        body.dark-mode .today-row td {
+            background-color: #713f12 !important;
+            border-color: #fef08a !important;
+        }
+
+        .canceled-row td {
+            background-color: rgba(239, 68, 68, 0.2) !important;
+            border-color: #f87171 !important;
+        }
+        body.dark-mode .canceled-row td {
+            background-color: rgba(239, 68, 68, 0.3) !important;
+            border-color: #991b1b !important;
+        }
+
+        .cell-input {
+            width: 100%; border: none; background: transparent; text-align: center;
+            font-size: 0.88em; color: var(--text-color); outline: none; padding: 2px;
+        }
+        .cell-input:focus { background: rgba(52, 152, 219, 0.1); border-radius: 4px; }
+
+        .cell-select {
+            width: 100%; border: 1px solid var(--border-color); background: var(--input-bg);
+            color: var(--text-color); font-size: 0.78em; border-radius: 4px; padding: 2px 1px; outline: none; cursor: pointer;
+            appearance: auto; -webkit-appearance: auto; -moz-appearance: auto;
+        }
+        .cell-select.has-selection {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            border: none;
+            text-align-last: center;
+            font-weight: bold;
+        }
+
+        .guides-container, .gorillas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            width: 100%;
+        }
+        .guide-row-flex, .gorilla-row-flex {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            width: 100%;
+        }
+        .add-guide-btn, .remove-guide-btn, .add-gorilla-btn, .remove-gorilla-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0 2px;
+            line-height: 1;
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .add-guide-btn:hover, .remove-guide-btn:hover, .add-gorilla-btn:hover, .remove-gorilla-btn:hover { transform: scale(1.2); }
+
+        .month-folders-bar {
+            display: flex; gap: 6px; overflow-x: auto; padding: 14px 6px; margin-top: 20px;
+            border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px;
+            justify-content: center; flex-wrap: wrap; align-items: flex-end;
+        }
+        .month-folder-btn {
+            background-color: #475569; color: white; border: none; padding: 9px 16px;
+            border-radius: 6px 6px 0 0; cursor: pointer; font-weight: bold; font-size: 0.9em; transition: 0.3s;
+        }
+        .month-folder-btn:hover { background-color: #64748b; }
+        .month-folder-btn.active {
+            background-color: #0284c7; 
+            color: #ffffff; 
+            transform: translateY(-6px) scale(1.08);
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.5);
+            border: 2px solid #ffffff;
+            font-weight: 800;
+            z-index: 10;
+        }
+
+        .status-select, .notes-input {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.9em;
+            font-weight: bold;
+            outline: none;
+            transition: 0.2s;
+        }
+        .status-select { cursor: pointer; }
+        .notes-input { width: 100%; }
+        .status-select:focus, .notes-input:focus { border-color: #3498db; }
+
+        .cleaning-date-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cleaning-date-input {
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.85em;
+            outline: none;
+        }
+        .cleaning-today-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.78em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cleaning-today-btn:hover { background-color: #20ba5a; }
+
+        .slide-box {
+            background-color: var(--card-bg); border: 1px solid var(--border-color); border-right: 4px solid #3498db;
+            border-radius: 8px; margin-bottom: 15px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .slide-title { margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 6px; font-size: 1.05em; }
+        
+        .step-list { margin-top: 8px; padding-right: 12px; font-size: 0.9em; }
+        .step-list li { margin-bottom: 8px; }
+        .step-list p { margin: 4px 0; }
+
+        .code-block { background: var(--code-bg); padding: 2px 5px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85em; word-break: break-all; }
+
+        .videos-flex-container { display: flex; gap: 10px; flex-direction: column; margin: 12px 0; }
+        @media (min-width: 768px) { .videos-flex-container { flex-direction: row; flex-wrap: wrap; } }
+        .slide-video-container {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; flex: 1; width: 100%;
+        }
+        .slide-video-container h4 { margin: 0 0 6px 0; font-size: 0.85em; color: var(--text-color); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px; background: #000; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .yt-link-btn {
+            display: inline-flex; align-items: center; gap: 6px; background-color: #ff0000;
+            color: white; padding: 6px 10px; border-radius: 15px; text-decoration: none; font-size: 0.78em; font-weight: bold; margin-top: 6px;
+        }
+
+        .cards-container { display: flex; gap: 10px; flex-direction: column; margin-top: 10px; }
+        @media (min-width: 600px) { .cards-container { flex-direction: row; flex-wrap: wrap; } }
+        
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; flex: 1; min-width: 280px; }
+        
+        .form-card-content { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .form-info { flex: 1; min-width: 160px; }
+        .form-qr-box { display: flex; flex-direction: column; align-items: center; background: var(--main-bg); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center; }
+        .form-qr-box img { width: 90px; height: 90px; border-radius: 4px; background: white; padding: 3px; margin-bottom: 4px; }
+        .form-url-text { font-size: 0.7em; direction: ltr; color: var(--text-color); max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px; }
+        .copy-btn { background-color: #64748b; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 0.72em; cursor: pointer; font-weight: bold; }
+        .copy-btn:hover { background-color: #475569; }
+
+        .btn { display: inline-block; background-color: #0284c7; color: white; padding: 8px 12px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 6px; font-size: 0.85em; text-align: center; width: 100%; }
+        @media (min-width: 600px) { .btn { width: auto; } }
+
+        .link-table-btn {
+            display: inline-block; background-color: #0284c7; color: white; padding: 6px 10px;
+            border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.8em; text-align: center;
+        }
+        .table-title {
+            background-color: #1e293b; color: white; padding: 10px 12px;
+            border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .slide-img-box { text-align: center; margin: 12px 0; }
+        .slide-img-box img {
+            max-width: 100%; height: auto; border-radius: 8px;
+            border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
+    <!-- מסך התחברות מאובטח -->
     <div id="auth-screen">
         <h2>הגישה לדף זה מוגבלת למורשים בלבד</h2>
+        <p>אנא התחבר באמצעות חשבון ה-Google המאושר שלך:</p>
         <button class="login-btn" onclick="loginWithGoogle()">התחבר עם Google</button>
-        <p id="error-msg"></p>
+        <p id="error-msg" style="color: #ff6b6b; margin-top: 10px;"></p>
     </div>
 
+    <!-- תוכן האתר המלא -->
     <div id="main-content">
         <header>
-            <h1>תפעול והדרכה - צוות גיל</h1>
+            <div class="header-top">
+                <h1>
+                    <div style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background:#f37021; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); vertical-align:middle; overflow:hidden;">
+                        <svg width="28" height="28" viewBox="0 0 100 100" style="transform: rotate(-45deg);">
+                            <rect x="35" y="20" width="30" height="60" rx="15" fill="#1e293b"/>
+                            <path d="M 35 35 Q 50 10 65 35 Z" fill="#334155"/>
+                            <circle cx="50" cy="28" r="4" fill="#38bdf8"/>
+                            <polygon points="20,55 35,50 35,70" fill="#0f172a"/>
+                            <polygon points="80,55 65,50 65,70" fill="#0f172a"/>
+                            <polygon points="45,80 55,80 52,90 48,90" fill="#f59e0b"/>
+                        </svg>
+                    </div>
+                    תפעול והדרכה - צוות גיל
+                </h1>
+                <div class="header-actions-left">
+                    <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 מצב כהה</button>
+                    <button class="logout-btn" onclick="logout()">התנתק 🚪</button>
+                </div>
+            </div>
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
                 <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
+                <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
+                <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים והעשרה</button>
             </div>
         </header>
 
         <main>
             <section id="schedule" class="tab-content active">
-                <div class="schedule-header-action">
-                    <button class="wa-group-btn" id="waGroupBtn" onclick="sendGroupWhatsAppSummary()">📋 סיכום שבועי לקבוצה</button>
+                <div class="trainer-profile-bar" id="trainerProfileBar">
+                    <div class="trainer-info-text" id="trainerInfoDisplay">👤 לא זוהית כמדריך. אנא הזן פרטים:</div>
+                    <div class="trainer-inputs-group" id="trainerInputsArea"></div>
                 </div>
+
+                <div class="schedule-header-action">
+                    <h2 style="margin: 0; font-size: 1.15em;">📅 אימוני גורילות גיל - סידור עבודה חודשי ושבועי</h2>
+                    <div class="search-box">
+                        <input type="text" id="scheduleSearch" oninput="filterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
+                    </div>
+                    <div class="action-btns-group">
+                        <button class="wa-group-btn" id="waGroupBtn" onclick="sendGroupWhatsAppSummary()">
+                            <span>📋</span> סיכום שבועי לקבוצה
+                        </button>
+                    </div>
+                </div>
+
+                <div class="week-tabs-bar" id="weekTabsBar"></div>
+
                 <div class="spreadsheet-container">
                     <div class="sheet-box">
-                        <div class="sheet-side-header"><span>ניידת 1 צפון</span></div>
-                        <table id="sheetNorthTable">
-                            <thead>
-                                <tr><th>תאריך</th><th>מדריך</th><th>כוח</th><th>מיקום</th><th>גורילה</th></tr>
-                            </thead>
-                            <tbody id="northTableBody"></tbody>
-                        </table>
+                        <div class="sheet-side-header">
+                            <span>ניידת 1 צפון</span>
+                            <div class="header-btns-group">
+                                <button class="unit-add-btn" onclick="addExtraRow('north')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
+                                <button class="unit-wa-btn" onclick="sendTomorrowReminder('north')">
+                                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                    שלח הודעה למתאמנים של מחר
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="sheetNorthTable">
+                                <thead>
+                                    <tr>
+                                        <th>תאריך</th>
+                                        <th>מדריך</th>
+                                        <th>כוח מתאמן</th>
+                                        <th>מיקום</th>
+                                        <th>ישלט/אחוד</th>
+                                        <th>איש קשר</th>
+                                        <th>מס מתאמנים</th>
+                                        <th>גורילה</th>
+                                        <th>שעות</th>
+                                        <th>הערות</th>
+                                        <th>ניידת</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="northTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="sheet-box">
+                        <div class="sheet-side-header">
+                            <span>ניידת 2 מרכז/דרום</span>
+                            <div class="header-btns-group">
+                                <button class="unit-add-btn" onclick="addExtraRow('south')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
+                                <button class="unit-wa-btn" onclick="sendTomorrowReminder('south')">
+                                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                    שלח הודעה למתאמנים של מחר
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="sheetSouthTable">
+                                <thead>
+                                    <tr>
+                                        <th>תאריך</th>
+                                        <th>מדריך</th>
+                                        <th>כוח מתאמן</th>
+                                        <th>מיקום</th>
+                                        <th>ישלט/אחוד</th>
+                                        <th>איש קשר</th>
+                                        <th>מס מתאמנים</th>
+                                        <th>גורילה</th>
+                                        <th>שעות</th>
+                                        <th>הערות</th>
+                                        <th>ניידת</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="southTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="month-folders-bar" id="monthFoldersBar"></div>
+            </section>
+
+            <section id="gorilla-status" class="tab-content">
+                <h2>📊 סטטוס גורילות</h2>
+                <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
+                <div class="status-table-container">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>גורילה</th>
+                                <th>תקין/תקול</th>
+                                <th>טיפול חודשי אחרון</th>
+                                <th>תקלה/הערות נוספות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statusTableBody">
+                            <tr data-id="0"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="1"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td></tr>
+                            <tr data-id="2"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="3"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="4"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="5"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="6"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="pdf-slides" class="tab-content">
+                <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;"><span>📞</span> צלצל לקסה</a>
+                    <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;"><span>📞</span> צלצל לטכנאי</a>
+                </div>
+                <div class="search-box" style="margin-bottom: 15px;">
+                    <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח...">
+                </div>
+                <div id="slidesContainer">
+                    <div class="slide-box">
+                        <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
+                        <ol class="step-list">
+                            <li><strong>חיבור כבל קומקום לגורילה</strong>...</li>
+                        </ol>
                     </div>
                 </div>
             </section>
-            <section id="gorilla-status" class="tab-content"><h2>📊 סטטוס גורילות</h2></section>
-            <section id="pdf-slides" class="tab-content"><h2>🔧 מדריך תפעול</h2></section>
+
+            <section id="training-program" class="tab-content">
+                <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
+            </section>
+
+            <section id="forms" class="tab-content">
+                <h2>📋 טפסים, ציוד והעשרה</h2>
+            </section>
         </main>
     </div>
 
+    <div id="datalistsContainer"></div>
+
     <script>
-        // לוגיקה לבחירה אוטומטית של גורילות
+        const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
+        const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+        
+        const currentYear = 2026;
+        let activeMonth = new Date().getMonth(); 
+        let activeWeekIndex = 0; 
+        let isUpdatingCloud = false;
+
+        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
+        const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
+        const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
+
+        // מיפוי הגורילות האוטומטי
+        window.trainerGorillaMap = {
+            "איתי הקר": ["גורילה 3", "גורילה 7"],
+            "עדיאל קסה": ["גורילה 1", "גורילה 5"]
+        };
+
+        let memoryData = {
+            units: new Set(), locations: new Set(), contacts: new Set(),
+            traineesCount: new Set(["10", "15", "20", "25", "30", "40"]),
+            hours: new Set(["08:00 - 13:00", "09:00 - 14:00", "12:00 - 17:00", "08:30 - 15:30"]),
+            notes: new Set(["אימון שגרתי תקין", "בוצע שיגור מוצלח", "תדרוך קצינים", "טיפול חודשי"])
+        };
+
+        function getAirForceWeek(date) {
+            const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const julyFirst = new Date(currentYear, 6, 1);
+            const firstSunday = new Date(currentYear, 6, 1 - julyFirst.getDay());
+            const diffDays = Math.floor((d - firstSunday) / (1000 * 60 * 60 * 24));
+            return 27 + Math.floor(diffDays / 7);
+        }
+
+        let monthWeeksCache = [];
+        let allMonthsDataCache = {};
+
+        window.addEventListener('firebase-ready', () => {
+            initTrainerProfile();
+            initMonthFolders();
+            loadMonthDataFromCloud(activeMonth);
+            initCloudStatusSync();
+        });
+
+        function loadMonthDataFromCloud(monthIdx) {
+            const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
+            window.fbOnValue(sheetRef, (snapshot) => {
+                if (isUpdatingCloud) return; 
+                processLoadedMonthData(monthIdx, snapshot.val());
+                renderCurrentWeekTables();
+            });
+        }
+
+        function processLoadedMonthData(monthIdx, saved) {
+            const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+            let north = [], south = [];
+            for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+                const dateObj = new Date(currentYear, monthIdx, dayNum);
+                if (dateObj.getDay() === 5 || dateObj.getDay() === 6) continue;
+                north.push({ dayNum, hDayName: hebrewDaysShort[dateObj.getDay()], values: ["", "איתי הקר", "", "", "", "", "", "", "", "", "", "", ""] });
+                south.push({ dayNum, hDayName: hebrewDaysShort[dateObj.getDay()], values: ["", "עדיאל קסה", "", "", "", "", "", "", "", "", "", "", ""] });
+            }
+
+            if (saved) {
+                if (saved.north && Array.isArray(saved.north)) north = saved.north;
+                if (saved.south && Array.isArray(saved.south)) south = saved.south;
+            }
+            allMonthsDataCache[monthIdx] = { north, south };
+            setupWeeksCache(monthIdx);
+        }
+
+        function getMonthDataCache(monthIdx) {
+            if (!allMonthsDataCache[monthIdx]) processLoadedMonthData(monthIdx, null);
+            return allMonthsDataCache[monthIdx];
+        }
+
+        function setupWeeksCache(monthIdx) {
+            const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
+            const weeksMap = new Map();
+            for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+                const date = new Date(currentYear, monthIdx, dayNum);
+                if (date.getDay() === 5 || date.getDay() === 6) continue;
+                const wNum = getAirForceWeek(date);
+                const sunDate = new Date(date);
+                sunDate.setDate(date.getDate() - date.getDay());
+                if (sunDate.getMonth() === monthIdx && !weeksMap.has(wNum)) {
+                    let weekDays = [];
+                    for (let d = new Date(sunDate); d <= new Date(sunDate.getTime() + 6*86400000); d.setDate(d.getDate() + 1)) {
+                        if (d.getFullYear() === currentYear && d.getDay() !== 5 && d.getDay() !== 6) {
+                            weekDays.push({ month: d.getMonth(), day: d.getDate(), hDayName: hebrewDaysShort[d.getDay()] });
+                        }
+                    }
+                    if (weekDays.length > 0) weeksMap.set(wNum, { weekNum: wNum, days: weekDays });
+                }
+            }
+            monthWeeksCache = [];
+            weeksMap.forEach((wObj) => monthWeeksCache.push(wObj));
+            initWeekTabs();
+        }
+
+        function initMonthFolders() {
+            const bar = document.getElementById('monthFoldersBar');
+            if (!bar) return;
+            bar.innerHTML = '';
+            monthNames.forEach((mName, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `month-folder-btn ${idx === activeMonth ? 'active' : ''}`;
+                btn.innerText = mName;
+                btn.onclick = () => {
+                    document.querySelectorAll('.month-folder-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeMonth = idx;
+                    activeWeekIndex = 0;
+                    loadMonthDataFromCloud(activeMonth);
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        function initWeekTabs() {
+            const bar = document.getElementById('weekTabsBar');
+            if (!bar) return;
+            bar.innerHTML = '';
+            monthWeeksCache.forEach((weekObj, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `week-tab-btn ${idx === activeWeekIndex ? 'active' : ''}`;
+                btn.innerText = `שבוע ${weekObj.weekNum}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.week-tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeWeekIndex = idx;
+                    renderCurrentWeekTables();
+                };
+                bar.appendChild(btn);
+            });
+        }
+
+        function renderCurrentWeekTables() {
+            const northBody = document.getElementById('northTableBody');
+            const southBody = document.getElementById('southTableBody');
+            if (!northBody || !southBody || monthWeeksCache.length === 0) return;
+
+            northBody.innerHTML = '';
+            southBody.innerHTML = '';
+            const currentWeekObj = monthWeeksCache[activeWeekIndex];
+
+            currentWeekObj.days.forEach(dayInfo => {
+                const monthData = getMonthDataCache(dayInfo.month);
+                monthData.north.filter(item => item.dayNum === dayInfo.day).forEach((nData) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, nData.values, 'north', dayInfo.month, monthData.north.indexOf(nData));
+                    northBody.appendChild(tr);
+                });
+                monthData.south.filter(item => item.dayNum === dayInfo.day).forEach((sData) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = buildRowHTML(dayInfo.day, dayInfo.hDayName, sData.values, 'south', dayInfo.month, monthData.south.indexOf(sData));
+                    southBody.appendChild(tr);
+                });
+            });
+        }
+
+        // לוגיקה מעודכנת לבחירת מדריך והשמת גורילות אוטומטית
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
@@ -154,15 +881,108 @@
             renderCurrentWeekTables();
         };
 
-        // פונקציות העזר (חייבות להיות כאן)
+        function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex) {
+            const dateStr = `${String(dayNum).padStart(2, '0')}.${String(monthIdx + 1).padStart(2, '0')}`;
+            const currentVal = vals[0] || `${dateStr} ${hDayName}`;
+
+            return `
+                <td><input type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)"></td>
+                <td>
+                    <select class="cell-select" onchange="handleGuideSelection('${side}', ${monthIdx}, ${cacheIndex}, 1, this)">
+                        ${guidesOptions.map(g => `<option value="${g}" ${vals[1] === g ? 'selected' : ''}>${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[3] || ''}" placeholder="מיקום" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 3, this.value)"></td>
+                <td>
+                    <select class="cell-select" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 4, this.value)">
+                        ${systemsOptions.map(s => `<option value="${s}" ${vals[4] === s ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[5] || ''}" placeholder="איש קשר" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 5, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[6] || ''}" placeholder="מס'" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 6, this.value)"></td>
+                <td>
+                    <select class="cell-select" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value)">
+                        ${gorillaOptions.map(g => `<option value="${g}" ${vals[7] === g ? 'selected' : ''}>${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 9, this.value)"></td>
+                <td><input type="text" class="cell-input" value="${vals[12] || ''}" placeholder="ניידת" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 12, this.value)"></td>
+            `;
+        }
+
         function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
             const monthData = getMonthDataCache(monthIdx);
-            if (side === 'north') monthData.north[cacheIndex].values[fieldIndex] = value;
-            else monthData.south[cacheIndex].values[fieldIndex] = value;
+            if (side === 'north' && monthData.north[cacheIndex]) monthData.north[cacheIndex].values[fieldIndex] = value;
+            else if (side === 'south' && monthData.south[cacheIndex]) monthData.south[cacheIndex].values[fieldIndex] = value;
             saveMonthDataToCloud(monthIdx, monthData);
         }
 
-        // --- כאן יש להוסיף את כל שאר הפונקציות (renderCurrentWeekTables, buildRowHTML, getMonthDataCache, saveMonthDataToCloud, switchTab, filter, וכו') מהקוד המלא המקורי ששלחנו ---
+        function saveMonthDataToCloud(monthIdx, monthData) {
+            isUpdatingCloud = true;
+            const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
+            window.fbSet(sheetRef, monthData).then(() => {
+                setTimeout(() => { isUpdatingCloud = false; }, 500);
+            }).catch(() => { isUpdatingCloud = false; });
+        }
+
+        function addExtraRow(side) {
+            const monthData = getMonthDataCache(activeMonth);
+            monthData[side].push({ dayNum: 1, hDayName: "א'", values: ["", "", "", "", "", "", "", "", "", "", "", "", ""] });
+            saveMonthDataToCloud(activeMonth, monthData);
+            renderCurrentWeekTables();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('gorilla_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+            localStorage.setItem('gorilla_active_tab', tabId);
+        }
+
+        function filterSchedule() {
+            let input = document.getElementById("scheduleSearch").value.toUpperCase();
+            document.querySelectorAll(".spreadsheet-container table tbody tr").forEach(row => {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
+            });
+        }
+
+        function initTrainerProfile() {
+            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            const display = document.getElementById('trainerInfoDisplay');
+            const inputsArea = document.getElementById('trainerInputsArea');
+            if (!display || !inputsArea) return;
+            if (trainer) {
+                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> <button onclick="localStorage.removeItem('gorilla_trainer_profile'); initTrainerProfile();" style="color:#3498db; background:none; border:none; cursor:pointer;">[שנה]</button>`;
+                inputsArea.style.display = 'none';
+            } else {
+                display.innerHTML = `👤 הזן פרטי מדריך:`;
+                inputsArea.innerHTML = `<input type="text" id="tFirstName" placeholder="שם פרטי"><input type="tel" id="tPhone" placeholder="טלפון"><button class="trainer-save-btn" onclick="saveTrainerProfile()">שמור</button>`;
+                inputsArea.style.display = 'flex';
+            }
+        }
+
+        function saveTrainerProfile() {
+            const fName = document.getElementById('tFirstName')?.value.trim();
+            const phone = document.getElementById('tPhone')?.value.trim();
+            if (!fName || !phone) { alert('נא למלא פרטים'); return; }
+            localStorage.setItem('gorilla_trainer_profile', JSON.stringify({ firstName: fName, phone: phone }));
+            initTrainerProfile();
+        }
+
+        function sendGroupWhatsAppSummary() {
+            alert("מכין סיכום שבועי...");
+        }
+
+        function initCloudStatusSync() {}
+        function sendTomorrowReminder() {}
     </script>
 </body>
 </html>
