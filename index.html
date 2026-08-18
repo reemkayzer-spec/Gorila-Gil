@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תפעול והדרכה - צוות גיל</title>
     
+    <!-- Chart.js לסרגל נתונים ודשבורד אינטראקטיבי -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -36,16 +39,13 @@
         window.fbOnValue = onValue;
         window.fbGet = get;
 
-        // שמירת חיבור מקומי בדפדפן - נשארים מחוברים גם בסגירת הטאב
         setPersistence(auth, browserLocalPersistence).catch(console.error);
 
-        // מיפוי גורילות אוטומטי למדריכים
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
         };
 
-        // מאגר מדריכים מוכרים לזיהוי אוטומטי בהתחברות
         window.knownTrainers = {
             "itayhaker19@gmail.com": { firstName: "איתי", lastName: "הקר", phone: "" },
             "adielkassa@gmail.com": { firstName: "עדיאל", lastName: "קסה", phone: "0526652209" },
@@ -56,7 +56,6 @@
             "netashatzberg@gmail.com": { firstName: "נטע", lastName: "שצברג", phone: "" }
         };
 
-        // פונקציית התחברות עם מייל וסיסמה
         window.loginWithCredentials = function(e) {
             if (e) e.preventDefault();
             const emailInput = document.getElementById("auth-email");
@@ -94,7 +93,6 @@
             signOut(auth);
         };
 
-        // האזנה לשינויי סטטוס חיבור
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
@@ -107,7 +105,6 @@
                 if (authScreen) authScreen.style.display = "none";
                 if (mainContent) mainContent.style.display = "block";
                 
-                // זיהוי אוטומטי של פרופיל המדריך לפי כתובת המייל
                 if (typeof window.initTrainerProfile === 'function') {
                     window.initTrainerProfile(user);
                 }
@@ -159,61 +156,26 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
-        /* מסך התחברות */
         #auth-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #0f172a;
-            color: #ffffff;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 99999;
-            padding: 20px;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; background-color: #0f172a; color: #ffffff; position: fixed;
+            top: 0; left: 0; width: 100%; z-index: 99999; padding: 20px;
         }
         .login-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 30px 25px;
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+            padding: 30px 25px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .login-card h2 { margin: 0 0 10px 0; font-size: 1.3em; }
         .login-card p { font-size: 0.85em; color: #94a3b8; margin-bottom: 20px; }
         .login-input {
-            width: 100%;
-            padding: 12px 14px;
-            margin-bottom: 12px;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            background: #0f172a;
-            color: #ffffff;
-            font-size: 0.95em;
-            outline: none;
-            direction: ltr;
-            text-align: right;
-            transition: 0.2s;
+            width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #475569;
+            border-radius: 8px; background: #0f172a; color: #ffffff; font-size: 0.95em; outline: none;
+            direction: ltr; text-align: right; transition: 0.2s;
         }
         .login-input:focus { border-color: #38bdf8; }
         .login-btn {
-            background-color: #0284c7;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-size: 1em;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            margin-top: 5px;
+            background-color: #0284c7; color: white; border: none; width: 100%; padding: 12px;
+            font-size: 1em; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: 5px;
         }
         .login-btn:hover { background-color: #0369a1; }
         .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -243,6 +205,127 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* עיצובי דשבורד חדשים */
+        .dashboard-header {
+            margin-bottom: 20px;
+        }
+        .dashboard-header h2 { margin: 0 0 4px 0; font-size: 1.3em; display: flex; align-items: center; gap: 8px; }
+        .dashboard-header p { margin: 0; font-size: 0.85em; color: #64748b; }
+
+        .dashboard-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        .kpi-card:hover { transform: translateY(-2px); }
+        .kpi-value { font-size: 2em; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-title { font-size: 0.85em; font-weight: 600; color: #64748b; }
+
+        .dashboard-main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 900px) {
+            .dashboard-main-grid {
+                grid-template-columns: 1.1fr 0.9fr;
+            }
+        }
+
+        .dashboard-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .dashboard-box-title {
+            margin: 0 0 15px 0;
+            font-size: 1.05em;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .stat-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--main-bg);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .stat-item-label { font-size: 0.9em; font-weight: 600; }
+        .stat-item-value { font-size: 1.1em; font-weight: 800; color: #0284c7; }
+
+        .badges-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .info-tag {
+            background: rgba(2, 132, 199, 0.1);
+            color: #0284c7;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.78em;
+            font-weight: bold;
+        }
+        body.dark-mode .info-tag {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .faults-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-right: 4px solid #ef4444;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .fault-row-item {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        body.dark-mode .fault-row-item {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border-color: #ef4444;
+        }
+
+        /* סגנונות כלליים */
         .trainer-profile-bar {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
             padding: 12px 16px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
@@ -280,83 +363,38 @@
         }
         .search-box input:focus { border-color: #3498db; }
 
-        .week-tabs-bar {
-            display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap;
-        }
+        .week-tabs-bar { display: flex; gap: 6px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
         .week-tab-btn {
             background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);
             padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.85em; cursor: pointer; transition: 0.3s;
         }
-        .week-tab-btn:hover, .week-tab-btn.active {
-            background-color: #0284c7; color: white; border-color: #0284c7;
-        }
+        .week-tab-btn:hover, .week-tab-btn.active { background-color: #0284c7; color: white; border-color: #0284c7; }
         .week-tab-btn.today-week-tab {
-            background-color: #fef08a !important;
-            color: #854d0e !important;
-            border-color: #facc15 !important;
-            font-weight: 800;
-            box-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
+            background-color: #fef08a !important; color: #854d0e !important; border-color: #facc15 !important;
+            font-weight: 800; box-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
         }
-        body.dark-mode .week-tab-btn.today-week-tab {
-            background-color: #713f12 !important;
-            color: #fef08a !important;
-            border-color: #ca8a04 !important;
-        }
+        body.dark-mode .week-tab-btn.today-week-tab { background-color: #713f12 !important; color: #fef08a !important; border-color: #ca8a04 !important; }
 
-        .spreadsheet-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .sheet-box {
-            background: var(--main-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
+        .spreadsheet-container { display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; }
+        .sheet-box { background: var(--main-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .sheet-side-header {
             background-color: #1e293b; color: white; padding: 10px 14px;
             display: flex; justify-content: space-between; align-items: center; font-size: 0.95em; font-weight: bold; flex-wrap: wrap; gap: 8px;
         }
-        .header-btns-group {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .header-btns-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         .unit-wa-btn, .unit-add-btn {
-            color: white; border: none; padding: 5px 10px;
-            border-radius: 20px; font-size: 0.78em; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-            white-space: nowrap;
+            color: white; border: none; padding: 5px 10px; border-radius: 20px; font-size: 0.78em; font-weight: bold; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15); white-space: nowrap;
         }
         .unit-wa-btn { background-color: #25d366; }
         .unit-wa-btn:hover { background-color: #20ba5a; }
         .unit-wa-btn svg { width: 14px; height: 14px; fill: white; flex-shrink: 0; }
-
         .unit-add-btn { background-color: #0284c7; }
         .unit-add-btn:hover { background-color: #0369a1; }
 
-        .table-container { 
-            overflow-x: auto; 
-            margin: 0; 
-            border: none;
-            border-radius: 0; 
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .status-table-container {
-            overflow-x: auto;
-            width: 100%;
-            -webkit-overflow-scrolling: touch;
-        }
-        .status-table-container table {
-            width: 100%;
-            min-width: 600px;
-        }
+        .table-container { overflow-x: auto; margin: 0; border: none; border-radius: 0; -webkit-overflow-scrolling: touch; }
+        .status-table-container { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+        .status-table-container table { width: 100%; min-width: 600px; }
 
         .status-table-container th:nth-child(1), .status-table-container td:nth-child(1) { width: 110px; min-width: 110px; } 
         .status-table-container th:nth-child(2), .status-table-container td:nth-child(2) { width: 90px; min-width: 90px; }   
@@ -379,172 +417,81 @@
         .spreadsheet-container table th:nth-child(10), .spreadsheet-container table td:nth-child(10) { width: 110px; min-width: 110px; } 
         .spreadsheet-container table th:nth-child(11), .spreadsheet-container table td:nth-child(11) { width: 90px; min-width: 90px; } 
         
-        .weekend-row td {
-            background-color: rgba(100, 116, 139, 0.1);
-            color: #64748b;
-        }
+        .today-row td { background-color: #fef08a !important; border-color: #facc15 !important; font-weight: bold; }
+        body.dark-mode .today-row td { background-color: #713f12 !important; border-color: #fef08a !important; }
 
-        .today-row td {
-            background-color: #fef08a !important;
-            border-color: #facc15 !important;
-            font-weight: bold;
-        }
-        body.dark-mode .today-row td {
-            background-color: #713f12 !important;
-            border-color: #fef08a !important;
-        }
+        .canceled-row td { background-color: rgba(239, 68, 68, 0.2) !important; border-color: #f87171 !important; }
+        body.dark-mode .canceled-row td { background-color: rgba(239, 68, 68, 0.3) !important; border-color: #991b1b !important; }
 
-        .canceled-row td {
-            background-color: rgba(239, 68, 68, 0.2) !important;
-            border-color: #f87171 !important;
-        }
-        body.dark-mode .canceled-row td {
-            background-color: rgba(239, 68, 68, 0.3) !important;
-            border-color: #991b1b !important;
-        }
-
-        .cell-input {
-            width: 100%; border: none; background: transparent; text-align: center;
-            font-size: 0.88em; color: var(--text-color); outline: none; padding: 2px;
-        }
+        .cell-input { width: 100%; border: none; background: transparent; text-align: center; font-size: 0.88em; color: var(--text-color); outline: none; padding: 2px; }
         .cell-input:focus { background: rgba(52, 152, 219, 0.1); border-radius: 4px; }
 
         .cell-select {
             width: 100%; border: 1px solid var(--border-color); background: var(--input-bg);
             color: var(--text-color); font-size: 0.78em; border-radius: 4px; padding: 2px 1px; outline: none; cursor: pointer;
-            appearance: auto; -webkit-appearance: auto; -moz-appearance: auto;
         }
-        .cell-select.has-selection {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: transparent;
-            border: none;
-            text-align-last: center;
-            font-weight: bold;
-        }
+        .cell-select.has-selection { appearance: none; -webkit-appearance: none; background: transparent; border: none; text-align-last: center; font-weight: bold; }
 
-        .guides-container, .gorillas-container {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            width: 100%;
-        }
-        .guide-row-flex, .gorilla-row-flex {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            width: 100%;
-        }
+        .guides-container, .gorillas-container { display: flex; flex-direction: column; gap: 3px; width: 100%; }
+        .guide-row-flex, .gorilla-row-flex { display: flex; align-items: center; gap: 2px; width: 100%; }
         .add-guide-btn, .remove-guide-btn, .add-gorilla-btn, .remove-gorilla-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.85em;
-            padding: 0 2px;
-            line-height: 1;
-            flex-shrink: 0;
-            transition: transform 0.2s;
+            background: none; border: none; cursor: pointer; font-size: 0.85em; padding: 0 2px; line-height: 1; flex-shrink: 0; transition: transform 0.2s;
         }
         .add-guide-btn:hover, .remove-guide-btn:hover, .add-gorilla-btn:hover, .remove-gorilla-btn:hover { transform: scale(1.2); }
 
         .month-folders-bar {
             display: flex; gap: 6px; overflow-x: auto; padding: 14px 6px; margin-top: 20px;
-            border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px;
-            justify-content: center; flex-wrap: wrap; align-items: flex-end;
+            border-top: 2px solid var(--border-color); background: var(--card-bg); border-radius: 8px; justify-content: center; flex-wrap: wrap; align-items: flex-end;
         }
         .month-folder-btn {
-            background-color: #475569; color: white; border: none; padding: 9px 16px;
-            border-radius: 6px 6px 0 0; cursor: pointer; font-weight: bold; font-size: 0.9em; transition: 0.3s;
+            background-color: #475569; color: white; border: none; padding: 9px 16px; border-radius: 6px 6px 0 0; cursor: pointer; font-weight: bold; font-size: 0.9em; transition: 0.3s;
         }
         .month-folder-btn:hover { background-color: #64748b; }
         .month-folder-btn.active {
-            background-color: #0284c7; 
-            color: #ffffff; 
-            transform: translateY(-6px) scale(1.08);
-            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.5);
-            border: 2px solid #ffffff;
-            font-weight: 800;
-            z-index: 10;
+            background-color: #0284c7; color: #ffffff; transform: translateY(-6px) scale(1.08);
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.5); border: 2px solid #ffffff; font-weight: 800; z-index: 10;
         }
 
         .status-select, .notes-input {
-            padding: 5px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            font-size: 0.9em;
-            font-weight: bold;
-            outline: none;
-            transition: 0.2s;
+            padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: var(--input-bg); color: var(--text-color); font-size: 0.9em; font-weight: bold; outline: none; transition: 0.2s;
         }
         .status-select { cursor: pointer; }
         .notes-input { width: 100%; }
         .status-select:focus, .notes-input:focus { border-color: #3498db; }
 
-        .cleaning-date-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .cleaning-date-input {
-            padding: 3px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            background: var(--input-bg);
-            color: var(--text-color);
-            font-size: 0.85em;
-            outline: none;
-        }
+        .cleaning-date-wrapper { display: flex; align-items: center; gap: 6px; justify-content: center; flex-wrap: wrap; }
+        .cleaning-date-input { padding: 3px 6px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-size: 0.85em; outline: none; }
         .cleaning-today-btn {
-            background-color: #25d366;
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.78em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #25d366; color: white; border: none; padding: 4px 10px; border-radius: 15px;
+            font-size: 0.78em; font-weight: bold; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .cleaning-today-btn:hover { background-color: #20ba5a; }
 
         .slide-box {
             background-color: var(--card-bg); border: 1px solid var(--border-color); border-right: 4px solid #3498db;
-            border-radius: 8px; margin-bottom: 15px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: background 0.3s, border-color 0.3s;
+            border-radius: 8px; margin-bottom: 15px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: background 0.3s, border-color 0.3s;
         }
         .slide-title { margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 6px; font-size: 1.05em; }
-        
         .step-list { margin-top: 8px; padding-right: 12px; font-size: 0.9em; }
         .step-list li { margin-bottom: 8px; }
         .step-list p { margin: 4px 0; }
-
         .code-block { background: var(--code-bg); padding: 2px 5px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85em; word-break: break-all; }
 
         .videos-flex-container { display: flex; gap: 10px; flex-direction: column; margin: 12px 0; }
         @media (min-width: 768px) { .videos-flex-container { flex-direction: row; flex-wrap: wrap; } }
-        .slide-video-container {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; flex: 1; width: 100%;
-        }
+        .slide-video-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; flex: 1; width: 100%; }
         .slide-video-container h4 { margin: 0 0 6px 0; font-size: 0.85em; color: var(--text-color); }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px; background: #000; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .yt-link-btn {
-            display: inline-flex; align-items: center; gap: 6px; background-color: #ff0000;
-            color: white; padding: 6px 10px; border-radius: 15px; text-decoration: none; font-size: 0.78em; font-weight: bold; margin-top: 6px;
+            display: inline-flex; align-items: center; gap: 6px; background-color: #ff0000; color: white;
+            padding: 6px 10px; border-radius: 15px; text-decoration: none; font-size: 0.78em; font-weight: bold; margin-top: 6px;
         }
 
         .cards-container { display: flex; gap: 10px; flex-direction: column; margin-top: 10px; }
         @media (min-width: 600px) { .cards-container { flex-direction: row; flex-wrap: wrap; } }
-        
         .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; flex: 1; min-width: 280px; }
-        
         .form-card-content { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
         .form-info { flex: 1; min-width: 160px; }
         .form-qr-box { display: flex; flex-direction: column; align-items: center; background: var(--main-bg); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center; }
@@ -556,22 +503,10 @@
         .btn { display: inline-block; background-color: #0284c7; color: white; padding: 8px 12px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 6px; font-size: 0.85em; text-align: center; width: 100%; }
         @media (min-width: 600px) { .btn { width: auto; } }
 
-        .link-table-btn {
-            display: inline-block; background-color: #0284c7; color: white; padding: 6px 10px;
-            border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.8em; text-align: center;
-        }
-        .table-title {
-            background-color: #1e293b; color: white; padding: 10px 12px;
-            border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
+        .link-table-btn { display: inline-block; background-color: #0284c7; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.8em; text-align: center; }
+        .table-title { background-color: #1e293b; color: white; padding: 10px 12px; border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em; display: flex; justify-content: space-between; align-items: center; }
         .slide-img-box { text-align: center; margin: 12px 0; }
-        .slide-img-box img {
-            max-width: 100%; height: auto; border-radius: 8px;
-            border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        #error-msg { color: #f87171; font-size: 0.85em; margin-top: 15px; min-height: 18px; font-weight: bold; }
+        .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -622,6 +557,7 @@
             </div>
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
+                <button class="tab-btn" onclick="switchTab('dashboard', event)">📈 דשבורד</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
                 <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
                 <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
@@ -630,6 +566,7 @@
         </header>
 
         <main>
+            <!-- לשונית סידור עבודה -->
             <section id="schedule" class="tab-content active">
                 <div class="trainer-profile-bar" id="trainerProfileBar">
                     <div class="trainer-info-text" id="trainerInfoDisplay">👤 לא זוהית כמדריך. אנא הזן פרטים:</div>
@@ -639,7 +576,7 @@
                 <div class="schedule-header-action">
                     <h2 style="margin: 0; font-size: 1.15em;">📅 אימוני גורילות גיל - סידור עבודה חודשי ושבועי</h2>
                     <div class="search-box">
-                        <input type="text" id="scheduleSearch" oninput="filterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
+                        <input type="text" id="scheduleSearch" oninput="debouncedFilterSchedule()" placeholder="🔍 חפש מדריך, מיקום או יחידה בגיליון...">
                     </div>
                     <div class="action-btns-group">
                         <button class="wa-group-btn" id="waShiftsBtn" onclick="exportWeeklyShiftsToCalendar()">
@@ -662,612 +599,696 @@
                                 <button class="unit-add-btn" onclick="addExtraRow('north')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
                                 <button class="unit-wa-btn" onclick="sendTomorrowReminder('north')">
                                     <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                            שלח הודעה למתאמנים של מחר
-                        </button>
+                                    שלח הודעה למתאמנים של מחר
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="sheetNorthTable">
+                                <thead>
+                                    <tr>
+                                        <th>תאריך</th>
+                                        <th>מדריך</th>
+                                        <th>כוח מתאמן</th>
+                                        <th>מיקום</th>
+                                        <th>ישלט/אחוד</th>
+                                        <th>איש קשר</th>
+                                        <th>מס מתאמנים</th>
+                                        <th>גורילה</th>
+                                        <th>שעות</th>
+                                        <th>הערות</th>
+                                        <th>ניידת</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="northTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="sheet-box">
+                        <div class="sheet-side-header">
+                            <span>ניידת 2 מרכז/דרום</span>
+                            <div class="header-btns-group">
+                                <button class="unit-add-btn" onclick="addExtraRow('south')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
+                                <button class="unit-wa-btn" onclick="sendTomorrowReminder('south')">
+                                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                    שלח הודעה למתאמנים של מחר
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="sheetSouthTable">
+                                <thead>
+                                    <tr>
+                                        <th>תאריך</th>
+                                        <th>מדריך</th>
+                                        <th>כוח מתאמן</th>
+                                        <th>מיקום</th>
+                                        <th>ישלט/אחוד</th>
+                                        <th>איש קשר</th>
+                                        <th>מס מתאמנים</th>
+                                        <th>גורילה</th>
+                                        <th>שעות</th>
+                                        <th>הערות</th>
+                                        <th>ניידת</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="southTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div class="table-container">
-                    <table id="sheetNorthTable">
+
+                <div class="month-folders-bar" id="monthFoldersBar"></div>
+            </section>
+
+            <!-- לשונית דשבורד סטטיסטי -->
+            <section id="dashboard" class="tab-content">
+                <div class="dashboard-header">
+                    <h2>📈 דשבורד סטטיסטי</h2>
+                    <p>תמונת מצב חיה של פעילות החודש, זמינות המאמנים ותקלות פתוחות. מתעדכן אוטומטית בכל שינוי.</p>
+                </div>
+
+                <!-- סרגל חודשים ייעודי לדשבורד -->
+                <div class="week-tabs-bar" id="dashboardMonthTabs" style="margin-bottom: 20px;"></div>
+
+                <!-- 4 כרטיסי KPI עליונים -->
+                <div class="dashboard-kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpiTotalGorillas" style="color: #64748b;">7</div>
+                        <div class="kpi-title">סה"כ גורילות</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpiHealthyGorillas" style="color: #22c55e;">0</div>
+                        <div class="kpi-title">✅ תקינות</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpiFaultyGorillas" style="color: #ef4444;">0</div>
+                        <div class="kpi-title">⚠️ לא תקינות</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value" id="kpiMonthTrainingDays" style="color: #0284c7;">0</div>
+                        <div class="kpi-title">📅 ימי אימון חודשי</div>
+                    </div>
+                </div>
+
+                <!-- גריד מרכזי: נתוני פעילות חודשית + נתוני גורילות (גרף עמודות) -->
+                <div class="dashboard-main-grid">
+                    <!-- צד ימין: נתוני גורילות וגרף עמודות -->
+                    <div class="dashboard-box">
+                        <div class="dashboard-box-title">
+                            <span>📊 נתוני גורילות (ימים מאז טיפול מול ימי אימון)</span>
+                            <span id="chartMonthLabel" style="font-size:0.8em; color:#0284c7;"></span>
+                        </div>
+                        <div style="position: relative; height: 280px; width: 100%;">
+                            <canvas id="gorillaBarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- צד שמאל: סיכום פעילות חודשית (מתאמנים, שעות, יחידות, מיקומים) -->
+                    <div class="dashboard-box">
+                        <div class="dashboard-box-title">
+                            <span>📋 סיכום פעילות - <span id="statsMonthTitle"></span></span>
+                        </div>
+                        <div class="stats-items-list">
+                            <div class="stat-item-row">
+                                <span class="stat-item-label">👥 סה"כ מתאמנים:</span>
+                                <span class="stat-item-value" id="dashTotalTrainees">0</span>
+                            </div>
+                            <div class="stat-item-row">
+                                <span class="stat-item-label">⏱️ סה"כ שעות פעילות (הערכה):</span>
+                                <span class="stat-item-value" id="dashTotalHours">0 שעות</span>
+                            </div>
+                            <div class="stat-item-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <span class="stat-item-label">📍 מיקומי אימון בחודש:</span>
+                                <div class="badges-wrap" id="dashLocationsList"></div>
+                            </div>
+                            <div class="stat-item-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                                <span class="stat-item-label">🛡️ כוחות מתאמנים (יחידות):</span>
+                                <div class="badges-wrap" id="dashUnitsList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- חלק תחתון: תקלות פתוחות כרגע -->
+                <div class="faults-section">
+                    <div class="dashboard-box-title" style="border-bottom-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
+                        <span>🔧 תקלות פתוחות כרגע</span>
+                        <span id="faultsCountBadge" style="font-size: 0.8em; background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px;">0 תקלות</span>
+                    </div>
+                    <div id="openFaultsContainer"></div>
+                </div>
+            </section>
+
+            <!-- לשונית סטטוס גורילות -->
+            <section id="gorilla-status" class="tab-content">
+                <h2>📊 סטטוס גורילות</h2>
+                <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
+                <div class="status-table-container">
+                    <table class="schedule-table">
                         <thead>
                             <tr>
-                                <th>תאריך</th>
-                                <th>מדריך</th>
-                                <th>כוח מתאמן</th>
-                                <th>מיקום</th>
-                                <th>ישלט/אחוד</th>
-                                <th>איש קשר</th>
-                                <th>מס מתאמנים</th>
                                 <th>גורילה</th>
-                                <th>שעות</th>
-                                <th>הערות</th>
-                                <th>ניידת</th>
+                                <th>תקין/תקול</th>
+                                <th>טיפול חודשי אחרון</th>
+                                <th>תקלה/הערות נוספות</th>
                             </tr>
                         </thead>
-                        <tbody id="northTableBody"></tbody>
+                        <tbody id="statusTableBody">
+                            <tr data-id="0"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="1"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td></tr>
+                            <tr data-id="2"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="3"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="4"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="5"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                            <tr data-id="6"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                        </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
 
-            <div class="sheet-box">
-                <div class="sheet-side-header">
-                    <span>ניידת 2 מרכז/דרום</span>
-                    <div class="header-btns-group">
-                        <button class="unit-add-btn" onclick="addExtraRow('south')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
-                        <button class="unit-wa-btn" onclick="sendTomorrowReminder('south')">
-                            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                            שלח הודעה למתאמנים של מחר
-                        </button>
-                    </div>
+            <!-- לשונית תקלות -->
+            <section id="pdf-slides" class="tab-content">
+                <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
+                <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
+                        <span>📞</span> צלצל לקסה
+                    </a>
+                    <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
+                        <span>📞</span> צלצל לטכנאי
+                    </a>
                 </div>
-                <div class="table-container">
-                    <table id="sheetSouthTable">
-                        <thead>
-                            <tr>
-                                <th>תאריך</th>
-                                <th>מדריך</th>
-                                <th>כוח מתאמן</th>
-                                <th>מיקום</th>
-                                <th>ישלט/אחוד</th>
-                                <th>איש קשר</th>
-                                <th>מס מתאמנים</th>
-                                <th>גורילה</th>
-                                <th>שעות</th>
-                                <th>הערות</th>
-                                <th>ניידת</th>
-                            </tr>
-                        </thead>
-                        <tbody id="southTableBody"></tbody>
-                    </table>
+
+                <div class="search-box" style="margin-bottom: 15px;">
+                    <input type="text" id="slidesSearch" oninput="debouncedFilterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
                 </div>
-            </div>
-        </div>
 
-        <div class="month-folders-bar" id="monthFoldersBar"></div>
-    </section>
-
-    <section id="gorilla-status" class="tab-content">
-        <h2>📊 סטטוס גורילות</h2>
-        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
-        <div class="status-table-container">
-            <table class="schedule-table">
-                <thead>
-                    <tr>
-                        <th>גורילה</th>
-                        <th>תקין/תקול</th>
-                        <th>טיפול חודשי אחרון</th>
-                        <th>תקלה/הערות נוספות</th>
-                    </tr>
-                </thead>
-                <tbody id="statusTableBody">
-                    <tr data-id="0"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                    <tr data-id="1"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td></tr>
-                    <tr data-id="2"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td></tr>
-                    <tr data-id="3"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td></tr>
-                    <tr data-id="4"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                    <tr data-id="5"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                    <tr data-id="6"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="pdf-slides" class="tab-content">
-        <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
-        <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-            <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
-                <span>📞</span> צלצל לקסה
-            </a>
-            <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
-                <span>📞</span> צלצל לטכנאי
-            </a>
-        </div>
-
-        <div class="search-box" style="margin-bottom: 15px;">
-            <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
-        </div>
-
-        <div id="slidesContainer">
-            <div class="slide-box">
-                <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
-                <ol class="step-list">
-                    <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
-                    <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
-                    <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
-                    <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
-                </ol>
-                <div class="slide-img-box">
-                    <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/2.jpg.png" alt="הדלקת הגורילה">
-                </div>
-            </div>
-
-            <div class="slide-box">
-                <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
-                <div class="step-list">
-                    <div class="slide-img-box">
-                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/1.jpg.png" alt="תקלות משגר וחיבורי SPARTACUS">
+                <div id="slidesContainer">
+                    <div class="slide-box">
+                        <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
+                        <ol class="step-list">
+                            <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
+                            <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
+                            <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
+                            <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
+                        </ol>
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/2.jpg.png" alt="הדלקת הגורילה" loading="lazy">
+                        </div>
                     </div>
 
-                    <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
-                    <ul>
-                        <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
-                        <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
-                        <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
-                        <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
-                        <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
-                    </ul>
-                    <p><strong>2. סידור קומים (Device Manager):</strong></p>
-                    <div class="slide-img-box">
-                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/6.jpg.png" alt="סידור קומים ב-Device Manager">
-                    </div>
-                    <ul>
-                        <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
-                        <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
+                    <div class="slide-box">
+                        <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
+                        <div class="step-list">
+                            <div class="slide-img-box">
+                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/1.jpg.png" alt="תקלות משגר וחיבורי SPARTACUS" loading="lazy">
+                            </div>
+
+                            <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
                             <ul>
-                                <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
-                                <li><strong>COM3:</strong> USB Serial Port</li>
-                                <li><strong>COM4:</strong> USB Serial Port</li>
-                                <li><strong>COM5:</strong> USB-SERIAL CH340</li>
+                                <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
+                                <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
+                                <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
+                                <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
+                                <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
                             </ul>
-                        </li>
-                        <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
-                    </ul>
-                    <div class="slide-video-container">
-                        <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" loading="lazy" allowfullscreen></iframe>
+                            <p><strong>2. סידור קומים (Device Manager):</strong></p>
+                            <div class="slide-img-box">
+                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/6.jpg.png" alt="סידור קומים ב-Device Manager" loading="lazy">
+                            </div>
+                            <ul>
+                                <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
+                                <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
+                                    <ul>
+                                        <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
+                                        <li><strong>COM3:</strong> USB Serial Port</li>
+                                        <li><strong>COM4:</strong> USB Serial Port</li>
+                                        <li><strong>COM5:</strong> USB-SERIAL CH340</li>
+                                    </ul>
+                                </li>
+                                <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
+                            </ul>
+                            <div class="slide-video-container">
+                                <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
+                                <div class="video-wrapper">
+                                    <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" loading="lazy" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                            </div>
                         </div>
-                        <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="slide-box">
-                <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
-                <div class="step-list">
-                    <div class="slide-img-box">
-                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/5.jpg.png" alt="תקלות תצוגה ומסכים">
                     </div>
 
-                    <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
-                    <ul>
-                        <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
-                    </ul>
-                    <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
-                    <div class="slide-img-box">
-                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/7.jpg.png" alt="סידור מסכים - הגדרת הרץ" style="margin-bottom: 8px;">
-                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/8.jpg.png" alt="סידור מסכים - רזולוציות">
-                    </div>
-                    <ul>
-                        <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
-                        <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
-                        <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
-                        <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
-                    </ul>
-                    <div class="slide-video-container">
-                        <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" loading="lazy" allowfullscreen></iframe>
+                    <div class="slide-box">
+                        <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
+                        <div class="step-list">
+                            <div class="slide-img-box">
+                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/5.jpg.png" alt="תקלות תצוגה ומסכים" loading="lazy">
+                            </div>
+
+                            <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
+                            <ul>
+                                <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
+                            </ul>
+                            <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
+                            <div class="slide-img-box">
+                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/7.jpg.png" alt="סידור מסכים - הגדרת הרץ" style="margin-bottom: 8px;" loading="lazy">
+                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/8.jpg.png" alt="סידור מסכים - רזולוציות" loading="lazy">
+                            </div>
+                            <ul>
+                                <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
+                                <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
+                                <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
+                                <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
+                            </ul>
+                            <div class="slide-video-container">
+                                <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
+                                <div class="video-wrapper">
+                                    <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" loading="lazy" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                            </div>
                         </div>
-                        <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
                     </div>
-                </div>
-            </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
-                <div class="step-list">
-                    <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
-                    <ul>
-                        <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
-                    </ul>
-                    <div class="slide-video-container">
-                        <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" loading="lazy" allowfullscreen></iframe>
+                    <div class="slide-box">
+                        <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
+                        <div class="step-list">
+                            <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
+                            <ul>
+                                <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
+                            </ul>
+                            <div class="slide-video-container">
+                                <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
+                                <div class="video-wrapper">
+                                    <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" loading="lazy" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                            </div>
+                            <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
+                            <ul>
+                                <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
+                            </ul>
                         </div>
-                        <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
                     </div>
-                    <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
-                    <ul>
-                        <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
-                    </ul>
-                </div>
-            </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
-                <div class="slide-img-box">
-                    <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/4.jpg.png" alt="העברת תרגילים בין גורילות">
-                </div>
-                <ol class="step-list">
-                    <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
-                    <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
-                    <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
-                </ol>
-                <div class="videos-flex-container">
-                    <div class="slide-video-container">
-                        <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" loading="lazy" allowfullscreen></iframe>
+                    <div class="slide-box">
+                        <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/4.jpg.png" alt="העברת תרגילים בין גורילות" loading="lazy">
                         </div>
-                        <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                    </div>
-                    <div class="slide-video-container">
-                        <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
-                        <div class="video-wrapper">
-                            <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" loading="lazy" allowfullscreen></iframe>
+                        <ol class="step-list">
+                            <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
+                            <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
+                            <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
+                        </ol>
+                        <div class="videos-flex-container">
+                            <div class="slide-video-container">
+                                <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
+                                <div class="video-wrapper">
+                                    <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" loading="lazy" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                            </div>
+                            <div class="slide-video-container">
+                                <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
+                                <div class="video-wrapper">
+                                    <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" loading="lazy" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                            </div>
                         </div>
-                        <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+
+                    <div class="slide-box">
+                        <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
+                        <div class="slide-img-box">
+                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/3.jpg.png" alt="התקנת דרייברים של NVIDIA" loading="lazy">
+                        </div>
+                        <div class="step-list">
+                            <ol>
+                                <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
+                                <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
+                                <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
+                                <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                                <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="slide-box" style="border-right-color: #ef4444;">
+                        <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
+                        <div class="step-list">
+                            <ul>
+                                <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
+                                <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="slide-box">
+                        <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
+                        <ol class="step-list">
+                            <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
+                            <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
+                            <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
+                            <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
+                            <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
+                            <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
+                        </ol>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="slide-box">
-                <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
-                <div class="slide-img-box">
-                    <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/3.jpg.png" alt="התקנת דרייברים של NVIDIA">
+            <!-- לשונית הסמכה -->
+            <section id="training-program" class="tab-content">
+                <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
+                <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
+
+                <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>הכרת החברה</td><td>מנהל אתר</td>
+                                <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
+                            </tr>
+                            <tr>
+                                <td>הצגת מוצרים</td><td>מנהל אתר</td>
+                                <td>הצגת מוצרי החברה.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
+                            </tr>
+                            <tr>
+                                <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
+                                <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
+                            </tr>
+                            <tr>
+                                <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
+                                <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>ירי תחושה</td><td>מנהל אתר</td>
+                                <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="step-list">
-                    <ol>
-                        <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
-                        <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
-                        <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                        <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
-                        <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
-                    </ol>
+
+                <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
+                                <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
+                            </tr>
+                            <tr>
+                                <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
+                                <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>כיבוי מערכות</td><td>מנהל אתר</td>
+                                <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <div class="slide-box" style="border-right-color: #ef4444;">
-                <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
-                <div class="step-list">
-                    <ul>
-                        <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
-                        <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
-                    </ul>
+                <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
+                                <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תתרגול תפעול.</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
+                                <td>תפעול תקלות נפוצות במערכת.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
+                            </tr>
+                            <tr>
+                                <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
+                                <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <div class="slide-box">
-                <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
-                <ol class="step-list">
-                    <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
-                    <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
-                    <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
-                    <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
-                    <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
-                    <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
-                </ol>
-            </div>
-        </div>
-    </section>
+                <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
+                                <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>מבחן עיוני</td><td>מנהל אתר</td>
+                                <td>ביצוע מבחן עיוני כתוב.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-    <section id="training-program" class="tab-content">
-        <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
-        <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
+                <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
+                                <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
+                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&action=default" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
+                            </tr>
+                            <tr>
+                                <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
+                                <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-        <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>הכרת החברה</td><td>מנהל אתר</td>
-                        <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
-                    </tr>
-                    <tr>
-                        <td>הצגת מוצרים</td><td>מנהל אתר</td>
-                        <td>הצגת מוצרי החברה.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
-                    </tr>
-                    <tr>
-                        <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
-                        <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
-                    </tr>
-                    <tr>
-                        <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
-                        <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>ירי תחושה</td><td>מנהל אתר</td>
-                        <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- לשונית טפסים והעשרה -->
+            <section id="forms" class="tab-content">
+                <h2>📋 טפסים, ציוד והעשרה</h2>
+                
+                <div class="search-box" style="margin-bottom: 15px;">
+                    <input type="text" id="formsSearch" oninput="debouncedFilterForms()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
+                </div>
 
-        <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
-                        <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
-                    </tr>
-                    <tr>
-                        <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
-                        <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>כיבוי מערכות</td><td>מנהל אתר</td>
-                        <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
-                        <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תתרגול תפעול.</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
-                        <td>תפעול תקלות נפוצות במערכת.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
-                    </tr>
-                    <tr>
-                        <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
-                        <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
-                        <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>מבחן עיוני</td><td>מנהל אתר</td>
-                        <td>ביצוע מבחן עיוני כתוב.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
-                        <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
-                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&action=default" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
-                    </tr>
-                    <tr>
-                        <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
-                        <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
-                        <td>-</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="forms" class="tab-content">
-        <h2>📋 טפסים, ציוד והעשרה</h2>
-        
-        <div class="search-box" style="margin-bottom: 15px;">
-            <input type="text" id="formsSearch" onkeyup="filterFormsTab()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
-        </div>
-
-        <div class="cards-container">
-            <div class="card form-item">
-                <div class="form-card-content">
-                    <div class="form-info">
-                        <h3>🚗 רשימת ציוד לרכב</h3>
-                        <p style="font-size: 0.85em; margin-bottom: 8px;">טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
-                        <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                <div class="cards-container">
+                    <div class="card form-item">
+                        <div class="form-card-content">
+                            <div class="form-info">
+                                <h3>🚗 רשימת ציוד לרכב</h3>
+                                <p style="font-size: 0.85em; margin-bottom: 8px;">טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
+                                <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                            </div>
+                            <div class="form-qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/YQWDPAaeUe" alt="QR Code" loading="lazy">
+                                <span class="form-url-text">forms.cloud.microsoft/r/YQWDPAaeUe</span>
+                                <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/YQWDPAaeUe', this)">📋 העתק</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-qr-box">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/YQWDPAaeUe" alt="QR Code" crossorigin="anonymous">
-                        <span class="form-url-text">forms.cloud.microsoft/r/YQWDPAaeUe</span>
-                        <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/YQWDPAaeUe', this)">📋 העתק</button>
+
+                    <div class="card form-item">
+                        <div class="form-card-content">
+                            <div class="form-info">
+                                <h3>✍️ משוב מתאמנים</h3>
+                                <p style="font-size: 0.85em; margin-bottom: 8px;">טופס איסוף רשמים ומשוב מהמתאמנים.</p>
+                                <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                            </div>
+                            <div class="form-qr-box">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/u1afBRvv3q" alt="QR Code" loading="lazy">
+                                <span class="form-url-text">forms.cloud.microsoft/r/u1afBRvv3q</span>
+                                <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card form-item">
-                <div class="form-card-content">
-                    <div class="form-info">
-                        <h3>✍️ משוב מתאמנים</h3>
-                        <p style="font-size: 0.85em; margin-bottom: 8px;">טופס איסוף רשמים ומשוב מהמתאמנים.</p>
-                        <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                <div class="card form-item" style="width: 100%; margin-top: 15px;">
+                    <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
+                    <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
+                    
+                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
+                    <div class="table-container" style="margin-bottom: 15px;">
+                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                            <thead>
+                                <tr style="background-color: var(--th-bg); color: white;">
+                                    <th style="padding: 8px;">פרמטר</th>
+                                    <th style="padding: 8px;">גיל 1</th>
+                                    <th style="padding: 8px;">גיל 2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">זום / הגדלה</td>
+                                    <td style="padding: 8px;">10X / 30X</td>
+                                    <td style="padding: 8px;">5X / 10X / 20X</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">רדיוס הרג ופציעה</td>
+                                    <td style="padding: 8px;">הרג 8 מטרים | פציעה 15 מטרים</td>
+                                    <td style="padding: 8px;">הרג 2.5–3 מטרים | פציעה 15 מטרים</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">זמן מעוף לטווח מקסימלי</td>
+                                    <td style="padding: 8px;"><span class="code-block">26 שניות</span></td>
+                                    <td style="padding: 8px;"><span class="code-block">53 שניות</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="form-qr-box">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/u1afBRvv3q" alt="QR Code" crossorigin="anonymous">
-                        <span class="form-url-text">forms.cloud.microsoft/r/u1afBRvv3q</span>
-                        <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
+
+                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
+                    <div class="table-container" style="margin-bottom: 15px;">
+                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                            <thead>
+                                <tr style="background-color: var(--th-bg); color: white;">
+                                    <th style="padding: 8px;">סוג מטרה</th>
+                                    <th style="padding: 8px;">מנגנון יזום ואופן הפעולה</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">קשה</td>
+                                    <td style="padding: 8px;">חודר</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">רכה</td>
+                                    <td style="padding: 8px;">מתפוצץ 30 ס"מ לפני המטרה</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">רסס</td>
+                                    <td style="padding: 8px;">מרעום קרבה – 70 ס"מ לפני המטרה</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">☁️ ירי בעננות, ניהוג וסחיפת נעילה</h4>
+                    <div class="table-container" style="margin-bottom: 15px;">
+                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                            <thead>
+                                <tr style="background-color: var(--th-bg); color: white;">
+                                    <th style="padding: 8px; width: 30%;">תרחיש / מצב</th>
+                                    <th style="padding: 8px;">אופן פעולה והנחיות</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">עננות נמוכה</td>
+                                    <td style="padding: 8px;">נשגר במעוף נמוך.</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">מטרת NLOS (ללא אפשרות למעוף נמוך)</td>
+                                    <td style="padding: 8px;">נשגר בניהוג.</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">כניסה לעננות במצב נעילה</td>
+                                    <td style="padding: 8px;">עלולה להתרחש סחיפת נעילה שעלולה להוביל לניהוג זמני.</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 1</td>
+                                    <td style="padding: 8px;">סחיפת נעילה ועדכון רציף של הכוון תכניס אותנו למצב זה.</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 2</td>
+                                    <td style="padding: 8px;">המערכת יודעת להתגבר לבד על סחיפת נעילה, ובגלל זה <strong>אין מצב מוגדר של ניהוג זמני</strong>.</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold; color: #ef4444;">חריגה ממשפך בטיחות</td>
+                                    <td style="padding: 8px;">במידה והטיל נסחף ועובר את משפך הבטיחות (<span class="code-block">2500 לצדדים</span>) – הטיל יפיל את עצמו.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
+                    <div class="table-container">
+                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                            <thead>
+                                <tr style="background-color: var(--th-bg); color: white;">
+                                    <th style="padding: 8px;">נושא / פרמטר</th>
+                                    <th style="padding: 8px;">נתון / פירוט</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">מהירות הטיל</td>
+                                    <td style="padding: 8px;"><span class="code-block">150 מטר/שנייה</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">טווח ירי מינימלי</td>
+                                    <td style="padding: 8px;">450 מטרים</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">מגבלת מזג אוויר</td>
+                                    <td style="padding: 8px; color: #ef4444; font-weight: bold;">איסור שיגור ברוח מעל 50 קמ"ש</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">תנאי יזום (מ-150 מטר)</td>
+                                    <td style="padding: 8px;">
+                                        טיל יכול ליזום לאחר 150 מטר בהתקיים 3 תנאים:
+                                        <br>
+                                        1. פתיחת כנפיים &nbsp;|&nbsp; 2. מעבר 150 מטר &nbsp;|&nbsp; 3. כוח עומס של 7G
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">TIPP OFF (יציאה מהזביל)</td>
+                                    <td style="padding: 8px;">נפילה של 60 ס"מ ב-8 המטרים הראשונים</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">הצתת מנוע ראשי</td>
+                                    <td style="padding: 8px;">ניצת רק לאחר 3.5 מטרים (להגנת המפעיל)</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">רשף לאחור</td>
+                                    <td style="padding: 8px;">2.7 מטרים</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; font-weight: bold;">פרופיל מעוף</td>
+                                    <td style="padding: 8px;">הטיל מגיע לשיא הגובה בחצי הדרך למטרה</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="card form-item" style="width: 100%; margin-top: 15px;">
-            <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
-            <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
-            
-            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
-            <div class="table-container" style="margin-bottom: 15px;">
-                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                    <thead>
-                        <tr style="background-color: var(--th-bg); color: white;">
-                            <th style="padding: 8px;">פרמטר</th>
-                            <th style="padding: 8px;">גיל 1</th>
-                            <th style="padding: 8px;">גיל 2</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">זום / הגדלה</td>
-                            <td style="padding: 8px;">10X / 30X</td>
-                            <td style="padding: 8px;">5X / 10X / 20X</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">רדיוס הרג ופציעה</td>
-                            <td style="padding: 8px;">הרג 8 מטרים | פציעה 15 מטרים</td>
-                            <td style="padding: 8px;">הרג 2.5–3 מטרים | פציעה 15 מטרים</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">זמן מעוף לטווח מקסימלי</td>
-                            <td style="padding: 8px;"><span class="code-block">26 שניות</span></td>
-                            <td style="padding: 8px;"><span class="code-block">53 שניות</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
-            <div class="table-container" style="margin-bottom: 15px;">
-                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                    <thead>
-                        <tr style="background-color: var(--th-bg); color: white;">
-                            <th style="padding: 8px;">סוג מטרה</th>
-                            <th style="padding: 8px;">מנגנון יזום ואופן הפעולה</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">קשה</td>
-                            <td style="padding: 8px;">חודר</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">רכה</td>
-                            <td style="padding: 8px;">מתפוצץ 30 ס"מ לפני המטרה</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">רסס</td>
-                            <td style="padding: 8px;">מרעום קרבה – 70 ס"מ לפני המטרה</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">☁️ ירי בעננות, ניהוג וסחיפת נעילה</h4>
-            <div class="table-container" style="margin-bottom: 15px;">
-                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                    <thead>
-                        <tr style="background-color: var(--th-bg); color: white;">
-                            <th style="padding: 8px; width: 30%;">תרחיש / מצב</th>
-                            <th style="padding: 8px;">אופן פעולה והנחיות</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">עננות נמוכה</td>
-                            <td style="padding: 8px;">נשגר במעוף נמוך.</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">מטרת NLOS (ללא אפשרות למעוף נמוך)</td>
-                            <td style="padding: 8px;">נשגר בניהוג.</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">כניסה לעננות במצב נעילה</td>
-                            <td style="padding: 8px;">עלולה להתרחש סחיפת נעילה שעלולה להוביל לניהוג זמני.</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 1</td>
-                            <td style="padding: 8px;">סחיפת נעילה ועדכון רציף של הכוון תכניס אותנו למצב זה.</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 2</td>
-                            <td style="padding: 8px;">המערכת יודעת להתגבר לבד על סחיפת נעילה, ובגלל זה <strong>אין מצב מוגדר של ניהוג זמני</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold; color: #ef4444;">חריגה ממשפך בטיחות</td>
-                            <td style="padding: 8px;">במידה והטיל נסחף ועובר את משפך הבטיחות (<span class="code-block">2500 לצדדים</span>) – הטיל יפיל את עצמו.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
-            <div class="table-container">
-                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                    <thead>
-                        <tr style="background-color: var(--th-bg); color: white;">
-                            <th style="padding: 8px;">נושא / פרמטר</th>
-                            <th style="padding: 8px;">נתון / פירוט</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">מהירות הטיל</td>
-                            <td style="padding: 8px;"><span class="code-block">150 מטר/שנייה</span></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">טווח ירי מינימלי</td>
-                            <td style="padding: 8px;">450 מטרים</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">מגבלת מזג אוויר</td>
-                            <td style="padding: 8px; color: #ef4444; font-weight: bold;">איסור שיגור ברוח מעל 50 קמ"ש</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">תנאי יזום (מ-150 מטר)</td>
-                            <td style="padding: 8px;">
-                                טיל יכול ליזום לאחר 150 מטר בהתקיים 3 תנאים:
-                                <br>
-                                1. פתיחת כנפיים &nbsp;|&nbsp; 2. מעבר 150 מטר &nbsp;|&nbsp; 3. כוח עומס של 7G
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">TIPP OFF (יציאה מהזביל)</td>
-                            <td style="padding: 8px;">נפילה של 60 ס"מ ב-8 המטרים הראשונים</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">הצתת מנוע ראשי</td>
-                            <td style="padding: 8px;">ניצת רק לאחר 3.5 מטרים (להגנת המפעיל)</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">רשף לאחור</td>
-                            <td style="padding: 8px;">2.7 מטרים</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px; font-weight: bold;">פרופיל מעוף</td>
-                            <td style="padding: 8px;">הטיל מגיע לשיא הגובה בחצי הדרך למטרה</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-</main>
+            </section>
+        </main>
+    </div>
 
     <div id="datalistsContainer"></div>
 
@@ -1277,7 +1298,10 @@
         
         const currentYear = new Date().getFullYear();
         let activeMonth = new Date().getMonth(); 
+        let activeDashboardMonth = new Date().getMonth(); 
         let activeWeekIndex = 0; 
+        let gorillaChartInstance = null;
+        let latestStatusData = {};
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
@@ -1307,7 +1331,18 @@
         let monthWeeksCache = [];
         let allMonthsDataCache = {};
 
-        // נרמול מערך ערכים מול Firebase RTDB למניעת שיבושים במפות/אובייקטים
+        function debounce(func, wait = 100) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        const debouncedFilterSchedule = debounce(filterSchedule, 100);
+        const debouncedFilterSlides = debounce(filterSlides, 100);
+        const debouncedFilterForms = debounce(filterFormsTab, 100);
+
         function normalizeRowValues(val) {
             if (Array.isArray(val)) {
                 const arr = [...val];
@@ -1327,11 +1362,10 @@
         }
 
         window.addEventListener('firebase-ready', () => {
-            const savedTab = localStorage.getItem('gorilla_active_tab');
-            if (savedTab) {
-                const btn = document.querySelector(`.tab-btn[onclick*="${savedTab}"]`);
-                if (btn) switchTab(savedTab, { currentTarget: btn }, false);
-            }
+            const savedTab = localStorage.getItem('gorilla_active_tab') || 'schedule';
+            const btn = document.querySelector(`.tab-btn[onclick*="${savedTab}"]`);
+            if (btn) switchTab(savedTab, { currentTarget: btn }, false);
+
             const savedTheme = localStorage.getItem('gorilla_theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
@@ -1341,6 +1375,7 @@
 
             initTrainerProfile();
             initMonthFolders();
+            initDashboardMonthTabs();
             loadMonthDataFromCloud(activeMonth);
             initCloudStatusSync();
         });
@@ -1351,6 +1386,7 @@
                 const saved = snapshot.val();
                 processLoadedMonthData(monthIdx, saved);
                 renderCurrentWeekTables();
+                renderDashboard(activeDashboardMonth);
             });
         }
 
@@ -1537,6 +1573,25 @@
             });
         }
 
+        function initDashboardMonthTabs() {
+            const bar = document.getElementById('dashboardMonthTabs');
+            if (!bar) return;
+            bar.innerHTML = '';
+            monthNames.forEach((mName, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `week-tab-btn ${idx === activeDashboardMonth ? 'active' : ''}`;
+                btn.innerText = mName;
+                btn.onclick = () => {
+                    document.querySelectorAll('#dashboardMonthTabs .week-tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeDashboardMonth = idx;
+                    loadMonthDataFromCloud(activeDashboardMonth);
+                    renderDashboard(activeDashboardMonth);
+                };
+                bar.appendChild(btn);
+            });
+        }
+
         function initWeekTabs() {
             const bar = document.getElementById('weekTabsBar');
             if (!bar) return;
@@ -1580,7 +1635,6 @@
             const southBody = document.getElementById('southTableBody');
             if (!northBody || !southBody) return;
 
-            // שמירת הפוקוס והסמן הנוכחי למניעת קפיצות בזמן עריכה
             const activeEl = document.activeElement;
             const activeId = activeEl && activeEl.id ? activeEl.id : null;
             const selStart = (activeEl && activeEl.selectionStart !== undefined) ? activeEl.selectionStart : null;
@@ -1641,7 +1695,6 @@
                 else sel.classList.remove('has-selection');
             });
 
-            // שחזור פוקוס מלא
             if (activeId) {
                 const restoredEl = document.getElementById(activeId);
                 if (restoredEl) {
@@ -1653,6 +1706,223 @@
             }
 
             filterSchedule();
+        }
+
+        // פונקציית רינדור מלאה ללשונית הדשבורד
+        function renderDashboard(monthIdx) {
+            const monthName = monthNames[monthIdx];
+            const titleEl = document.getElementById('statsMonthTitle');
+            const chartMonthLabel = document.getElementById('chartMonthLabel');
+            if (titleEl) titleEl.innerText = `${monthName} ${currentYear}`;
+            if (chartMonthLabel) chartMonthLabel.innerText = `(חודש ${monthName})`;
+
+            // 1. נתוני סטטוס גורילות ותקלות מ-latestStatusData
+            let healthyCount = 0;
+            let faultyCount = 0;
+            let faultsList = [];
+            const today = new Date();
+
+            let cleaningDaysArray = [];
+            for (let i = 0; i < 7; i++) {
+                const row = latestStatusData[i] || {};
+                const status = row.status || (i === 1 || i === 3 || i === 6 ? 'לא תקין' : 'תקין');
+                if (status === 'תקין') healthyCount++;
+                else {
+                    faultyCount++;
+                    faultsList.push({
+                        gorillaName: `גורילה מס ${i + 1}`,
+                        notes: row.notes || 'תקלה לא פורטה'
+                    });
+                }
+
+                // חישוב ימים מאז טיפול אחרון
+                let daysSince = 0;
+                if (row.cleaning) {
+                    const cleanDate = new Date(row.cleaning);
+                    const diffTime = today - cleanDate;
+                    daysSince = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+                } else {
+                    daysSince = 16; // ברירת מחדל
+                }
+                cleaningDaysArray.push(daysSince);
+            }
+
+            const kpiHealthy = document.getElementById('kpiHealthyGorillas');
+            const kpiFaulty = document.getElementById('kpiFaultyGorillas');
+            if (kpiHealthy) kpiHealthy.innerText = healthyCount;
+            if (kpiFaulty) kpiFaulty.innerText = faultyCount;
+
+            // 2. ריכוז תקלות פתוחות
+            const faultsContainer = document.getElementById('openFaultsContainer');
+            const faultsBadge = document.getElementById('faultsCountBadge');
+            if (faultsBadge) faultsBadge.innerText = `${faultyCount} תקלות פתוחות`;
+
+            if (faultsContainer) {
+                if (faultsList.length === 0) {
+                    faultsContainer.innerHTML = `<div style="color: #22c55e; font-weight: bold; padding: 10px; text-align: center;">כל המאמנים תקינים כעת! ✓</div>`;
+                } else {
+                    faultsContainer.innerHTML = faultsList.map(f => `
+                        <div class="fault-row-item">
+                            <span>${f.notes}</span>
+                            <span style="font-weight: 800;">${f.gorillaName}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // 3. איסוף נתונים מסידור העבודה של החודש
+            const monthData = getMonthDataCache(monthIdx);
+            let activeTrainingDays = new Set();
+            let totalTrainees = 0;
+            let totalHours = 0;
+            let uniqueLocations = new Set();
+            let uniqueUnits = new Set();
+            let gorillaTrainingDays = [0, 0, 0, 0, 0, 0, 0]; // גורילה 1 עד 7
+
+            const processRows = (rows) => {
+                rows.forEach(item => {
+                    const vals = item.values || [];
+                    const notes = vals[9] || '';
+                    if (notes.includes('בוטל') || notes.includes('התבטל')) return;
+
+                    const hasActivity = (vals[1] && vals[1].trim()) || (vals[2] && vals[2].trim()) || (vals[7] && vals[7].trim());
+                    if (hasActivity) {
+                        activeTrainingDays.add(item.dayNum);
+                    }
+
+                    if (vals[2] && vals[2].trim() && vals[2].trim() !== "ללא") uniqueUnits.add(vals[2].trim());
+                    if (vals[3] && vals[3].trim()) uniqueLocations.add(vals[3].trim());
+
+                    if (vals[6] && !isNaN(parseInt(vals[6]))) {
+                        totalTrainees += parseInt(vals[6]);
+                    }
+
+                    if (vals[8] && vals[8].trim()) {
+                        totalHours += 5; // חישוב משוער של 5 שעות פר אימון
+                    }
+
+                    // ספירת ימי אימון לגורילות
+                    for (let g = 1; g <= 7; g++) {
+                        const gName = `גורילה ${g}`;
+                        const gNameAlt = `גורילה מס ${g}`;
+                        if ((vals[7] && (vals[7].includes(gName) || vals[7].includes(gNameAlt))) ||
+                            (vals[11] && (vals[11].includes(gName) || vals[11].includes(gNameAlt)))) {
+                            gorillaTrainingDays[g - 1]++;
+                        }
+                    }
+                });
+            };
+
+            processRows(monthData.north);
+            processRows(monthData.south);
+
+            const kpiDays = document.getElementById('kpiMonthTrainingDays');
+            if (kpiDays) kpiDays.innerText = activeTrainingDays.size;
+
+            const dashTrainees = document.getElementById('dashTotalTrainees');
+            if (dashTrainees) dashTrainees.innerText = `${totalTrainees} מתאמנים`;
+
+            const dashHours = document.getElementById('dashTotalHours');
+            if (dashHours) dashHours.innerText = `${totalHours} שעות פעילות`;
+
+            const locList = document.getElementById('dashLocationsList');
+            if (locList) {
+                locList.innerHTML = uniqueLocations.size > 0 
+                    ? Array.from(uniqueLocations).map(l => `<span class="info-tag">${l}</span>`).join('') 
+                    : '<span style="color:#64748b; font-size:0.85em;">אין מיקומים רשומים</span>';
+            }
+
+            const unitsList = document.getElementById('dashUnitsList');
+            if (unitsList) {
+                unitsList.innerHTML = uniqueUnits.size > 0 
+                    ? Array.from(uniqueUnits).map(u => `<span class="info-tag">${u}</span>`).join('') 
+                    : '<span style="color:#64748b; font-size:0.85em;">אין יחידות רשומות</span>';
+            }
+
+            // 4. עדכון גרף עמודות אינטראקטיבי (Chart.js)
+            updateGorillaBarChart(cleaningDaysArray, gorillaTrainingDays);
+        }
+
+        function updateGorillaBarChart(cleaningDays, trainingDays) {
+            const ctx = document.getElementById('gorillaBarChart');
+            if (!ctx) return;
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const labels = ['גורילה מס 1', 'גורילה מס 2', 'גורילה מס 3', 'גורילה מס 4', 'גורילה מס 5', 'גורילה מס 6', 'גורילה מס 7'];
+
+            if (gorillaChartInstance) {
+                gorillaChartInstance.destroy();
+            }
+
+            gorillaChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'ימים מאז טיפול אחרון',
+                            data: cleaningDays,
+                            backgroundColor: '#22c55e',
+                            borderRadius: 6,
+                            borderSkipped: false
+                        },
+                        {
+                            label: 'ימי אימון בחודש',
+                            data: trainingDays,
+                            backgroundColor: '#0284c7',
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: isDark ? '#f8fafc' : '#2c3e50',
+                                font: { family: 'Segoe UI', weight: 'bold', size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            rtl: true,
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: 'Segoe UI', size: 12, weight: 'bold' },
+                            bodyFont: { family: 'Segoe UI', size: 12 },
+                            padding: 10,
+                            boxPadding: 4,
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: isDark ? '#94a3b8' : '#64748b',
+                                font: { family: 'Segoe UI', size: 10, weight: 'bold' }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' },
+                            ticks: {
+                                color: isDark ? '#94a3b8' : '#64748b',
+                                font: { family: 'Segoe UI', size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function addExtraRow(side) {
@@ -1722,6 +1992,7 @@
 
             saveSideArrayToCloud(side, targetMonthIdx);
             renderCurrentWeekTables();
+            renderDashboard(activeDashboardMonth);
         }
 
         function removeExtraRow(side, monthIdx, cacheIndex) {
@@ -1734,6 +2005,7 @@
             }
             saveSideArrayToCloud(side, monthIdx);
             renderCurrentWeekTables();
+            renderDashboard(activeDashboardMonth);
         }
 
         function showSecondGuideSelect(side, monthIdx, cacheIndex) {
@@ -1770,7 +2042,6 @@
             renderCurrentWeekTables();
         }
 
-        // בחירת מדריך וסנכרון אטומי מיידי של גורילה 1 + גורילה 2
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
             if (val === "אחר...") {
@@ -1804,7 +2075,6 @@
                         updates[`sheets/${currentYear}_${monthIdx}/south/${cacheIndex}/hasUserModifiedGuide2`] = true;
                     }
 
-                    // אוטומציה אטומית לגורילות
                     if (window.trainerGorillaMap[val]) {
                         const defaults = window.trainerGorillaMap[val];
                         row.values[7] = defaults[0];
@@ -1823,6 +2093,7 @@
             }
 
             renderCurrentWeekTables();
+            renderDashboard(activeDashboardMonth);
         };
 
         function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex, isExtra) {
@@ -1927,9 +2198,9 @@
             }
             
             renderCurrentWeekTables();
+            renderDashboard(activeDashboardMonth);
         }
 
-        // עדכון ישיר ונקודתי ברמת תא למניעת דריסות בין מדריכים
         function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
             const monthData = getMonthDataCache(monthIdx);
             const targetRow = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
@@ -1953,15 +2224,14 @@
                     }
                 }
 
-                // ביצוע עדכון אטומי ומדויק ב-Firebase
                 window.fbUpdate(window.fbRef(window.fbDB), updates).catch(console.error);
 
                 extractMemory(targetRow.values);
                 rebuildDatalists();
+                renderDashboard(activeDashboardMonth);
             }
         }
 
-        // שמירת רשימת הניידת כולה רק במקרה של הוספת או מחיקת שורות
         function saveSideArrayToCloud(side, monthIdx) {
             const monthData = getMonthDataCache(monthIdx);
             const cleanArray = monthData[side].map(item => ({
@@ -1979,6 +2249,7 @@
             const statusRef = window.fbRef(window.fbDB, 'gorilla_statuses');
             window.fbOnValue(statusRef, (snapshot) => {
                 const data = snapshot.val();
+                latestStatusData = data || {};
                 const todayDateStr = new Date().toISOString().split('T')[0];
                 const statusRows = document.querySelectorAll('#statusTableBody tr');
                 
@@ -2015,6 +2286,8 @@
                         if (notesInput) { notesInput.style.color = ''; notesInput.style.fontWeight = ''; }
                     }
                 });
+
+                renderDashboard(activeDashboardMonth);
             });
         }
 
@@ -2031,8 +2304,10 @@
                     notes: notesInput ? notesInput.value : ''
                 };
             });
+            latestStatusData = statusesData;
             const statusRef = window.fbRef(window.fbDB, 'gorilla_statuses');
             window.fbSet(statusRef, statusesData);
+            renderDashboard(activeDashboardMonth);
         }
 
         function openCleaningPicker(btn) {
@@ -2060,7 +2335,6 @@
         window.initTrainerProfile = function(currentUser) {
             let trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
             
-            // זיהוי אוטומטי מבוסס מייל אם המשתמש מחובר
             if (!trainer && currentUser && currentUser.email) {
                 const emailKey = currentUser.email.toLowerCase();
                 if (window.knownTrainers && window.knownTrainers[emailKey]) {
@@ -2255,6 +2529,7 @@
             localStorage.setItem('gorilla_theme', isDark ? 'dark' : 'light');
             const tBtn = document.getElementById('themeToggleBtn');
             if (tBtn) tBtn.innerText = isDark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
+            renderDashboard(activeDashboardMonth);
         }
 
         function switchTab(tabId, event, save = true) {
@@ -2264,6 +2539,11 @@
             if (targetTab) targetTab.classList.add('active');
             if (event && event.currentTarget) event.currentTarget.classList.add('active');
             if (save) localStorage.setItem('gorilla_active_tab', tabId);
+            
+            if (tabId === 'dashboard') {
+                renderDashboard(activeDashboardMonth);
+            }
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
