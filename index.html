@@ -8,10 +8,10 @@
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- Firebase SDKs & Auth Integration with Redirect for Mobile Support -->
+    <!-- Firebase SDKs & Auth Integration with Mobile & Redirect Fix -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -64,6 +64,12 @@
             signOut(auth);
         };
 
+        // בדיקת תוצאת ה-Redirect בעליית העמוד למניעת תקיעות בלופים
+        getRedirectResult(auth).catch((error) => {
+            const errEl = document.getElementById("error-msg");
+            if(errEl) errEl.innerText = "שגיאה בתהליך האימות: " + error.message;
+        });
+
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
@@ -71,6 +77,13 @@
 
             if (user) {
                 const userEmail = user.email ? user.email.toLowerCase() : "";
+                
+                if (!userEmail) {
+                    signOut(auth);
+                    if(errEl) errEl.innerText = "שגיאה: חשבון ה-Google אינו מספק כתובת אימייל זמינה.";
+                    return;
+                }
+
                 const isAllowed = allowedEmails.some(email => email.toLowerCase() === userEmail);
 
                 if (isAllowed) {
@@ -81,7 +94,8 @@
                     signOut(auth).then(() => {
                         if(authScreen) authScreen.style.display = "flex";
                         if(mainContent) mainContent.style.display = "none";
-                        if(errEl) errEl.innerText = "הגישה דורשת אימייל מורשה בלבד. חשבונך אינו מורשה להיכנס.";
+                        // מציג בדיוק איזה מייל ניסה להיכנס כדי שנדע אם יש פער
+                        if(errEl) errEl.innerText = `הגישה נדחתה. המייל (${userEmail}) אינו מורשה להיכנס.`;
                     });
                 }
             } else {
@@ -832,7 +846,7 @@
                                 <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
                                 <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
                                 <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                                <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                                <li>בחלוני Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
                                 <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
                             </ol>
                         </div>
@@ -1655,7 +1669,7 @@
             renderCurrentWeekTables();
         }
 
-        // לוגיקה מעודכנת לבחירת מדריך ומילוי אוטומטי של גורילות
+        // לוגיקה מעודכנת לבחירת מדריך ומילוי אוטומטי של גורילות כולל ריענון מסך מידי
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
             if (val === "אחר...") {
@@ -1670,7 +1684,6 @@
             handleSelectChange(selectEl);
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
 
-            // מילוי אוטומטי של גורילות לפי המדריך שנבחר (אם התאים ריקים)
             if (fieldIndex === 1 && window.trainerGorillaMap[val]) {
                 const defaults = window.trainerGorillaMap[val];
                 const monthData = getMonthDataCache(monthIdx);
@@ -1689,6 +1702,9 @@
             if (val && !guidesOptions.includes(val) && val !== "אחר...") {
                 renderCurrentWeekTables();
             }
+
+            // ריענון מידי של הטבלה להצגת העדכון בעמודת הגורילות באותו רגע
+            renderCurrentWeekTables();
         };
 
         function buildRowHTML(dayNum, hDayName, vals, side, monthIdx, cacheIndex, isExtra) {
