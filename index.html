@@ -58,7 +58,6 @@
             signOut(auth);
         };
 
-        // בדיקה האם המשתמש מחובר ונמצא ברשימת המורשים
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
@@ -280,7 +279,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* גלילה אופקית והגדרת רוחב עמודות בטבלת סטטוס גורילות */
         .status-table-container {
             overflow-x: auto;
             width: 100%;
@@ -1204,7 +1202,6 @@
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
         const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
 
-        // מיפוי אוטומטי של גורילות לפי מדריך נבחר
         const trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
@@ -1670,7 +1667,6 @@
             handleSelectChange(selectEl);
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
             
-            // אוטומציה: בחירת גורילות לפי מדריך מועדף במידה והשדה ריק
             if (fieldIndex === 1 && trainerGorillaMap[val]) {
                 const defaults = trainerGorillaMap[val];
                 const monthData = getMonthDataCache(monthIdx);
@@ -2093,7 +2089,7 @@
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('gorilla_theme', isDark ? 'dark' : 'light');
             const tBtn = document.getElementById('themeToggleBtn');
-            if(tBtn) tBtn.innerText = isDark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
+            if(tBtn) tBtn.innerText = '☀️ מצב בהיר';
         }
 
         function switchTab(tabId, event, save = true) {
