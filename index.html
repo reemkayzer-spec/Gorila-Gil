@@ -58,6 +58,7 @@
             signOut(auth);
         };
 
+        // בדיקה האם המשתמש מחובר ונמצא ברשימת המורשים
         onAuthStateChanged(auth, (user) => {
             const authScreen = document.getElementById("auth-screen");
             const mainContent = document.getElementById("main-content");
@@ -279,6 +280,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* גלילה אופקית והגדרת רוחב עמודות בטבלת סטטוס גורילות */
         .status-table-container {
             overflow-x: auto;
             width: 100%;
