@@ -37,7 +37,7 @@
         window.fbOnValue = onValue;
         window.fbGet = get;
 
-        // מיפוי גורילות למדריכים
+        // מיפוי גורילות למדריכים (גלובלי)
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
@@ -65,7 +65,7 @@
             }
         });
     </script>
-
+    
     <script>
         const SUPABASE_URL = 'https://pvtswscsqnymbbzgsafu.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_wlsjLYqz458Ud69TrPR7AA_LB9xvimg';
@@ -73,7 +73,6 @@
     </script>
 
     <style>
-        /* CSS נשאר זהה למה שהיה - לא משנה את העיצוב */
         :root { --bg-color: #f4f6f9; --main-bg: #ffffff; --text-color: #2c3e50; --header-bg: #1a252f; --card-bg: #f8fafc; --border-color: #e2e8f0; --input-bg: #ffffff; --th-bg: #334155; --code-bg: #f1f5f9; --link-color: #3498db; }
         body.dark-mode { --bg-color: #0b0f19; --main-bg: #1e293b; --text-color: #f8fafc; --header-bg: #0f172a; --card-bg: #1e293b; --border-color: #334155; --input-bg: #0f172a; --th-bg: #0f172a; --code-bg: #0f172a; --link-color: #58a6ff; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -92,63 +91,53 @@
         th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; }
         .cell-input { width: 100%; border: none; background: transparent; text-align: center; }
         .cell-select { width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
-        .slide-box { background: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-right: 4px solid #3498db; }
-        .slide-img-box img { max-width: 100%; border-radius: 8px; }
     </style>
 </head>
 <body>
-
     <div id="auth-screen">
         <h2>הגישה לדף זה מוגבלת למורשים בלבד</h2>
         <button class="login-btn" onclick="loginWithGoogle()">התחבר עם Google</button>
         <p id="error-msg"></p>
     </div>
-
     <div id="main-content">
         <header>
             <h1>תפעול והדרכה - צוות גיל</h1>
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
-                <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
             </div>
         </header>
-
         <main>
-            <section id="schedule" class="tab-content active">
-                <!-- כאן יופיעו הטבלאות -->
-            </section>
-            <section id="gorilla-status" class="tab-content">
-                <!-- כאן יופיע הסטטוס -->
-            </section>
-            <section id="pdf-slides" class="tab-content">
-                <!-- כאן יופיעו המדריכים -->
-            </section>
+            <section id="schedule" class="tab-content active"></section>
+            <section id="gorilla-status" class="tab-content"></section>
         </main>
     </div>
 
     <script>
-        // לוגיקה משופרת לבחירה אוטומטית של גורילות
-        function handleGuideSelection(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
+        // לוגיקה לעדכון אוטומטי של גורילות
+        window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
-            // עדכון הערך ב-Firebase
+            // שמירת המדריך שנבחר
             updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
             
-            // לוגיקה לברירת מחדל של גורילות
+            // בדיקת המיפוי (לפי הקבוע שהגדרנו למעלה)
             if (fieldIndex === 1 && window.trainerGorillaMap[val]) {
                 const defaults = window.trainerGorillaMap[val];
                 const monthData = getMonthDataCache(monthIdx);
                 const row = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
                 
-                // ממלא רק אם ריק
-                if (row && !row.values[7]) updateCacheAndSave(side, monthIdx, cacheIndex, 7, defaults[0]);
-                if (row && !row.values[11]) updateCacheAndSave(side, monthIdx, cacheIndex, 11, defaults[1]);
+                // עדכון רק אם התא ריק
+                if (row && (!row.values[7] || row.values[7] === "")) {
+                    updateCacheAndSave(side, monthIdx, cacheIndex, 7, defaults[0]);
+                }
+                if (row && (!row.values[11] || row.values[11] === "")) {
+                    if (defaults[1]) updateCacheAndSave(side, monthIdx, cacheIndex, 11, defaults[1]);
+                }
             }
+            // הרינדור מחדש יקרא את הנתונים המעודכנים ששמרנו, 
+            // וזה יתעדכן בכל הכפתורים (וואטסאפ וכו') שקוראים את monthData.
             renderCurrentWeekTables();
-        }
-
-        // שאר הפונקציות (save, update, render) נשארות זהות
-        // מומלץ להעתיק את כל ה-Script המלא מהקוד ששלחתי קודם לכן כדי לוודא תאימות
+        };
     </script>
 </body>
 </html>
