@@ -12,7 +12,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCdqf9bo_mMiMxjXU24zMnrDgX4qTLcHwM",
@@ -32,6 +32,7 @@
         window.fbDB = db;
         window.fbRef = ref;
         window.fbSet = set;
+        window.fbUpdate = update;
         window.fbOnValue = onValue;
         window.fbGet = get;
 
@@ -42,6 +43,17 @@
         window.trainerGorillaMap = {
             "איתי הקר": ["גורילה 3", "גורילה 7"],
             "עדיאל קסה": ["גורילה 1", "גורילה 5"]
+        };
+
+        // מאגר מדריכים מוכרים לזיהוי אוטומטי בהתחברות
+        window.knownTrainers = {
+            "itayhaker19@gmail.com": { firstName: "איתי", lastName: "הקר", phone: "" },
+            "adielkassa@gmail.com": { firstName: "עדיאל", lastName: "קסה", phone: "0526652209" },
+            "reemkayzer@gmail.com": { firstName: "ראם", lastName: "קייזר", phone: "" },
+            "nadavyichye@gmail.com": { firstName: "נדב", lastName: "יחיא", phone: "" },
+            "idolevko2@gmail.com": { firstName: "עידו", lastName: "לבקוביץ", phone: "" },
+            "tomerk2001@gmail.com": { firstName: "תומר", lastName: "כחלון", phone: "" },
+            "netashatzberg@gmail.com": { firstName: "נטע", lastName: "שצברג", phone: "" }
         };
 
         // פונקציית התחברות עם מייל וסיסמה
@@ -78,6 +90,7 @@
         };
 
         window.logout = function() {
+            localStorage.removeItem('gorilla_trainer_profile');
             signOut(auth);
         };
 
@@ -93,6 +106,12 @@
             if (user) {
                 if (authScreen) authScreen.style.display = "none";
                 if (mainContent) mainContent.style.display = "block";
+                
+                // זיהוי אוטומטי של פרופיל המדריך לפי כתובת המייל
+                if (typeof window.initTrainerProfile === 'function') {
+                    window.initTrainerProfile(user);
+                }
+                
                 window.dispatchEvent(new Event('firebase-ready'));
             } else {
                 if (authScreen) authScreen.style.display = "flex";
@@ -643,613 +662,612 @@
                                 <button class="unit-add-btn" onclick="addExtraRow('north')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
                                 <button class="unit-wa-btn" onclick="sendTomorrowReminder('north')">
                                     <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                                    שלח הודעה למתאמנים של מחר
-                                </button>
-                            </div>
-                        </div>
-                        <div class="table-container">
-                            <table id="sheetNorthTable">
-                                <thead>
-                                    <tr>
-                                        <th>תאריך</th>
-                                        <th>מדריך</th>
-                                        <th>כוח מתאמן</th>
-                                        <th>מיקום</th>
-                                        <th>ישלט/אחוד</th>
-                                        <th>איש קשר</th>
-                                        <th>מס מתאמנים</th>
-                                        <th>גורילה</th>
-                                        <th>שעות</th>
-                                        <th>הערות</th>
-                                        <th>ניידת</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="northTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="sheet-box">
-                        <div class="sheet-side-header">
-                            <span>ניידת 2 מרכז/דרום</span>
-                            <div class="header-btns-group">
-                                <button class="unit-add-btn" onclick="addExtraRow('south')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
-                                <button class="unit-wa-btn" onclick="sendTomorrowReminder('south')">
-                                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                                    שלח הודעה למתאמנים של מחר
-                                </button>
-                            </div>
-                        </div>
-                        <div class="table-container">
-                            <table id="sheetSouthTable">
-                                <thead>
-                                    <tr>
-                                        <th>תאריך</th>
-                                        <th>מדריך</th>
-                                        <th>כוח מתאמן</th>
-                                        <th>מיקום</th>
-                                        <th>ישלט/אחוד</th>
-                                        <th>איש קשר</th>
-                                        <th>מס מתאמנים</th>
-                                        <th>גורילה</th>
-                                        <th>שעות</th>
-                                        <th>הערות</th>
-                                        <th>ניידת</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="southTableBody"></tbody>
-                            </table>
-                        </div>
+                            שלח הודעה למתאמנים של מחר
+                        </button>
                     </div>
                 </div>
-
-                <div class="month-folders-bar" id="monthFoldersBar"></div>
-            </section>
-
-            <section id="gorilla-status" class="tab-content">
-                <h2>📊 סטטוס גורילות</h2>
-                <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
-                <div class="status-table-container">
-                    <table class="schedule-table">
+                <div class="table-container">
+                    <table id="sheetNorthTable">
                         <thead>
                             <tr>
+                                <th>תאריך</th>
+                                <th>מדריך</th>
+                                <th>כוח מתאמן</th>
+                                <th>מיקום</th>
+                                <th>ישלט/אחוד</th>
+                                <th>איש קשר</th>
+                                <th>מס מתאמנים</th>
                                 <th>גורילה</th>
-                                <th>תקין/תקול</th>
-                                <th>טיפול חודשי אחרון</th>
-                                <th>תקלה/הערות נוספות</th>
+                                <th>שעות</th>
+                                <th>הערות</th>
+                                <th>ניידת</th>
                             </tr>
                         </thead>
-                        <tbody id="statusTableBody">
-                            <tr data-id="0"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                            <tr data-id="1"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td></tr>
-                            <tr data-id="2"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td></tr>
-                            <tr data-id="3"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td></tr>
-                            <tr data-id="4"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                            <tr data-id="5"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                            <tr data-id="6"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
-                        </tbody>
+                        <tbody id="northTableBody"></tbody>
                     </table>
                 </div>
-            </section>
+            </div>
 
-            <section id="pdf-slides" class="tab-content">
-                <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
-                <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
-
-                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
-                        <span>📞</span> צלצל לקסה
-                    </a>
-                    <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
-                        <span>📞</span> צלצל לטכנאי
-                    </a>
-                </div>
-
-                <div class="search-box" style="margin-bottom: 15px;">
-                    <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
-                </div>
-
-                <div id="slidesContainer">
-                    <div class="slide-box">
-                        <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
-                        <ol class="step-list">
-                            <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
-                            <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
-                            <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
-                            <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
-                        </ol>
-                        <div class="slide-img-box">
-                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/2.jpg.png" alt="הדלקת הגורילה">
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
-                        <div class="step-list">
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/1.jpg.png" alt="תקלות משגר וחיבורי SPARTACUS">
-                            </div>
-
-                            <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
-                            <ul>
-                                <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
-                                <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
-                                <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
-                                <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
-                                <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
-                            </ul>
-                            <p><strong>2. סידור קומים (Device Manager):</strong></p>
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/6.jpg.png" alt="סידור קומים ב-Device Manager">
-                            </div>
-                            <ul>
-                                <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
-                                <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
-                                    <ul>
-                                        <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
-                                        <li><strong>COM3:</strong> USB Serial Port</li>
-                                        <li><strong>COM4:</strong> USB Serial Port</li>
-                                        <li><strong>COM5:</strong> USB-SERIAL CH340</li>
-                                    </ul>
-                                </li>
-                                <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
-                            </ul>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
-                        <div class="step-list">
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/5.jpg.png" alt="תקלות תצוגה ומסכים">
-                            </div>
-
-                            <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
-                            <ul>
-                                <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
-                            </ul>
-                            <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/7.jpg.png" alt="סידור מסכים - הגדרת הרץ" style="margin-bottom: 8px;">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/8.jpg.png" alt="סידור מסכים - רזולוציות">
-                            </div>
-                            <ul>
-                                <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
-                                <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
-                                <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
-                                <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
-                            </ul>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
-                        <div class="step-list">
-                            <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
-                            <ul>
-                                <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
-                            </ul>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                            <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
-                            <ul>
-                                <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
-                        <div class="slide-img-box">
-                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/4.jpg.png" alt="העברת תרגילים בין גורילות">
-                        </div>
-                        <ol class="step-list">
-                            <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
-                            <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
-                            <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
-                        </ol>
-                        <div class="videos-flex-container">
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
-                        <div class="slide-img-box">
-                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/3.jpg.png" alt="התקנת דרייברים של NVIDIA">
-                        </div>
-                        <div class="step-list">
-                            <ol>
-                                <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
-                                <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
-                                <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                                <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
-                                <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="slide-box" style="border-right-color: #ef4444;">
-                        <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
-                        <div class="step-list">
-                            <ul>
-                                <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
-                                <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
-                        <ol class="step-list">
-                            <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
-                            <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
-                            <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
-                            <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
-                            <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
-                            <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
-                        </ol>
+            <div class="sheet-box">
+                <div class="sheet-side-header">
+                    <span>ניידת 2 מרכז/דרום</span>
+                    <div class="header-btns-group">
+                        <button class="unit-add-btn" onclick="addExtraRow('south')" title="הוסף שורה נוספת לתאריך">➕ הוסף שורה</button>
+                        <button class="unit-wa-btn" onclick="sendTomorrowReminder('south')">
+                            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                            שלח הודעה למתאמנים של מחר
+                        </button>
                     </div>
                 </div>
-            </section>
-
-            <section id="training-program" class="tab-content">
-                <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
-                <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
-
-                <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
                 <div class="table-container">
-                    <table>
+                    <table id="sheetSouthTable">
                         <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                            <tr>
+                                <th>תאריך</th>
+                                <th>מדריך</th>
+                                <th>כוח מתאמן</th>
+                                <th>מיקום</th>
+                                <th>ישלט/אחוד</th>
+                                <th>איש קשר</th>
+                                <th>מס מתאמנים</th>
+                                <th>גורילה</th>
+                                <th>שעות</th>
+                                <th>הערות</th>
+                                <th>ניידת</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>הכרת החברה</td><td>מנהל אתר</td>
-                                <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
-                            </tr>
-                            <tr>
-                                <td>הצגת מוצרים</td><td>מנהל אתר</td>
-                                <td>הצגת מוצרי החברה.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
-                            </tr>
-                            <tr>
-                                <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
-                                <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
-                            </tr>
-                            <tr>
-                                <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
-                                <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>ירי תחושה</td><td>מנהל אתר</td>
-                                <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="southTableBody"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
 
-                <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
-                                <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
-                            </tr>
-                            <tr>
-                                <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
-                                <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>כיבוי מערכות</td><td>מנהל אתר</td>
-                                <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <div class="month-folders-bar" id="monthFoldersBar"></div>
+    </section>
+
+    <section id="gorilla-status" class="tab-content">
+        <h2>📊 סטטוס גורילות</h2>
+        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.85em;">מעקב ועדכון סטטוס תקינות למאמני הגורילה (שינוי סטטוס מעדכן הערות וצבעים).</p>
+        <div class="status-table-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>גורילה</th>
+                        <th>תקין/תקול</th>
+                        <th>טיפול חודשי אחרון</th>
+                        <th>תקלה/הערות נוספות</th>
+                    </tr>
+                </thead>
+                <tbody id="statusTableBody">
+                    <tr data-id="0"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 1</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                    <tr data-id="1"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 2</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="לא ידוע." oninput="saveStatusData()"></td></tr>
+                    <tr data-id="2"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 3</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="קופסאת ממשקים תקולה (VGA) צריך לבדוק עם מתאם חדש" oninput="saveStatusData()"></td></tr>
+                    <tr data-id="3"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 4</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="טכנאי צריך להלבין, קיבל הצפנה משלום +עדכון מפות" oninput="saveStatusData()"></td></tr>
+                    <tr data-id="4"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 5</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                    <tr data-id="5"><td class="gorilla-name-cell" style="font-weight: bold; background: #27ae60; color: white;">גורילה מס 6</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין" selected>תקין</option><option value="לא תקין">לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                    <tr data-id="6"><td class="gorilla-name-cell" style="font-weight: bold; background: #e74c3c; color: white;">גורילה מס 7</td><td><select class="status-select" onchange="updateRowStatus(this)"><option value="תקין">תקין</option><option value="לא תקין" selected>לא תקין</option></select></td><td><div class="cleaning-date-wrapper"><button type="button" class="cleaning-today-btn" onclick="openCleaningPicker(this)">27/07</button><input type="date" class="cleaning-date-input" onchange="onCleaningDateChange(this)" style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px;"></div></td><td><input type="text" class="notes-input" value="יש מפות חדשות+ הותקן רפאלו מחדש" oninput="saveStatusData()"></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="pdf-slides" class="tab-content">
+        <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
+        <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+            <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
+                <span>📞</span> צלצל לקסה
+            </a>
+            <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
+                <span>📞</span> צלצל לטכנאי
+            </a>
+        </div>
+
+        <div class="search-box" style="margin-bottom: 15px;">
+            <input type="text" id="slidesSearch" onkeyup="filterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
+        </div>
+
+        <div id="slidesContainer">
+            <div class="slide-box">
+                <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
+                <ol class="step-list">
+                    <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
+                    <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
+                    <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
+                    <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
+                </ol>
+                <div class="slide-img-box">
+                    <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/2.jpg.png" alt="הדלקת הגורילה">
                 </div>
+            </div>
 
-                <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
-                                <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תתרגול תפעול.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
-                                <td>תפעול תקלות נפוצות במערכת.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
-                            </tr>
-                            <tr>
-                                <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
-                                <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="slide-box">
+                <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
+                <div class="step-list">
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/1.jpg.png" alt="תקלות משגר וחיבורי SPARTACUS">
+                    </div>
 
-                <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
-                                <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>מבחן עיוני</td><td>מנהל אתר</td>
-                                <td>ביצוע מבחן עיוני כתוב.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
-                                <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&action=default" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
-                            </tr>
-                            <tr>
-                                <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
-                                <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="forms" class="tab-content">
-                <h2>📋 טפסים, ציוד והעשרה</h2>
-                
-                <div class="search-box" style="margin-bottom: 15px;">
-                    <input type="text" id="formsSearch" onkeyup="filterFormsTab()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
-                </div>
-
-                <div class="cards-container">
-                    <div class="card form-item">
-                        <div class="form-card-content">
-                            <div class="form-info">
-                                <h3>🚗 רשימת ציוד לרכב</h3>
-                                <p style="font-size: 0.85em; margin-bottom: 8px;">טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
-                                <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
-                            </div>
-                            <div class="form-qr-box">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/YQWDPAaeUe" alt="QR Code" crossorigin="anonymous">
-                                <span class="form-url-text">forms.cloud.microsoft/r/YQWDPAaeUe</span>
-                                <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/YQWDPAaeUe', this)">📋 העתק</button>
-                            </div>
+                    <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
+                    <ul>
+                        <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
+                        <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
+                        <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
+                        <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
+                        <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
+                    </ul>
+                    <p><strong>2. סידור קומים (Device Manager):</strong></p>
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/6.jpg.png" alt="סידור קומים ב-Device Manager">
+                    </div>
+                    <ul>
+                        <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
+                        <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
+                            <ul>
+                                <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
+                                <li><strong>COM3:</strong> USB Serial Port</li>
+                                <li><strong>COM4:</strong> USB Serial Port</li>
+                                <li><strong>COM5:</strong> USB-SERIAL CH340</li>
+                            </ul>
+                        </li>
+                        <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
+                    </ul>
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" loading="lazy" allowfullscreen></iframe>
                         </div>
+                        <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-box">
+                <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
+                <div class="step-list">
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/5.jpg.png" alt="תקלות תצוגה ומסכים">
                     </div>
 
-                    <div class="card form-item">
-                        <div class="form-card-content">
-                            <div class="form-info">
-                                <h3>✍️ משוב מתאמנים</h3>
-                                <p style="font-size: 0.85em; margin-bottom: 8px;">טופס איסוף רשמים ומשוב מהמתאמנים.</p>
-                                <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
-                            </div>
-                            <div class="form-qr-box">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/u1afBRvv3q" alt="QR Code" crossorigin="anonymous">
-                                <span class="form-url-text">forms.cloud.microsoft/r/u1afBRvv3q</span>
-                                <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
-                            </div>
+                    <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
+                    <ul>
+                        <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
+                    </ul>
+                    <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
+                    <div class="slide-img-box">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/7.jpg.png" alt="סידור מסכים - הגדרת הרץ" style="margin-bottom: 8px;">
+                        <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/8.jpg.png" alt="סידור מסכים - רזולוציות">
+                    </div>
+                    <ul>
+                        <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
+                        <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
+                        <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
+                        <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
+                    </ul>
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" loading="lazy" allowfullscreen></iframe>
                         </div>
+                        <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
                     </div>
                 </div>
+            </div>
 
-                <div class="card form-item" style="width: 100%; margin-top: 15px;">
-                    <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
-                    <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
-                    
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
-                    <div class="table-container" style="margin-bottom: 15px;">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px;">פרמטר</th>
-                                    <th style="padding: 8px;">גיל 1</th>
-                                    <th style="padding: 8px;">גיל 2</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">זום / הגדלה</td>
-                                    <td style="padding: 8px;">10X / 30X</td>
-                                    <td style="padding: 8px;">5X / 10X / 20X</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רדיוס הרג ופציעה</td>
-                                    <td style="padding: 8px;">הרג 8 מטרים | פציעה 15 מטרים</td>
-                                    <td style="padding: 8px;">הרג 2.5–3 מטרים | פציעה 15 מטרים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">זמן מעוף לטווח מקסימלי</td>
-                                    <td style="padding: 8px;"><span class="code-block">26 שניות</span></td>
-                                    <td style="padding: 8px;"><span class="code-block">53 שניות</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="slide-box">
+                <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
+                <div class="step-list">
+                    <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
+                    <ul>
+                        <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
+                    </ul>
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" loading="lazy" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
                     </div>
+                    <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
+                    <ul>
+                        <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
+                    </ul>
+                </div>
+            </div>
 
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
-                    <div class="table-container" style="margin-bottom: 15px;">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px;">סוג מטרה</th>
-                                    <th style="padding: 8px;">מנגנון יזום ואופן הפעולה</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">קשה</td>
-                                    <td style="padding: 8px;">חודר</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רכה</td>
-                                    <td style="padding: 8px;">מתפוצץ 30 ס"מ לפני המטרה</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רסס</td>
-                                    <td style="padding: 8px;">מרעום קרבה – 70 ס"מ לפני המטרה</td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="slide-box">
+                <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
+                <div class="slide-img-box">
+                    <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/4.jpg.png" alt="העברת תרגילים בין גורילות">
+                </div>
+                <ol class="step-list">
+                    <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
+                    <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
+                    <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
+                </ol>
+                <div class="videos-flex-container">
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" loading="lazy" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
                     </div>
-
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">☁️ ירי בעננות, ניהוג וסחיפת נעילה</h4>
-                    <div class="table-container" style="margin-bottom: 15px;">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px; width: 30%;">תרחיש / מצב</th>
-                                    <th style="padding: 8px;">אופן פעולה והנחיות</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">עננות נמוכה</td>
-                                    <td style="padding: 8px;">נשגר במעוף נמוך.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">מטרת NLOS (ללא אפשרות למעוף נמוך)</td>
-                                    <td style="padding: 8px;">נשגר בניהוג.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">כניסה לעננות במצב נעילה</td>
-                                    <td style="padding: 8px;">עלולה להתרחש סחיפת נעילה שעלולה להוביל לניהוג זמני.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 1</td>
-                                    <td style="padding: 8px;">סחיפת נעילה ועדכון רציף של הכוון תכניס אותנו למצב זה.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 2</td>
-                                    <td style="padding: 8px;">המערכת יודעת להתגבר לבד על סחיפת נעילה, ובגלל זה <strong>אין מצב מוגדר של ניהוג זמני</strong>.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold; color: #ef4444;">חריגה ממשפך בטיחות</td>
-                                    <td style="padding: 8px;">במידה והטיל נסחף ועובר את משפך הבטיחות (<span class="code-block">2500 לצדדים</span>) – הטיל יפיל את עצמו.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
-                    <div class="table-container">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px;">נושא / פרמטר</th>
-                                    <th style="padding: 8px;">נתון / פירוט</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">מהירות הטיל</td>
-                                    <td style="padding: 8px;"><span class="code-block">150 מטר/שנייה</span></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">טווח ירי מינימלי</td>
-                                    <td style="padding: 8px;">450 מטרים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">מגבלת מזג אוויר</td>
-                                    <td style="padding: 8px; color: #ef4444; font-weight: bold;">איסור שיגור ברוח מעל 50 קמ"ש</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">תנאי יזום (מ-150 מטר)</td>
-                                    <td style="padding: 8px;">
-                                        טיל יכול ליזום לאחר 150 מטר בהתקיים 3 תנאים:
-                                        <br>
-                                        1. פתיחת כנפיים &nbsp;|&nbsp; 2. מעבר 150 מטר &nbsp;|&nbsp; 3. כוח עומס של 7G
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">TIPP OFF (יציאה מהזביל)</td>
-                                    <td style="padding: 8px;">נפילה של 60 ס"מ ב-8 המטרים הראשונים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">הצתת מנוע ראשי</td>
-                                    <td style="padding: 8px;">ניצת רק לאחר 3.5 מטרים (להגנת המפעיל)</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רשף לאחור</td>
-                                    <td style="padding: 8px;">2.7 מטרים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">פרופיל מעוף</td>
-                                    <td style="padding: 8px;">הטיל מגיע לשיא הגובה בחצי הדרך למטרה</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="slide-video-container">
+                        <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" loading="lazy" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
                     </div>
                 </div>
-            </section>
-        </main>
-    </div>
+            </div>
+
+            <div class="slide-box">
+                <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
+                <div class="slide-img-box">
+                    <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/3.jpg.png" alt="התקנת דרייברים של NVIDIA">
+                </div>
+                <div class="step-list">
+                    <ol>
+                        <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
+                        <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
+                        <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
+                        <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                        <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="slide-box" style="border-right-color: #ef4444;">
+                <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
+                <div class="step-list">
+                    <ul>
+                        <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
+                        <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-box">
+                <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
+                <ol class="step-list">
+                    <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
+                    <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
+                    <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
+                    <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
+                    <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
+                    <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section id="training-program" class="tab-content">
+        <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
+        <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
+
+        <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>הכרת החברה</td><td>מנהל אתר</td>
+                        <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
+                    </tr>
+                    <tr>
+                        <td>הצגת מוצרים</td><td>מנהל אתר</td>
+                        <td>הצגת מוצרי החברה.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
+                    </tr>
+                    <tr>
+                        <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
+                        <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
+                    </tr>
+                    <tr>
+                        <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
+                        <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>ירי תחושה</td><td>מנהל אתר</td>
+                        <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
+                        <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
+                    </tr>
+                    <tr>
+                        <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
+                        <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>כיבוי מערכות</td><td>מנהל אתר</td>
+                        <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
+                        <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תתרגול תפעול.</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
+                        <td>תפעול תקלות נפוצות במערכת.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
+                    </tr>
+                    <tr>
+                        <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
+                        <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
+                        <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>מבחן עיוני</td><td>מנהל אתר</td>
+                        <td>ביצוע מבחן עיוני כתוב.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
+                        <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
+                        <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&action=default" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
+                    </tr>
+                    <tr>
+                        <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
+                        <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="forms" class="tab-content">
+        <h2>📋 טפסים, ציוד והעשרה</h2>
+        
+        <div class="search-box" style="margin-bottom: 15px;">
+            <input type="text" id="formsSearch" onkeyup="filterFormsTab()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
+        </div>
+
+        <div class="cards-container">
+            <div class="card form-item">
+                <div class="form-card-content">
+                    <div class="form-info">
+                        <h3>🚗 רשימת ציוד לרכב</h3>
+                        <p style="font-size: 0.85em; margin-bottom: 8px;">טופס לבדיקה ומילוי דיווח ציוד רכב.</p>
+                        <a href="https://forms.cloud.microsoft/r/YQWDPAaeUe" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                    </div>
+                    <div class="form-qr-box">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/YQWDPAaeUe" alt="QR Code" crossorigin="anonymous">
+                        <span class="form-url-text">forms.cloud.microsoft/r/YQWDPAaeUe</span>
+                        <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/YQWDPAaeUe', this)">📋 העתק</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card form-item">
+                <div class="form-card-content">
+                    <div class="form-info">
+                        <h3>✍️ משוב מתאמנים</h3>
+                        <p style="font-size: 0.85em; margin-bottom: 8px;">טופס איסוף רשמים ומשוב מהמתאמנים.</p>
+                        <a href="https://forms.cloud.microsoft/r/u1afBRvv3q" target="_blank" class="btn">לפתיחת הטופס 🔗</a>
+                    </div>
+                    <div class="form-qr-box">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://forms.cloud.microsoft/r/u1afBRvv3q" alt="QR Code" crossorigin="anonymous">
+                        <span class="form-url-text">forms.cloud.microsoft/r/u1afBRvv3q</span>
+                        <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card form-item" style="width: 100%; margin-top: 15px;">
+            <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
+            <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
+            
+            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
+            <div class="table-container" style="margin-bottom: 15px;">
+                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                    <thead>
+                        <tr style="background-color: var(--th-bg); color: white;">
+                            <th style="padding: 8px;">פרמטר</th>
+                            <th style="padding: 8px;">גיל 1</th>
+                            <th style="padding: 8px;">גיל 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">זום / הגדלה</td>
+                            <td style="padding: 8px;">10X / 30X</td>
+                            <td style="padding: 8px;">5X / 10X / 20X</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">רדיוס הרג ופציעה</td>
+                            <td style="padding: 8px;">הרג 8 מטרים | פציעה 15 מטרים</td>
+                            <td style="padding: 8px;">הרג 2.5–3 מטרים | פציעה 15 מטרים</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">זמן מעוף לטווח מקסימלי</td>
+                            <td style="padding: 8px;"><span class="code-block">26 שניות</span></td>
+                            <td style="padding: 8px;"><span class="code-block">53 שניות</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
+            <div class="table-container" style="margin-bottom: 15px;">
+                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                    <thead>
+                        <tr style="background-color: var(--th-bg); color: white;">
+                            <th style="padding: 8px;">סוג מטרה</th>
+                            <th style="padding: 8px;">מנגנון יזום ואופן הפעולה</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">קשה</td>
+                            <td style="padding: 8px;">חודר</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">רכה</td>
+                            <td style="padding: 8px;">מתפוצץ 30 ס"מ לפני המטרה</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">רסס</td>
+                            <td style="padding: 8px;">מרעום קרבה – 70 ס"מ לפני המטרה</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">☁️ ירי בעננות, ניהוג וסחיפת נעילה</h4>
+            <div class="table-container" style="margin-bottom: 15px;">
+                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                    <thead>
+                        <tr style="background-color: var(--th-bg); color: white;">
+                            <th style="padding: 8px; width: 30%;">תרחיש / מצב</th>
+                            <th style="padding: 8px;">אופן פעולה והנחיות</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">עננות נמוכה</td>
+                            <td style="padding: 8px;">נשגר במעוף נמוך.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">מטרת NLOS (ללא אפשרות למעוף נמוך)</td>
+                            <td style="padding: 8px;">נשגר בניהוג.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">כניסה לעננות במצב נעילה</td>
+                            <td style="padding: 8px;">עלולה להתרחש סחיפת נעילה שעלולה להוביל לניהוג זמני.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 1</td>
+                            <td style="padding: 8px;">סחיפת נעילה ועדכון רציף של הכוון תכניס אותנו למצב זה.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 2</td>
+                            <td style="padding: 8px;">המערכת יודעת להתגבר לבד על סחיפת נעילה, ובגלל זה <strong>אין מצב מוגדר של ניהוג זמני</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold; color: #ef4444;">חריגה ממשפך בטיחות</td>
+                            <td style="padding: 8px;">במידה והטיל נסחף ועובר את משפך הבטיחות (<span class="code-block">2500 לצדדים</span>) – הטיל יפיל את עצמו.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
+            <div class="table-container">
+                <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
+                    <thead>
+                        <tr style="background-color: var(--th-bg); color: white;">
+                            <th style="padding: 8px;">נושא / פרמטר</th>
+                            <th style="padding: 8px;">נתון / פירוט</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">מהירות הטיל</td>
+                            <td style="padding: 8px;"><span class="code-block">150 מטר/שנייה</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">טווח ירי מינימלי</td>
+                            <td style="padding: 8px;">450 מטרים</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">מגבלת מזג אוויר</td>
+                            <td style="padding: 8px; color: #ef4444; font-weight: bold;">איסור שיגור ברוח מעל 50 קמ"ש</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">תנאי יזום (מ-150 מטר)</td>
+                            <td style="padding: 8px;">
+                                טיל יכול ליזום לאחר 150 מטר בהתקיים 3 תנאים:
+                                <br>
+                                1. פתיחת כנפיים &nbsp;|&nbsp; 2. מעבר 150 מטר &nbsp;|&nbsp; 3. כוח עומס של 7G
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">TIPP OFF (יציאה מהזביל)</td>
+                            <td style="padding: 8px;">נפילה של 60 ס"מ ב-8 המטרים הראשונים</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">הצתת מנוע ראשי</td>
+                            <td style="padding: 8px;">ניצת רק לאחר 3.5 מטרים (להגנת המפעיל)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">רשף לאחור</td>
+                            <td style="padding: 8px;">2.7 מטרים</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">פרופיל מעוף</td>
+                            <td style="padding: 8px;">הטיל מגיע לשיא הגובה בחצי הדרך למטרה</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</main>
 
     <div id="datalistsContainer"></div>
 
@@ -1257,10 +1275,9 @@
         const hebrewDaysShort = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
         const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
         
-        const currentYear = 2026;
+        const currentYear = new Date().getFullYear();
         let activeMonth = new Date().getMonth(); 
         let activeWeekIndex = 0; 
-        let isUpdatingCloud = false;
 
         const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
@@ -1290,6 +1307,25 @@
         let monthWeeksCache = [];
         let allMonthsDataCache = {};
 
+        // נרמול מערך ערכים מול Firebase RTDB למניעת שיבושים במפות/אובייקטים
+        function normalizeRowValues(val) {
+            if (Array.isArray(val)) {
+                const arr = [...val];
+                while (arr.length < 13) arr.push("");
+                return arr;
+            }
+            const arr = Array(13).fill("");
+            if (val && typeof val === 'object') {
+                Object.keys(val).forEach(k => {
+                    const idx = parseInt(k, 10);
+                    if (!isNaN(idx) && idx >= 0 && idx < 13) {
+                        arr[idx] = val[k] != null ? String(val[k]) : "";
+                    }
+                });
+            }
+            return arr;
+        }
+
         window.addEventListener('firebase-ready', () => {
             const savedTab = localStorage.getItem('gorilla_active_tab');
             if (savedTab) {
@@ -1299,7 +1335,8 @@
             const savedTheme = localStorage.getItem('gorilla_theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.getElementById('themeToggleBtn').innerText = '☀️ מצב בהיר';
+                const tBtn = document.getElementById('themeToggleBtn');
+                if (tBtn) tBtn.innerText = '☀️ מצב בהיר';
             }
 
             initTrainerProfile();
@@ -1311,7 +1348,6 @@
         function loadMonthDataFromCloud(monthIdx) {
             const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
             window.fbOnValue(sheetRef, (snapshot) => {
-                if (isUpdatingCloud) return; 
                 const saved = snapshot.val();
                 processLoadedMonthData(monthIdx, saved);
                 renderCurrentWeekTables();
@@ -1336,15 +1372,16 @@
             }
 
             if (saved) {
-                if (saved.north && Array.isArray(saved.north)) {
-                    north = saved.north.filter(item => {
+                if (saved.north && (Array.isArray(saved.north) || typeof saved.north === 'object')) {
+                    const northArr = Array.isArray(saved.north) ? saved.north : Object.values(saved.north);
+                    north = northArr.filter(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
                         const dow = dateObj.getDay();
                         return dow !== 5 && dow !== 6;
                     }).map(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
                         let defaultGuideNorth = "איתי הקר";
-                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
+                        let currentVals = normalizeRowValues(item.values);
                         if (!currentVals[1] && !item.hasUserModifiedGuide1) {
                             currentVals[1] = defaultGuideNorth;
                         }
@@ -1357,15 +1394,16 @@
                         };
                     });
                 }
-                if (saved.south && Array.isArray(saved.south)) {
-                    south = saved.south.filter(item => {
+                if (saved.south && (Array.isArray(saved.south) || typeof saved.south === 'object')) {
+                    const southArr = Array.isArray(saved.south) ? saved.south : Object.values(saved.south);
+                    south = southArr.filter(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
                         const dow = dateObj.getDay();
                         return dow !== 5 && dow !== 6;
                     }).map(item => {
                         const dateObj = new Date(currentYear, monthIdx, item.dayNum);
                         let defaultGuideSouth = "עדיאל קסה";
-                        let currentVals = item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
+                        let currentVals = normalizeRowValues(item.values);
                         if (!currentVals[1] && !item.hasUserModifiedGuide2) {
                             currentVals[1] = defaultGuideSouth;
                         }
@@ -1484,7 +1522,6 @@
             const bar = document.getElementById('monthFoldersBar');
             if (!bar) return;
             bar.innerHTML = '';
-            // סידור החודשים כהלכה בסדר כרונולוגי מינואר עד דצמבר
             monthNames.forEach((mName, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `month-folder-btn ${idx === activeMonth ? 'active' : ''}`;
@@ -1543,6 +1580,12 @@
             const southBody = document.getElementById('southTableBody');
             if (!northBody || !southBody) return;
 
+            // שמירת הפוקוס והסמן הנוכחי למניעת קפיצות בזמן עריכה
+            const activeEl = document.activeElement;
+            const activeId = activeEl && activeEl.id ? activeEl.id : null;
+            const selStart = (activeEl && activeEl.selectionStart !== undefined) ? activeEl.selectionStart : null;
+            const selEnd = (activeEl && activeEl.selectionEnd !== undefined) ? activeEl.selectionEnd : null;
+
             northBody.innerHTML = '';
             southBody.innerHTML = '';
 
@@ -1597,6 +1640,17 @@
                 if (sel.value !== "") sel.classList.add('has-selection');
                 else sel.classList.remove('has-selection');
             });
+
+            // שחזור פוקוס מלא
+            if (activeId) {
+                const restoredEl = document.getElementById(activeId);
+                if (restoredEl) {
+                    restoredEl.focus();
+                    if (selStart !== null && restoredEl.setSelectionRange) {
+                        try { restoredEl.setSelectionRange(selStart, selEnd); } catch (e) {}
+                    }
+                }
+            }
 
             filterSchedule();
         }
@@ -1666,7 +1720,7 @@
                 monthData.south.sort((a, b) => a.dayNum - b.dayNum);
             }
 
-            saveMonthDataToCloud(targetMonthIdx, monthData);
+            saveSideArrayToCloud(side, targetMonthIdx);
             renderCurrentWeekTables();
         }
 
@@ -1678,7 +1732,7 @@
             } else {
                 monthData.south.splice(cacheIndex, 1);
             }
-            saveMonthDataToCloud(monthIdx, monthData);
+            saveSideArrayToCloud(side, monthIdx);
             renderCurrentWeekTables();
         }
 
@@ -1716,6 +1770,7 @@
             renderCurrentWeekTables();
         }
 
+        // בחירת מדריך וסנכרון אטומי מיידי של גורילה 1 + גורילה 2
         window.handleGuideSelection = function(side, monthIdx, cacheIndex, fieldIndex, selectEl) {
             let val = selectEl.value;
             if (val === "אחר...") {
@@ -1728,21 +1783,43 @@
                 }
             }
             handleSelectChange(selectEl);
-            updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, val);
 
-            if (fieldIndex === 1 && window.trainerGorillaMap[val]) {
-                const defaults = window.trainerGorillaMap[val];
-                const monthData = getMonthDataCache(monthIdx);
-                const row = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
-                
-                if (row) {
-                    if (!row.values[7] || row.values[7] === "") {
-                        updateCacheAndSave(side, monthIdx, cacheIndex, 7, defaults[0]);
+            const monthData = getMonthDataCache(monthIdx);
+            const row = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
+
+            if (row) {
+                if (!Array.isArray(row.values)) row.values = Array(13).fill("");
+                while (row.values.length < 13) row.values.push("");
+
+                row.values[fieldIndex] = val;
+                const updates = {};
+                updates[`sheets/${currentYear}_${monthIdx}/${side}/${cacheIndex}/values/${fieldIndex}`] = val;
+
+                if (fieldIndex === 1) {
+                    if (side === 'north') {
+                        row.hasUserModifiedGuide1 = true;
+                        updates[`sheets/${currentYear}_${monthIdx}/north/${cacheIndex}/hasUserModifiedGuide1`] = true;
+                    } else {
+                        row.hasUserModifiedGuide2 = true;
+                        updates[`sheets/${currentYear}_${monthIdx}/south/${cacheIndex}/hasUserModifiedGuide2`] = true;
                     }
-                    if (defaults[1] && (!row.values[11] || row.values[11] === "")) {
-                        updateCacheAndSave(side, monthIdx, cacheIndex, 11, defaults[1]);
+
+                    // אוטומציה אטומית לגורילות
+                    if (window.trainerGorillaMap[val]) {
+                        const defaults = window.trainerGorillaMap[val];
+                        row.values[7] = defaults[0];
+                        updates[`sheets/${currentYear}_${monthIdx}/${side}/${cacheIndex}/values/7`] = defaults[0];
+
+                        if (defaults[1]) {
+                            row.values[11] = defaults[1];
+                            updates[`sheets/${currentYear}_${monthIdx}/${side}/${cacheIndex}/values/11`] = defaults[1];
+                        }
                     }
                 }
+
+                window.fbUpdate(window.fbRef(window.fbDB), updates).catch(console.error);
+                extractMemory(row.values);
+                rebuildDatalists();
             }
 
             renderCurrentWeekTables();
@@ -1772,14 +1849,14 @@
                 <td>
                     <div class="guides-container">
                         <div class="guide-row-flex">
-                            <select class="cell-select ${guide1Val ? 'has-selection' : ''}" onchange="handleGuideSelection('${side}', ${monthIdx}, ${cacheIndex}, 1, this)">
+                            <select id="cell_${side}_${monthIdx}_${cacheIndex}_1" class="cell-select ${guide1Val ? 'has-selection' : ''}" onchange="handleGuideSelection('${side}', ${monthIdx}, ${cacheIndex}, 1, this)">
                                 ${localGuides1.map(g => `<option value="${g}" ${guide1Val === g ? 'selected' : ''}>${g}</option>`).join('')}
                             </select>
                             ${hasGuide1 && !hasGuide2 ? `<button type="button" class="add-guide-btn" onclick="showSecondGuideSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הוסף מדריך נוסף">➕</button>` : ''}
                         </div>
                         ${hasGuide2 ? `
                         <div class="guide-row-flex">
-                            <select class="cell-select ${guide2Val ? 'has-selection' : ''}" onchange="handleGuideSelection('${side}', ${monthIdx}, ${cacheIndex}, 10, this)">
+                            <select id="cell_${side}_${monthIdx}_${cacheIndex}_10" class="cell-select ${guide2Val ? 'has-selection' : ''}" onchange="handleGuideSelection('${side}', ${monthIdx}, ${cacheIndex}, 10, this)">
                                 ${localGuides2.map(g => `<option value="${g}" ${guide2Val === g ? 'selected' : ''}>${g}</option>`).join('')}
                             </select>
                             <button type="button" class="remove-guide-btn" onclick="removeSecondGuideSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הסר מדריך שני">❌</button>
@@ -1798,14 +1875,14 @@
                 <td>
                     <div class="gorillas-container">
                         <div class="gorilla-row-flex">
-                            <select class="cell-select ${gorilla1Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value); renderCurrentWeekTables();">
+                            <select id="cell_${side}_${monthIdx}_${cacheIndex}_7" class="cell-select ${gorilla1Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 7, this.value); renderCurrentWeekTables();">
                                 ${gorillaOptions.map(g => `<option value="${g}" ${gorilla1Val === g ? 'selected' : ''}>${g}</option>`).join('')}
                             </select>
                             ${hasGorilla1 && !hasGorilla2 ? `<button type="button" class="add-gorilla-btn" onclick="showSecondGorillaSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הוסף גורילה נוספת">➕</button>` : ''}
                         </div>
                         ${hasGorilla2 ? `
                         <div class="gorilla-row-flex">
-                            <select class="cell-select ${gorilla2Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 11, this.value)">
+                            <select id="cell_${side}_${monthIdx}_${cacheIndex}_11" class="cell-select ${gorilla2Val ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 11, this.value)">
                                 ${gorillaOptions.map(g => `<option value="${g}" ${gorilla2Val === g ? 'selected' : ''}>${g}</option>`).join('')}
                             </select>
                             <button type="button" class="remove-gorilla-btn" onclick="removeSecondGorillaSelect('${side}', ${monthIdx}, ${cacheIndex})" title="הסר גורילה שנייה">❌</button>
@@ -1817,23 +1894,23 @@
 
             return `
                 <td>
-                    <input type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
+                    <input id="cell_${side}_${monthIdx}_${cacheIndex}_0" type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
                     ${extraBadge}
                 </td>
                 ${guideCellHTML}
-                <td><input type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח מתאמן" list="mem-units" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
-                <td><input type="text" class="cell-input" value="${vals[3] || ''}" placeholder="מיקום" list="mem-locations" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 3, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_2" type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח מתאמן" list="mem-units" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_3" type="text" class="cell-input" value="${vals[3] || ''}" placeholder="מיקום" list="mem-locations" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 3, this.value)"></td>
                 <td>
-                    <select class="cell-select ${vals[4] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 4, this.value)">
+                    <select id="cell_${side}_${monthIdx}_${cacheIndex}_4" class="cell-select ${vals[4] ? 'has-selection' : ''}" onchange="handleSelectChange(this); updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 4, this.value)">
                         ${systemsOptions.map(s => `<option value="${s}" ${vals[4] === s ? 'selected' : ''}>${s}</option>`).join('')}
                     </select>
                 </td>
-                <td><input type="text" class="cell-input" value="${vals[5] || ''}" placeholder="איש קשר" list="mem-contacts" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 5, this.value)"></td>
-                <td><input type="text" class="cell-input" value="${vals[6] || ''}" placeholder="מס'" list="mem-count" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 6, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_5" type="text" class="cell-input" value="${vals[5] || ''}" placeholder="איש קשר" list="mem-contacts" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 5, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_6" type="text" class="cell-input" value="${vals[6] || ''}" placeholder="מס'" list="mem-count" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 6, this.value)"></td>
                 ${gorillaCellHTML}
-                <td><input type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" list="mem-hours" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
-                <td><input type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" list="mem-notes" onchange="handleNotesChange('${side}', ${monthIdx}, ${cacheIndex}, this.value)"></td>
-                <td><input type="text" class="cell-input" value="${vals[12] || ''}" placeholder="ניידת" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 12, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_8" type="text" class="cell-input" value="${vals[8] || ''}" placeholder="שעות" list="mem-hours" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 8, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_9" type="text" class="cell-input" value="${vals[9] || ''}" placeholder="הערות" list="mem-notes" onchange="handleNotesChange('${side}', ${monthIdx}, ${cacheIndex}, this.value)"></td>
+                <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_12" type="text" class="cell-input" value="${vals[12] || ''}" placeholder="ניידת" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 12, this.value)"></td>
             `;
         }
 
@@ -1852,45 +1929,50 @@
             renderCurrentWeekTables();
         }
 
+        // עדכון ישיר ונקודתי ברמת תא למניעת דריסות בין מדריכים
         function updateCacheAndSave(side, monthIdx, cacheIndex, fieldIndex, value) {
             const monthData = getMonthDataCache(monthIdx);
-            if (side === 'north' && monthData.north[cacheIndex]) {
-                monthData.north[cacheIndex].values[fieldIndex] = value;
-                if (fieldIndex === 1) monthData.north[cacheIndex].hasUserModifiedGuide1 = true;
-            } else if (side === 'south' && monthData.south[cacheIndex]) {
-                monthData.south[cacheIndex].values[fieldIndex] = value;
-                if (fieldIndex === 1) monthData.south[cacheIndex].hasUserModifiedGuide2 = true;
-            }
-
             const targetRow = side === 'north' ? monthData.north[cacheIndex] : monthData.south[cacheIndex];
+
             if (targetRow) {
+                if (!Array.isArray(targetRow.values)) targetRow.values = Array(13).fill("");
+                while (targetRow.values.length < 13) targetRow.values.push("");
+
+                targetRow.values[fieldIndex] = value;
+                
+                const updates = {};
+                updates[`sheets/${currentYear}_${monthIdx}/${side}/${cacheIndex}/values/${fieldIndex}`] = value;
+
+                if (fieldIndex === 1) {
+                    if (side === 'north') {
+                        targetRow.hasUserModifiedGuide1 = true;
+                        updates[`sheets/${currentYear}_${monthIdx}/north/${cacheIndex}/hasUserModifiedGuide1`] = true;
+                    } else {
+                        targetRow.hasUserModifiedGuide2 = true;
+                        updates[`sheets/${currentYear}_${monthIdx}/south/${cacheIndex}/hasUserModifiedGuide2`] = true;
+                    }
+                }
+
+                // ביצוע עדכון אטומי ומדויק ב-Firebase
+                window.fbUpdate(window.fbRef(window.fbDB), updates).catch(console.error);
+
                 extractMemory(targetRow.values);
                 rebuildDatalists();
             }
-
-            saveMonthDataToCloud(monthIdx, monthData);
         }
 
-        function saveMonthDataToCloud(monthIdx, monthData) {
-            isUpdatingCloud = true;
-            const saveData = {
-                north: monthData.north.map(item => ({ 
-                    dayNum: item.dayNum, 
-                    values: item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""], 
-                    hasUserModifiedGuide1: !!item.hasUserModifiedGuide1 
-                })),
-                south: monthData.south.map(item => ({ 
-                    dayNum: item.dayNum, 
-                    values: item.values || ["", "", "", "", "", "", "", "", "", "", "", "", ""], 
-                    hasUserModifiedGuide2: !!item.hasUserModifiedGuide2 
-                }))
-            };
-            const sheetRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}`);
-            window.fbSet(sheetRef, saveData).then(() => {
-                setTimeout(() => { isUpdatingCloud = false; }, 500);
-            }).catch(() => {
-                isUpdatingCloud = false;
-            });
+        // שמירת רשימת הניידת כולה רק במקרה של הוספת או מחיקת שורות
+        function saveSideArrayToCloud(side, monthIdx) {
+            const monthData = getMonthDataCache(monthIdx);
+            const cleanArray = monthData[side].map(item => ({
+                dayNum: item.dayNum,
+                values: normalizeRowValues(item.values),
+                hasUserModifiedGuide1: !!item.hasUserModifiedGuide1,
+                hasUserModifiedGuide2: !!item.hasUserModifiedGuide2
+            }));
+
+            const sideRef = window.fbRef(window.fbDB, `sheets/${currentYear}_${monthIdx}/${side}`);
+            window.fbSet(sideRef, cleanArray).catch(console.error);
         }
 
         function initCloudStatusSync() {
@@ -1975,17 +2057,39 @@
             if (parts.length === 3) btn.innerText = `${parts[2]}/${parts[1]}`;
         }
 
-        function initTrainerProfile() {
-            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+        window.initTrainerProfile = function(currentUser) {
+            let trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            
+            // זיהוי אוטומטי מבוסס מייל אם המשתמש מחובר
+            if (!trainer && currentUser && currentUser.email) {
+                const emailKey = currentUser.email.toLowerCase();
+                if (window.knownTrainers && window.knownTrainers[emailKey]) {
+                    trainer = {
+                        firstName: window.knownTrainers[emailKey].firstName,
+                        lastName: window.knownTrainers[emailKey].lastName,
+                        email: currentUser.email,
+                        phone: window.knownTrainers[emailKey].phone || ""
+                    };
+                } else {
+                    trainer = {
+                        firstName: currentUser.email.split('@')[0],
+                        lastName: "",
+                        email: currentUser.email,
+                        phone: ""
+                    };
+                }
+                localStorage.setItem('gorilla_trainer_profile', JSON.stringify(trainer));
+            }
+
             const display = document.getElementById('trainerInfoDisplay');
             const inputsArea = document.getElementById('trainerInputsArea');
             if (!display || !inputsArea) return;
 
             if (trainer) {
-                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email} | ${trainer.phone || 'אין טלפון'}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
+                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email}${trainer.phone ? ' | ' + trainer.phone : ''}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
                 inputsArea.style.display = 'none';
             } else {
-                display.innerHTML = `👤 התחברות מדריך (פעם ראשונה):`;
+                display.innerHTML = `👤 התחברות מדריך:`;
                 inputsArea.innerHTML = `
                     <input type="text" id="tFirstName" placeholder="שם פרטי">
                     <input type="text" id="tLastName" placeholder="שם משפחה">
@@ -1995,7 +2099,7 @@
                 `;
                 inputsArea.style.display = 'flex';
             }
-        }
+        };
 
         function saveTrainerProfile() {
             const fName = document.getElementById('tFirstName')?.value.trim();
@@ -2010,13 +2114,13 @@
 
             const profile = { firstName: fName, lastName: lName, email: email, phone: phone };
             localStorage.setItem('gorilla_trainer_profile', JSON.stringify(profile));
-            initTrainerProfile();
+            window.initTrainerProfile();
             alert('הפרטים נשמרו בהצלחה!');
         }
 
         function editTrainerProfile() {
             localStorage.removeItem('gorilla_trainer_profile');
-            initTrainerProfile();
+            window.initTrainerProfile();
         }
 
         function exportWeeklyShiftsToCalendar() {
@@ -2150,7 +2254,7 @@
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('gorilla_theme', isDark ? 'dark' : 'light');
             const tBtn = document.getElementById('themeToggleBtn');
-            if(tBtn) tBtn.innerText = isDark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
+            if (tBtn) tBtn.innerText = isDark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
         }
 
         function switchTab(tabId, event, save = true) {
