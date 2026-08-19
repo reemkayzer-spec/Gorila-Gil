@@ -53,9 +53,21 @@
             "nadavyichye@gmail.com": { firstName: "נדב", lastName: "יחיא", phone: "" },
             "idolevko2@gmail.com": { firstName: "עידו", lastName: "לבקוביץ", phone: "" },
             "tomerk2001@gmail.com": { firstName: "תומר", lastName: "כחלון", phone: "" },
-            "netashatzberg@gmail.com": { firstName: "נטע", lastName: "שצברג", phone: "" }
+            "netashatzberg@gmail.com": { firstName: "נטע", lastName: "שצברג", phone: "" },
+            "antonicbc@gmail.com": { firstName: "מרקו", lastName: "", phone: "" }
         };
 
+        // בחירת מדריך מהירה במסך הכניסה
+        window.selectQuickTrainer = function(email) {
+            const emailInput = document.getElementById("auth-email");
+            const passInput = document.getElementById("auth-pass");
+            if (emailInput) {
+                emailInput.value = email;
+                if (passInput) passInput.focus();
+            }
+        };
+
+        // פונקציית התחברות
         window.loginWithCredentials = function(e) {
             if (e) e.preventDefault();
             const emailInput = document.getElementById("auth-email");
@@ -75,6 +87,9 @@
             if (btn) btn.disabled = true;
 
             signInWithEmailAndPassword(auth, email, pass)
+                .then((userCredential) => {
+                    localStorage.setItem('gorilla_last_email', email);
+                })
                 .catch((error) => {
                     if (btn) btn.disabled = false;
                     if (!errEl) return;
@@ -98,6 +113,7 @@
             const mainContent = document.getElementById("main-content");
             const errEl = document.getElementById("error-msg");
             const btn = document.getElementById("loginBtn");
+            const emailInput = document.getElementById("auth-email");
 
             if (btn) btn.disabled = false;
 
@@ -114,6 +130,11 @@
                 if (authScreen) authScreen.style.display = "flex";
                 if (mainContent) mainContent.style.display = "none";
                 if (errEl) errEl.innerText = "";
+
+                const savedEmail = localStorage.getItem('gorilla_last_email');
+                if (savedEmail && emailInput && !emailInput.value) {
+                    emailInput.value = savedEmail;
+                }
             }
         });
     </script>
@@ -156,16 +177,15 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
-        /* אפקט קפיצה אלסטי בריחוף על כלל הכפתורים והכרטיסים */
         button, .btn, .link-table-btn, .tab-btn, .week-tab-btn, .month-folder-btn, 
         .wa-group-btn, .call-btn, .unit-wa-btn, .unit-add-btn, .theme-toggle-btn, 
-        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn {
+        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn {
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease !important;
         }
         button:hover, .btn:hover, .link-table-btn:hover, .tab-btn:hover, .week-tab-btn:hover,
         .wa-group-btn:hover, .call-btn:hover, .unit-wa-btn:hover, .unit-add-btn:hover, 
         .theme-toggle-btn:hover, .logout-btn:hover, .trainer-save-btn:hover, 
-        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover {
+        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover, .trainer-chip-btn:hover {
             transform: translateY(-2.5px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.18);
         }
@@ -174,16 +194,52 @@
         }
 
         #auth-screen {
-            display: none; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100vh; background-color: #0f172a; color: #ffffff; position: fixed;
             top: 0; left: 0; width: 100%; z-index: 99999; padding: 20px;
         }
         .login-card {
             background: #1e293b; border: 1px solid #334155; border-radius: 12px;
-            padding: 30px 25px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 26px 22px; width: 100%; max-width: 390px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .login-card h2 { margin: 0 0 10px 0; font-size: 1.3em; }
-        .login-card p { font-size: 0.85em; color: #94a3b8; margin-bottom: 20px; }
+        .login-card h2 { margin: 0 0 8px 0; font-size: 1.3em; }
+        .login-card p { font-size: 0.85em; color: #94a3b8; margin-bottom: 15px; }
+
+        .quick-trainers-wrapper {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .quick-trainers-title {
+            font-size: 0.76em;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .quick-trainers-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+        .trainer-chip-btn {
+            background: #334155;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 0.78em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .trainer-chip-btn:hover {
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: white;
+        }
+
         .login-input {
             width: 100%; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #475569;
             border-radius: 8px; background: #0f172a; color: #ffffff; font-size: 0.95em; outline: none;
@@ -196,7 +252,7 @@
         }
         .login-btn:hover { background-color: #0369a1; }
         .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        #error-msg { color: #f87171; font-size: 0.85em; margin-top: 15px; min-height: 18px; font-weight: bold; }
+        #error-msg { color: #f87171; font-size: 0.85em; margin-top: 12px; min-height: 18px; font-weight: bold; }
 
         #main-content { display: none; }
 
@@ -496,10 +552,10 @@
 </head>
 <body>
 
-    <!-- מסך התחברות עם אימייל וסיסמה -->
+    <!-- מסך התחברות מהיר וידידותי -->
     <div id="auth-screen">
-        <form class="login-card" onsubmit="loginWithCredentials(event)">
-            <div style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; background:#f37021; border-radius:10px; margin-bottom:12px;">
+        <form class="login-card" onsubmit="loginWithCredentials(event)" autocomplete="on">
+            <div style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; background:#f37021; border-radius:10px; margin-bottom:10px;">
                 <svg width="28" height="28" viewBox="0 0 100 100" style="transform: rotate(-45deg);">
                     <rect x="35" y="20" width="30" height="60" rx="15" fill="#1e293b"/>
                     <path d="M 35 35 Q 50 10 65 35 Z" fill="#334155"/>
@@ -510,9 +566,25 @@
                 </svg>
             </div>
             <h2>כניסת מדריכים - צוות גיל</h2>
-            <p>הזן אימייל וסיסמה מורשים לכניסה למערכת:</p>
-            <input type="email" id="auth-email" class="login-input" placeholder="כתובת אימייל" required autocomplete="username">
-            <input type="password" id="auth-pass" class="login-input" placeholder="סיסמה" required autocomplete="current-password">
+            <p>בחר מדריך או הזן אימייל וסיסמה:</p>
+
+            <!-- סרגל מדריכים לבחירה מהירה -->
+            <div class="quick-trainers-wrapper">
+                <div class="quick-trainers-title">👥 כניסה מהירה לפי שם:</div>
+                <div class="quick-trainers-chips">
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('itayhaker19@gmail.com')">איתי</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('adielkassa@gmail.com')">עדיאל</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('reemkayzer@gmail.com')">ראם</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('nadavyichye@gmail.com')">נדב</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('idolevko2@gmail.com')">עידו</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('tomerk2001@gmail.com')">תומר</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('netashatzberg@gmail.com')">נטע</button>
+                    <button type="button" class="trainer-chip-btn" onclick="selectQuickTrainer('antonicbc@gmail.com')">מרקו</button>
+                </div>
+            </div>
+
+            <input type="email" id="auth-email" name="email" class="login-input" placeholder="כתובת אימייל" required autocomplete="username">
+            <input type="password" id="auth-pass" name="password" class="login-input" placeholder="סיסמה" required autocomplete="current-password">
             <button type="submit" id="loginBtn" class="login-btn">התחבר למערכת 🔐</button>
             <div id="error-msg"></div>
         </form>
@@ -1290,7 +1362,7 @@
         let gorillaChartInstance = null;
         let latestStatusData = {};
 
-        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "טיפול חודשי", "אחר..."];
+        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "מרקו", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
         const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
 
@@ -1695,7 +1767,6 @@
             filterSchedule();
         }
 
-        // פונקציית רינדור מלאה ללשונית הדשבורד
         function renderDashboard(monthIdx) {
             const monthName = monthNames[monthIdx];
             const titleEl = document.getElementById('statsMonthTitle');
@@ -1754,7 +1825,6 @@
                 }
             }
 
-            // חישוב ימי אימון, ביטולים ופעילות
             const monthData = getMonthDataCache(monthIdx);
             let activeTrainingDays = new Set();
             let canceledTrainingDays = new Set();
@@ -1775,7 +1845,6 @@
                         return;
                     }
 
-                    // תנאי: ספירת יום אימון רק כאשר 3 שדות המפתח מלאים: מדריך + כוח מתאמן + מיקום
                     const hasGuide = vals[1] && vals[1].trim() !== "";
                     const hasUnit = vals[2] && vals[2].trim() !== "" && vals[2].trim() !== "ללא";
                     const hasLocation = vals[3] && vals[3].trim() !== "";
@@ -1797,7 +1866,6 @@
                         totalHours += 5;
                     }
 
-                    // ספירת ימי אימון לגורילות לפי שיבוץ בפועל
                     for (let g = 1; g <= 7; g++) {
                         const gName = `גורילה ${g}`;
                         const gNameAlt = `גורילה מס ${g}`;
@@ -1814,7 +1882,6 @@
             processRows(monthData.north);
             processRows(monthData.south);
 
-            // עדכון ה-KPI עם ימי אימון / ימים שבוטלו באדום
             const kpiDays = document.getElementById('kpiMonthTrainingDays');
             const kpiCanceled = document.getElementById('kpiMonthCanceledDays');
             if (kpiDays) kpiDays.innerText = activeTrainingDays.size;
