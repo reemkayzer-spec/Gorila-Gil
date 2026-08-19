@@ -456,6 +456,7 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .todo-input-title {
             flex: 2;
@@ -467,6 +468,7 @@
             color: var(--text-color);
             font-size: 0.95em;
             outline: none;
+            height: 44px; /* גובה אחיד תואם */
         }
         .todo-input-title:focus { border-color: #38bdf8; }
         .todo-select-assignee, .todo-input-date {
@@ -480,20 +482,17 @@
             font-size: 0.9em;
             outline: none;
             cursor: pointer;
-            width: 100%;
-            -webkit-appearance: none;
-            appearance: none;
-            text-align: right;
+            height: 44px; /* גובה אחיד תואם */
         }
         .todo-input-date {
-            text-align: center;
-            direction: ltr;
+            text-align: right;
+            direction: rtl;
         }
         .todo-add-btn {
             background: #0284c7;
             color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 0 20px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 0.95em;
@@ -502,10 +501,7 @@
             align-items: center;
             gap: 6px;
             justify-content: center;
-            width: 100%;
-        }
-        @media (min-width: 600px) {
-            .todo-add-btn { width: auto; }
+            height: 44px; /* גובה אחיד תואם */
         }
         .todo-add-btn:hover { background: #0369a1; }
 
@@ -818,8 +814,16 @@
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
         /* ========================================================
-           📱 שיפורי CSS רספונסיביים מדויקים לעמודת התאריך ושדה תאריך משימות
+           📱 תיקון אבטחת תצוגה מוחלטת לעמודת תאריך במובייל
            ======================================================== */
+        .date-cell-inner {
+            display: block;
+            width: 75px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         @media (max-width: 768px) {
             main { padding: 10px 8px; margin: 8px auto; }
             header { padding: 8px 6px; }
@@ -827,16 +831,16 @@
 
             .spreadsheet-container table th:first-child,
             .spreadsheet-container table td:first-child {
-                position: sticky;
-                right: 0;
-                z-index: 10;
-                width: 85px !important;
-                min-width: 85px !important;
-                max-width: 85px !important;
-                background-color: var(--main-bg);
-                box-shadow: -2px 0 6px rgba(0,0,0,0.1);
+                position: sticky !important;
+                right: 0 !important;
+                z-index: 10 !important;
+                width: 75px !important;
+                min-width: 75px !important;
+                max-width: 75px !important;
+                background-color: var(--main-bg) !important;
+                box-shadow: -2px 0 6px rgba(0,0,0,0.1) !important;
             }
-            .spreadsheet-container table th:first-child { background-color: var(--th-bg); }
+            .spreadsheet-container table th:first-child { background-color: var(--th-bg) !important; }
             .spreadsheet-container tr.today-row td:first-child { background-color: #fef08a !important; }
             body.dark-mode .spreadsheet-container tr.today-row td:first-child { background-color: #713f12 !important; }
             .spreadsheet-container tr.canceled-row td:first-child { background-color: rgba(239, 68, 68, 0.25) !important; }
@@ -848,12 +852,12 @@
             .kpi-value { font-size: 1.55em; }
             .kpi-title { font-size: 0.78em; }
 
-            /* הכרחת שדות המשימות לקבל רוחב מלא ואחיד במובייל כולל שדה התאריך */
             .todo-inputs-row { flex-direction: column; }
             .todo-input-title, .todo-select-assignee, .todo-input-date, .todo-add-btn { 
                 width: 100% !important; 
                 min-width: 100% !important; 
                 max-width: 100% !important;
+                height: 44px !important;
             }
             .todo-item-card { padding: 10px 12px; gap: 8px; }
             .todo-item-title { font-size: 0.9em; }
@@ -2929,8 +2933,10 @@
 
             return `
                 <td>
-                    <input id="cell_${side}_${monthIdx}_${cacheIndex}_0" type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
-                    ${extraBadge}
+                    <div class="date-cell-inner">
+                        <input id="cell_${side}_${monthIdx}_${cacheIndex}_0" type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
+                        ${extraBadge}
+                    </div>
                 </td>
                 ${guideCellHTML}
                 <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_2" type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח מתאמן" list="mem-units" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
