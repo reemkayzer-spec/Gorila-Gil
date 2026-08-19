@@ -256,7 +256,6 @@
 
         #main-content { display: none; }
 
-        /* באנר תזכורת למשימות המדריך */
         .todo-user-reminder-banner {
             display: none;
             max-width: 1400px;
@@ -281,7 +280,6 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
         header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 10px; justify-content: center; }
         
-        /* תגית האוואטר המשודרגת בראש העמוד */
         .header-user-avatar {
             display: inline-flex;
             align-items: center;
@@ -324,7 +322,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* סרגל עריכת פרופיל למקרה שאין מדריך */
         .trainer-profile-bar {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
             padding: 12px 16px; margin-bottom: 15px; display: none; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
@@ -337,7 +334,6 @@
         .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
         .trainer-save-btn:hover { background: #0369a1; }
 
-        /* עיצובי דשבורד */
         .dashboard-header { margin-bottom: 20px; }
         .dashboard-header h2 { margin: 0 0 4px 0; font-size: 1.3em; display: flex; align-items: center; gap: 8px; }
         .dashboard-header p { margin: 0; font-size: 0.85em; color: #64748b; }
@@ -425,7 +421,6 @@
         .fault-row-item:hover { transform: translateX(-3px); }
         body.dark-mode .fault-row-item { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: #ef4444; }
 
-        /* ================= סגנונות מודול To-Do ================= */
         .todo-container {
             max-width: 900px;
             margin: 0 auto;
@@ -640,7 +635,6 @@
         .todo-delete-btn { color: #94a3b8; }
         .todo-delete-btn:hover { color: #ef4444; }
 
-        /* סגנונות סידור עבודה וטבלאות */
         .schedule-header-action {
             display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--card-bg);
             padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -812,26 +806,37 @@
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
         /* ========================================================
-           📱 שיפורי CSS רספונסיביים ייעודיים למובייל
+           📱 שיפורי CSS רספונסיביים מדויקים לעמודת התאריך במובייל
            ======================================================== */
         @media (max-width: 768px) {
             main { padding: 10px 8px; margin: 8px auto; }
             header { padding: 8px 6px; }
             .header-top h1 { font-size: 1em; gap: 6px; }
 
+            /* עמודת תאריך נעוצה (Sticky) בצד ימין עם רוחב קבוע ורקע מותאם למניעת העלמות הטקסט */
             .spreadsheet-container table th:first-child,
             .spreadsheet-container table td:first-child {
                 position: sticky;
                 right: 0;
                 z-index: 10;
+                width: 85px !important;
+                min-width: 85px !important;
+                max-width: 85px !important;
                 background-color: var(--main-bg);
-                box-shadow: -2px 0 5px rgba(0,0,0,0.08);
+                box-shadow: -2px 0 6px rgba(0,0,0,0.1);
             }
-            .spreadsheet-container table th:first-child { background-color: var(--th-bg); }
-            .spreadsheet-container tr.today-row td:first-child { background-color: #fef08a !important; }
-            body.dark-mode .spreadsheet-container tr.today-row td:first-child { background-color: #713f12 !important; }
-            .spreadsheet-container tr.canceled-row td:first-child { background-color: #fee2e2 !important; }
-            body.dark-mode .spreadsheet-container tr.canceled-row td:first-child { background-color: #7f1d1d !important; }
+            .spreadsheet-container table th:first-child {
+                background-color: var(--th-bg);
+            }
+            .spreadsheet-container tr.today-row td:first-child {
+                background-color: #fef08a !important;
+            }
+            body.dark-mode .spreadsheet-container tr.today-row td:first-child {
+                background-color: #713f12 !important;
+            }
+            .spreadsheet-container tr.canceled-row td:first-child {
+                background-color: rgba(239, 68, 68, 0.25) !important;
+            }
 
             .action-btns-group button { min-width: 100%; font-size: 0.88em; padding: 12px; }
 
@@ -893,7 +898,6 @@
         <header>
             <div class="header-top">
                 <h1>
-                    <!-- תגית האוואטר המשודרגת (החלפה של האייקון הכתום) -->
                     <div id="headerUserAvatar" class="header-user-avatar" title="צוות גיל">
                         🚀
                     </div>
@@ -1723,7 +1727,7 @@
         </div>
     </div>
 
-    <!-- מודאל עריכת פרטי מדריך (נפתח בלחיצה על האוואטר) -->
+    <!-- מודאל עריכת פרטי מדריך -->
     <div id="trainerEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:100000; align-items:center; justify-content:center; padding:20px;">
         <div class="login-card" style="text-align:right; max-width:400px;">
             <h3 style="margin-top:0; color:var(--text-color); font-size:1.15em;">👤 פרטי מדריך מחובר</h3>
@@ -2186,7 +2190,6 @@
             filterSchedule();
         }
 
-        // ================= לוגיקת סנכרון וניהול משימות To-Do =================
         function initCloudTodoSync() {
             const todoRef = window.fbRef(window.fbDB, 'todos');
             window.fbOnValue(todoRef, (snapshot) => {
@@ -2456,7 +2459,6 @@
             return card;
         }
 
-        // ================= רינדור דשבורד =================
         function renderDashboard(monthIdx) {
             const monthName = monthNames[monthIdx];
             const titleEl = document.getElementById('statsMonthTitle');
@@ -3086,7 +3088,6 @@
             if (parts.length === 3) btn.innerText = `${parts[2]}/${parts[1]}`;
         }
 
-        // זיהוי ועדכון תגית האוואטר במקום השורה הארוכה
         window.initTrainerProfile = function(currentUser) {
             let trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
             
@@ -3114,10 +3115,8 @@
             const headerAvatar = document.getElementById('headerUserAvatar');
 
             if (trainer && trainer.firstName) {
-                // הסתרת השורה הארוכה כדי לחסוך מקום
                 if (profileBar) profileBar.style.display = 'none';
 
-                // יצירת ראשי תיבות בעברית (למשל: ראם קייזר -> רק)
                 const fullName = (trainer.firstName + ' ' + (trainer.lastName || '')).trim();
                 const initials = (trainer.firstName[0] + (trainer.lastName ? trainer.lastName[0] : (trainer.firstName[1] || ''))).trim();
                 const avatarBg = getTrainerColor(fullName);
