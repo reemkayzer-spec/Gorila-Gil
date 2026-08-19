@@ -15,7 +15,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, get, update, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCdqf9bo_mMiMxjXU24zMnrDgX4qTLcHwM",
@@ -35,6 +35,8 @@
         window.fbDB = db;
         window.fbRef = ref;
         window.fbSet = set;
+        window.fbPush = push;
+        window.fbRemove = remove;
         window.fbUpdate = update;
         window.fbOnValue = onValue;
         window.fbGet = get;
@@ -57,7 +59,6 @@
             "antonicbc@gmail.com": { firstName: "מרקו", lastName: "", phone: "" }
         };
 
-        // בחירת מדריך מהירה במסך הכניסה
         window.selectQuickTrainer = function(email) {
             const emailInput = document.getElementById("auth-email");
             const passInput = document.getElementById("auth-pass");
@@ -67,7 +68,6 @@
             }
         };
 
-        // פונקציית התחברות
         window.loginWithCredentials = function(e) {
             if (e) e.preventDefault();
             const emailInput = document.getElementById("auth-email");
@@ -87,7 +87,7 @@
             if (btn) btn.disabled = true;
 
             signInWithEmailAndPassword(auth, email, pass)
-                .then((userCredential) => {
+                .then(() => {
                     localStorage.setItem('gorilla_last_email', email);
                 })
                 .catch((error) => {
@@ -179,13 +179,13 @@
         
         button, .btn, .link-table-btn, .tab-btn, .week-tab-btn, .month-folder-btn, 
         .wa-group-btn, .call-btn, .unit-wa-btn, .unit-add-btn, .theme-toggle-btn, 
-        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn {
+        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn, .todo-add-btn {
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease !important;
         }
         button:hover, .btn:hover, .link-table-btn:hover, .tab-btn:hover, .week-tab-btn:hover,
         .wa-group-btn:hover, .call-btn:hover, .unit-wa-btn:hover, .unit-add-btn:hover, 
         .theme-toggle-btn:hover, .logout-btn:hover, .trainer-save-btn:hover, 
-        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover, .trainer-chip-btn:hover {
+        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover, .trainer-chip-btn:hover, .todo-add-btn:hover {
             transform: translateY(-2.5px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.18);
         }
@@ -365,6 +365,197 @@
         }
         .fault-row-item:hover { transform: translateX(-3px); }
         body.dark-mode .fault-row-item { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: #ef4444; }
+
+        /* ================= סגנונות מודול To-Do החדש ================= */
+        .todo-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .todo-header-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .todo-header-box h2 {
+            margin: 0;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #38bdf8;
+        }
+        .todo-add-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .todo-inputs-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .todo-input-title {
+            flex: 2;
+            min-width: 220px;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.95em;
+            outline: none;
+        }
+        .todo-input-title:focus { border-color: #38bdf8; }
+        .todo-select-assignee, .todo-input-date {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 0.9em;
+            outline: none;
+            cursor: pointer;
+        }
+        .todo-add-btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+        .todo-add-btn:hover { background: #0369a1; }
+
+        .todo-list-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+        .todo-item-card {
+            background: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: background 0.2s, transform 0.2s ease;
+        }
+        body:not(.dark-mode) .todo-item-card {
+            background: #ffffff;
+            color: #1e293b;
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .todo-item-card:hover { transform: translateY(-2px); }
+        .todo-item-card.completed {
+            opacity: 0.65;
+        }
+        .todo-item-card.completed .todo-item-title {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+        .todo-main-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        .todo-check-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #64748b;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0;
+            transition: 0.2s;
+        }
+        .todo-check-btn.checked {
+            background: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+        .todo-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .todo-item-title {
+            font-size: 0.98em;
+            font-weight: 600;
+        }
+        .todo-item-date {
+            font-size: 0.78em;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .todo-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .trainer-badge-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.78em;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .todo-star-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.25em;
+            cursor: pointer;
+            padding: 2px;
+            line-height: 1;
+        }
+        .todo-star-btn.starred {
+            color: #f59e0b;
+        }
+        .todo-delete-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 2px;
+        }
+        .todo-delete-btn:hover { color: #ef4444; }
 
         /* סגנונות כלליים */
         .trainer-profile-bar {
@@ -615,6 +806,7 @@
             <div class="nav-tabs">
                 <button class="tab-btn active" onclick="switchTab('schedule', event)">📅 סידור עבודה</button>
                 <button class="tab-btn" onclick="switchTab('dashboard', event)">📈 דשבורד</button>
+                <button class="tab-btn" onclick="switchTab('todo-tab', event)">📝 משימות To-Do</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
                 <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
                 <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
@@ -798,6 +990,49 @@
 
                 <!-- סרגל חודשים בתחתית הדשבורד -->
                 <div class="month-folders-bar" id="dashboardMonthTabs"></div>
+            </section>
+
+            <!-- לשונית משימות To-Do החדשה -->
+            <section id="todo-tab" class="tab-content">
+                <div class="todo-container">
+                    <div class="todo-header-box">
+                        <h2>🚗 גורילות גיל - משימות לביצוע</h2>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="todoCountDisplay" style="font-size:0.85em; color:#94a3b8; font-weight: bold;">0 משימות</span>
+                        </div>
+                    </div>
+
+                    <!-- כרטיס הוספת משימה חדשה -->
+                    <form class="todo-add-card" onsubmit="handleCreateTodo(event)">
+                        <div class="todo-inputs-row">
+                            <input type="text" id="todoTitleInput" class="todo-input-title" placeholder="➕ הוסף משימה חדשה..." required>
+                            <select id="todoAssigneeSelect" class="todo-select-assignee">
+                                <option value="">👤 ללא שיוך</option>
+                                <option value="איתי הקר">איתי הקר</option>
+                                <option value="עדיאל קסה">עדיאל קסה</option>
+                                <option value="ראם קייזר">ראם קייזר</option>
+                                <option value="נדב יחיא">נדב יחיא</option>
+                                <option value="עידו לבקוביץ">עידו לבקוביץ</option>
+                                <option value="תומר כחלון">תומר כחלון</option>
+                                <option value="נטע שצברג">נטע שצברג</option>
+                                <option value="מרקו">מרקו</option>
+                            </select>
+                            <input type="date" id="todoDueDateInput" class="todo-input-date" title="תאריך יעד לביצוע">
+                            <button type="submit" class="todo-add-btn">הוסף 📌</button>
+                        </div>
+                    </form>
+
+                    <!-- רשימת משימות פעילות -->
+                    <div class="todo-list-wrap" id="activeTodoList"></div>
+
+                    <!-- רשימת משימות שהושלמו -->
+                    <div id="completedTodoSection" style="display:none; margin-top:20px;">
+                        <h4 style="margin: 0 0 10px 0; font-size:0.9em; color:#94a3b8; border-bottom:1px solid var(--border-color); padding-bottom:4px;">
+                            ✔️ הושלמו (<span id="completedCountDisplay">0</span>)
+                        </h4>
+                        <div class="todo-list-wrap" id="completedTodoList"></div>
+                    </div>
+                </div>
             </section>
 
             <!-- לשונית סטטוס גורילות -->
@@ -1361,8 +1596,9 @@
         let activeWeekIndex = 0; 
         let gorillaChartInstance = null;
         let latestStatusData = {};
+        let latestTodosData = {};
 
-        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "מרקו", "טיפול חודשי", "אחר..."];
+        const guidesOptions = ["", "איתי הקר", "עדיאל קסה", "תומר כחלון", "עידו לבקוביץ", "נדב יחיא", "נטע שצברג", "ראם קייזר", "מרקו", "טיפול חודשי", "אחר..."];
         const gorillaOptions = ["", "גורילה 1", "גורילה 2", "גורילה 3", "גורילה 4", "גורילה 5", "גורילה 6", "גורילה 7"];
         const systemsOptions = ["", "ללא", "אחוד", "ישלט", "אחוד סימולטיבי"];
 
@@ -1437,6 +1673,7 @@
             initDashboardMonthTabs();
             loadMonthDataFromCloud(activeMonth);
             initCloudStatusSync();
+            initCloudTodoSync();
         });
 
         function loadMonthDataFromCloud(monthIdx) {
@@ -1523,12 +1760,15 @@
             return allMonthsDataCache[monthIdx];
         }
 
+        // שמירת שבוע מדויקת ללא קפיצות
         function setupWeeksCache(monthIdx) {
             for (let m = 0; m < 12; m++) {
                 const mData = getMonthDataCache(m);
                 if (mData && mData.north) mData.north.forEach(item => extractMemory(item.values));
                 if (mData && mData.south) mData.south.forEach(item => extractMemory(item.values));
             }
+
+            const prevSelectedWeekNum = (monthWeeksCache[activeWeekIndex]) ? monthWeeksCache[activeWeekIndex].weekNum : null;
 
             const daysInMonth = new Date(currentYear, monthIdx + 1, 0).getDate();
             const weeksMap = new Map();
@@ -1576,7 +1816,17 @@
                 );
             }
 
-            if (foundTodayIndex !== -1) {
+            // שימור שבוע פעיל שנבחר ע"י המשתמש
+            if (prevSelectedWeekNum !== null) {
+                const foundPrevIndex = monthWeeksCache.findIndex(w => w.weekNum === prevSelectedWeekNum);
+                if (foundPrevIndex !== -1) {
+                    activeWeekIndex = foundPrevIndex;
+                } else if (foundTodayIndex !== -1) {
+                    activeWeekIndex = foundTodayIndex;
+                } else {
+                    activeWeekIndex = 0;
+                }
+            } else if (foundTodayIndex !== -1) {
                 activeWeekIndex = foundTodayIndex;
             } else if (activeWeekIndex >= monthWeeksCache.length) {
                 activeWeekIndex = 0;
@@ -1767,6 +2017,172 @@
             filterSchedule();
         }
 
+        // ================= לוגיקת סנכרון וניהול משימות To-Do =================
+        function initCloudTodoSync() {
+            const todoRef = window.fbRef(window.fbDB, 'todos');
+            window.fbOnValue(todoRef, (snapshot) => {
+                latestTodosData = snapshot.val() || {};
+                renderTodoList();
+            });
+        }
+
+        function getTrainerInitials(name) {
+            if (!name) return "??";
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        function getTrainerColor(name) {
+            const colors = ["#0284c7", "#16a34a", "#ea580c", "#9333ea", "#0d9488", "#e11d48", "#d97706", "#4f46e5", "#059669"];
+            let hash = 0;
+            for (let i = 0; i < (name || '').length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        function formatTodoDate(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return `📅 ${parts[2]}/${parts[1]}`;
+            }
+            return `📅 ${dateStr}`;
+        }
+
+        function handleCreateTodo(e) {
+            if (e) e.preventDefault();
+            const titleInput = document.getElementById('todoTitleInput');
+            const assigneeSelect = document.getElementById('todoAssigneeSelect');
+            const dateInput = document.getElementById('todoDueDateInput');
+
+            const title = titleInput ? titleInput.value.trim() : "";
+            const assignee = assigneeSelect ? assigneeSelect.value : "";
+            const dueDate = dateInput ? dateInput.value : "";
+
+            if (!title) return;
+
+            const todoListRef = window.fbRef(window.fbDB, 'todos');
+            const newTodoRef = window.fbPush(todoListRef);
+            
+            const newTodoData = {
+                title: title,
+                assignee: assignee,
+                dueDate: dueDate,
+                completed: false,
+                starred: false,
+                createdAt: Date.now()
+            };
+
+            window.fbSet(newTodoRef, newTodoData).then(() => {
+                if (titleInput) titleInput.value = "";
+                if (dateInput) dateInput.value = "";
+            }).catch(console.error);
+        }
+
+        window.toggleTodoCompleted = function(id, currentStatus) {
+            const updates = {};
+            updates[`todos/${id}/completed`] = !currentStatus;
+            window.fbUpdate(window.fbRef(window.fbDB), updates).catch(console.error);
+        };
+
+        window.toggleTodoStarred = function(id, currentStatus) {
+            const updates = {};
+            updates[`todos/${id}/starred`] = !currentStatus;
+            window.fbUpdate(window.fbRef(window.fbDB), updates).catch(console.error);
+        };
+
+        window.deleteTodo = function(id) {
+            if (!confirm("האם למחוק משימה זו?")) return;
+            const itemRef = window.fbRef(window.fbDB, `todos/${id}`);
+            window.fbRemove(itemRef).catch(console.error);
+        };
+
+        function renderTodoList() {
+            const activeContainer = document.getElementById('activeTodoList');
+            const completedContainer = document.getElementById('completedTodoList');
+            const completedSection = document.getElementById('completedTodoSection');
+            const countDisplay = document.getElementById('todoCountDisplay');
+            const completedCountDisplay = document.getElementById('completedCountDisplay');
+
+            if (!activeContainer) return;
+
+            activeContainer.innerHTML = '';
+            if (completedContainer) completedContainer.innerHTML = '';
+
+            const tasks = Object.keys(latestTodosData).map(k => ({ id: k, ...latestTodosData[k] }));
+
+            // מיון: מכוכבים קודם, ולאחר מכן לפי תאריך יצירה
+            tasks.sort((a, b) => {
+                if (a.starred && !b.starred) return -1;
+                if (!a.starred && b.starred) return 1;
+                return (b.createdAt || 0) - (a.createdAt || 0);
+            });
+
+            const activeTasks = tasks.filter(t => !t.completed);
+            const completedTasks = tasks.filter(t => t.completed);
+
+            if (countDisplay) countDisplay.innerText = `${activeTasks.length} משימות פתוחות`;
+            if (completedCountDisplay) completedCountDisplay.innerText = completedTasks.length;
+
+            if (activeTasks.length === 0) {
+                activeContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.9em;">אין משימות פתוחות כרגע. כל הכבוד! 🎉</div>`;
+            } else {
+                activeTasks.forEach(task => {
+                    activeContainer.appendChild(buildTodoItemElement(task));
+                });
+            }
+
+            if (completedTasks.length > 0 && completedContainer && completedSection) {
+                completedSection.style.display = 'block';
+                completedTasks.forEach(task => {
+                    completedContainer.appendChild(buildTodoItemElement(task));
+                });
+            } else if (completedSection) {
+                completedSection.style.display = 'none';
+            }
+        }
+
+        function buildTodoItemElement(task) {
+            const card = document.createElement('div');
+            card.className = `todo-item-card ${task.completed ? 'completed' : ''}`;
+
+            const initials = task.assignee ? getTrainerInitials(task.assignee) : "";
+            const avatarBg = task.assignee ? getTrainerColor(task.assignee) : "#64748b";
+
+            const assigneeBadge = task.assignee ? `
+                <div class="trainer-badge-avatar" style="background-color: ${avatarBg};" title="אחראי: ${task.assignee}">
+                    ${initials}
+                </div>
+            ` : '';
+
+            const dateBadge = task.dueDate ? `
+                <div class="todo-item-date">${formatTodoDate(task.dueDate)}</div>
+            ` : '';
+
+            card.innerHTML = `
+                <div class="todo-main-content">
+                    <button type="button" class="todo-check-btn ${task.completed ? 'checked' : ''}" onclick="toggleTodoCompleted('${task.id}', ${task.completed})" title="${task.completed ? 'סמן כלא הושלם' : 'סמן כהושלם'}">
+                        ${task.completed ? '✓' : ''}
+                    </button>
+                    <div class="todo-item-info">
+                        <div class="todo-item-title">${task.title}</div>
+                        ${dateBadge}
+                    </div>
+                </div>
+                <div class="todo-actions-right">
+                    ${assigneeBadge}
+                    <button type="button" class="todo-star-btn ${task.starred ? 'starred' : ''}" onclick="toggleTodoStarred('${task.id}', ${task.starred})" title="סמן בכוכב">
+                        ${task.starred ? '★' : '☆'}
+                    </button>
+                    <button type="button" class="todo-delete-btn" onclick="deleteTodo('${task.id}')" title="מחק משימה">🗑️</button>
+                </div>
+            `;
+            return card;
+        }
+
+        // ================= רינדור דשבורד =================
         function renderDashboard(monthIdx) {
             const monthName = monthNames[monthIdx];
             const titleEl = document.getElementById('statsMonthTitle');
