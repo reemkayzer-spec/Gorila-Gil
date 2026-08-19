@@ -468,7 +468,7 @@
             color: var(--text-color);
             font-size: 0.95em;
             outline: none;
-            height: 44px; /* גובה אחיד תואם */
+            height: 44px;
         }
         .todo-input-title:focus { border-color: #38bdf8; }
         .todo-select-assignee, .todo-input-date {
@@ -482,11 +482,14 @@
             font-size: 0.9em;
             outline: none;
             cursor: pointer;
-            height: 44px; /* גובה אחיד תואם */
+            height: 44px;
+            display: flex;
+            align-items: center;
         }
         .todo-input-date {
             text-align: right;
-            direction: rtl;
+            direction: ltr;
+            -webkit-appearance: textfield; /* מאפשר תצוגה אחידה ומדויקת באייפון ואנדרואיד */
         }
         .todo-add-btn {
             background: #0284c7;
@@ -501,7 +504,7 @@
             align-items: center;
             gap: 6px;
             justify-content: center;
-            height: 44px; /* גובה אחיד תואם */
+            height: 44px;
         }
         .todo-add-btn:hover { background: #0369a1; }
 
@@ -814,7 +817,7 @@
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
         /* ========================================================
-           📱 תיקון אבטחת תצוגה מוחלטת לעמודת תאריך במובייל
+           📱 תיקון מובייל סופי ומושלם לעמודת תאריך ולשדה תאריך ב-To-Do
            ======================================================== */
         .date-cell-inner {
             display: block;
@@ -831,6 +834,7 @@
 
             .spreadsheet-container table th:first-child,
             .spreadsheet-container table td:first-child {
+                position: -webkit-sticky !important;
                 position: sticky !important;
                 right: 0 !important;
                 z-index: 10 !important;
@@ -858,6 +862,13 @@
                 min-width: 100% !important; 
                 max-width: 100% !important;
                 height: 44px !important;
+            }
+            /* התאמה מלאה לשדה תאריך במובייל כך שיציג את האייקון כמו במחשב */
+            .todo-input-date {
+                -webkit-appearance: auto !important;
+                appearance: auto !important;
+                direction: ltr !important;
+                text-align: center !important;
             }
             .todo-item-card { padding: 10px 12px; gap: 8px; }
             .todo-item-title { font-size: 0.9em; }
