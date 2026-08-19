@@ -177,15 +177,16 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
+        /* אפקט קפיצה אלסטי בריחוף על כלל הכפתורים והכרטיסים */
         button, .btn, .link-table-btn, .tab-btn, .week-tab-btn, .month-folder-btn, 
         .wa-group-btn, .call-btn, .unit-wa-btn, .unit-add-btn, .theme-toggle-btn, 
-        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn, .todo-add-btn {
+        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn, .todo-add-btn, .todo-edit-btn {
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease !important;
         }
         button:hover, .btn:hover, .link-table-btn:hover, .tab-btn:hover, .week-tab-btn:hover,
         .wa-group-btn:hover, .call-btn:hover, .unit-wa-btn:hover, .unit-add-btn:hover, 
         .theme-toggle-btn:hover, .logout-btn:hover, .trainer-save-btn:hover, 
-        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover, .trainer-chip-btn:hover, .todo-add-btn:hover {
+        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover, .trainer-chip-btn:hover, .todo-add-btn:hover, .todo-edit-btn:hover {
             transform: translateY(-2.5px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.18);
         }
@@ -255,6 +256,27 @@
         #error-msg { color: #f87171; font-size: 0.85em; margin-top: 12px; min-height: 18px; font-weight: bold; }
 
         #main-content { display: none; }
+
+        /* באנר תזכורת למשימות המדריך */
+        .todo-user-reminder-banner {
+            display: none;
+            max-width: 1400px;
+            margin: 10px auto 0 auto;
+            padding: 10px 16px;
+            background: linear-gradient(90deg, #0284c7, #0369a1);
+            color: white;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            border: 1px solid #38bdf8;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            transition: transform 0.2s ease;
+        }
+        .todo-user-reminder-banner:hover { transform: translateY(-2px); }
 
         header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
@@ -366,7 +388,7 @@
         .fault-row-item:hover { transform: translateX(-3px); }
         body.dark-mode .fault-row-item { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: #ef4444; }
 
-        /* ================= סגנונות מודול To-Do החדש ================= */
+        /* ================= סגנונות מודול To-Do ================= */
         .todo-container {
             max-width: 900px;
             margin: 0 auto;
@@ -460,7 +482,7 @@
             justify-content: space-between;
             gap: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: background 0.2s, transform 0.2s ease;
+            transition: background 0.2s, transform 0.2s ease, border-color 0.2s ease;
         }
         body:not(.dark-mode) .todo-item-card {
             background: #ffffff;
@@ -469,12 +491,31 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
         .todo-item-card:hover { transform: translateY(-2px); }
+        
+        /* צביעת שורה שלמה בצהוב כאשר המשימה מסומנת בכוכב */
+        .todo-item-card.starred {
+            background-color: #fef9c3 !important;
+            border-color: #facc15 !important;
+            color: #854d0e !important;
+        }
+        body.dark-mode .todo-item-card.starred {
+            background-color: rgba(234, 179, 8, 0.2) !important;
+            border-color: #ca8a04 !important;
+            color: #fef08a !important;
+        }
+        .todo-item-card.starred .todo-item-title {
+            color: #854d0e !important;
+        }
+        body.dark-mode .todo-item-card.starred .todo-item-title {
+            color: #fef08a !important;
+        }
+
         .todo-item-card.completed {
-            opacity: 0.65;
+            opacity: 0.6;
         }
         .todo-item-card.completed .todo-item-title {
             text-decoration: line-through;
-            color: #94a3b8;
+            color: #94a3b8 !important;
         }
         .todo-main-content {
             display: flex;
@@ -517,10 +558,24 @@
             align-items: center;
             gap: 4px;
         }
+        /* תאריך באיחור עם סימן קריאה אדום */
+        .todo-item-date.overdue {
+            color: #ef4444 !important;
+            font-weight: 800;
+        }
+        .todo-item-date.due-today {
+            color: #f59e0b !important;
+            font-weight: bold;
+        }
+        .todo-item-date.due-tomorrow {
+            color: #38bdf8 !important;
+            font-weight: bold;
+        }
+
         .todo-actions-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .trainer-badge-avatar {
             width: 32px;
@@ -535,26 +590,19 @@
             flex-shrink: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .todo-star-btn {
+        .todo-star-btn, .todo-edit-btn, .todo-delete-btn {
             background: none;
             border: none;
-            color: #64748b;
-            font-size: 1.25em;
             cursor: pointer;
-            padding: 2px;
+            padding: 4px;
+            font-size: 1.1em;
             line-height: 1;
         }
-        .todo-star-btn.starred {
-            color: #f59e0b;
-        }
-        .todo-delete-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 1em;
-            padding: 2px;
-        }
+        .todo-star-btn { color: #64748b; }
+        .todo-star-btn.starred { color: #eab308; }
+        .todo-edit-btn { color: #94a3b8; }
+        .todo-edit-btn:hover { color: #38bdf8; }
+        .todo-delete-btn { color: #94a3b8; }
         .todo-delete-btn:hover { color: #ef4444; }
 
         /* סגנונות כלליים */
@@ -759,7 +807,6 @@
             <h2>כניסת מדריכים - צוות גיל</h2>
             <p>בחר מדריך או הזן אימייל וסיסמה:</p>
 
-            <!-- סרגל מדריכים לבחירה מהירה -->
             <div class="quick-trainers-wrapper">
                 <div class="quick-trainers-title">👥 כניסה מהירה לפי שם:</div>
                 <div class="quick-trainers-chips">
@@ -813,6 +860,12 @@
                 <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים והעשרה</button>
             </div>
         </header>
+
+        <!-- באנר תזכורת פנימי למדריך המחובר -->
+        <div id="todoUserReminderBanner" class="todo-user-reminder-banner" onclick="switchTab('todo-tab', event)">
+            <span id="todoUserReminderText"></span>
+            <span style="background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; font-size:0.8em;">לצפייה 👈</span>
+        </div>
 
         <main>
             <!-- לשונית סידור עבודה -->
@@ -992,7 +1045,7 @@
                 <div class="month-folders-bar" id="dashboardMonthTabs"></div>
             </section>
 
-            <!-- לשונית משימות To-Do החדשה -->
+            <!-- לשונית משימות To-Do -->
             <section id="todo-tab" class="tab-content">
                 <div class="todo-container">
                     <div class="todo-header-box">
@@ -1584,6 +1637,38 @@
         </main>
     </div>
 
+    <!-- מודאל עריכת משימה -->
+    <div id="todoEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:100000; align-items:center; justify-content:center; padding:20px;">
+        <div class="login-card" style="text-align:right; max-width:420px;">
+            <h3 style="margin-top:0; color:var(--text-color); font-size:1.15em;">✏️ עריכת משימה</h3>
+            <input type="hidden" id="editTodoId">
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">שם המשימה:</label>
+            <input type="text" id="editTodoTitle" class="login-input" style="direction:rtl; text-align:right;" required>
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">מדריך אחראי:</label>
+            <select id="editTodoAssignee" class="login-input" style="direction:rtl; text-align:right;">
+                <option value="">👤 ללא שיוך</option>
+                <option value="איתי הקר">איתי הקר</option>
+                <option value="עדיאל קסה">עדיאל קסה</option>
+                <option value="ראם קייזר">ראם קייזר</option>
+                <option value="נדב יחיא">נדב יחיא</option>
+                <option value="עידו לבקוביץ">עידו לבקוביץ</option>
+                <option value="תומר כחלון">תומר כחלון</option>
+                <option value="נטע שצברג">נטע שצברג</option>
+                <option value="מרקו">מרקו</option>
+            </select>
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">תאריך יעד לביצוע:</label>
+            <input type="date" id="editTodoDueDate" class="login-input" style="direction:ltr; text-align:right;">
+            
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button type="button" class="login-btn" onclick="saveEditedTodo()">שמור שינויים 💾</button>
+                <button type="button" class="login-btn" style="background:#64748b;" onclick="closeEditTodoModal()">ביטול ❌</button>
+            </div>
+        </div>
+    </div>
+
     <div id="datalistsContainer"></div>
 
     <script>
@@ -1610,6 +1695,13 @@
             hours: new Set(["08:00 - 13:00", "09:00 - 14:00", "12:00 - 17:00", "08:30 - 15:30"]),
             notes: new Set(["אימון שגרתי תקין", "בוצע שיגור מוצלח", "תדרוך קצינים", "נדרש רענון למשגר", "טיפול חודשי"])
         };
+
+        function getLocalDateString(d = new Date()) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
 
         function getAirForceWeek(date) {
             const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -1760,7 +1852,6 @@
             return allMonthsDataCache[monthIdx];
         }
 
-        // שמירת שבוע מדויקת ללא קפיצות
         function setupWeeksCache(monthIdx) {
             for (let m = 0; m < 12; m++) {
                 const mData = getMonthDataCache(m);
@@ -1816,7 +1907,6 @@
                 );
             }
 
-            // שימור שבוע פעיל שנבחר ע"י המשתמש
             if (prevSelectedWeekNum !== null) {
                 const foundPrevIndex = monthWeeksCache.findIndex(w => w.weekNum === prevSelectedWeekNum);
                 if (foundPrevIndex !== -1) {
@@ -2023,6 +2113,7 @@
             window.fbOnValue(todoRef, (snapshot) => {
                 latestTodosData = snapshot.val() || {};
                 renderTodoList();
+                checkUserTodoReminders();
             });
         }
 
@@ -2046,9 +2137,60 @@
             if (!dateStr) return "";
             const parts = dateStr.split('-');
             if (parts.length === 3) {
-                return `📅 ${parts[2]}/${parts[1]}`;
+                return `${parts[2]}/${parts[1]}`;
             }
-            return `📅 ${dateStr}`;
+            return dateStr;
+        }
+
+        // בדיקת תזכורות פנימיות עבור המדריך המחובר (היום ומחר)
+        function checkUserTodoReminders() {
+            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            const banner = document.getElementById('todoUserReminderBanner');
+            const bannerText = document.getElementById('todoUserReminderText');
+            if (!banner || !bannerText) return;
+
+            if (!trainer || !trainer.firstName) {
+                banner.style.display = 'none';
+                return;
+            }
+
+            const todayStr = getLocalDateString(new Date());
+            const tomorrowObj = new Date();
+            tomorrowObj.setDate(tomorrowObj.getDate() + 1);
+            const tomorrowStr = getLocalDateString(tomorrowObj);
+
+            const tasks = Object.keys(latestTodosData).map(k => ({ id: k, ...latestTodosData[k] }));
+            
+            let todayTasks = 0;
+            let tomorrowTasks = 0;
+            let overdueTasks = 0;
+
+            tasks.forEach(t => {
+                if (t.completed) return;
+                const isAssignedToMe = t.assignee && (t.assignee.includes(trainer.firstName) || (trainer.lastName && t.assignee.includes(trainer.lastName)));
+                if (!isAssignedToMe) return;
+
+                if (t.dueDate) {
+                    if (t.dueDate < todayStr) overdueTasks++;
+                    else if (t.dueDate === todayStr) todayTasks++;
+                    else if (t.dueDate === tomorrowStr) tomorrowTasks++;
+                }
+            });
+
+            const totalUrgent = todayTasks + tomorrowTasks + overdueTasks;
+            if (totalUrgent > 0) {
+                let msg = `🔔 שלום ${trainer.firstName}, יש לך `;
+                let parts = [];
+                if (overdueTasks > 0) parts.push(`${overdueTasks} משימות באיחור ⚠️`);
+                if (todayTasks > 0) parts.push(`${todayTasks} משימות לביצוע היום ⏰`);
+                if (tomorrowTasks > 0) parts.push(`${tomorrowTasks} משימות למחר ⏳`);
+                
+                msg += parts.join(' | ') + '!';
+                bannerText.innerText = msg;
+                banner.style.display = 'flex';
+            } else {
+                banner.style.display = 'none';
+            }
         }
 
         function handleCreateTodo(e) {
@@ -2099,6 +2241,46 @@
             window.fbRemove(itemRef).catch(console.error);
         };
 
+        // פונקציות עריכת משימה
+        window.openEditTodoModal = function(id) {
+            const task = latestTodosData[id];
+            if (!task) return;
+
+            document.getElementById('editTodoId').value = id;
+            document.getElementById('editTodoTitle').value = task.title || '';
+            document.getElementById('editTodoAssignee').value = task.assignee || '';
+            document.getElementById('editTodoDueDate').value = task.dueDate || '';
+
+            const modal = document.getElementById('todoEditModal');
+            if (modal) modal.style.display = 'flex';
+        };
+
+        window.closeEditTodoModal = function() {
+            const modal = document.getElementById('todoEditModal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        window.saveEditedTodo = function() {
+            const id = document.getElementById('editTodoId').value;
+            const title = document.getElementById('editTodoTitle').value.trim();
+            const assignee = document.getElementById('editTodoAssignee').value;
+            const dueDate = document.getElementById('editTodoDueDate').value;
+
+            if (!id || !title) {
+                alert('נא להזין כותרת למשימה.');
+                return;
+            }
+
+            const updates = {};
+            updates[`todos/${id}/title`] = title;
+            updates[`todos/${id}/assignee`] = assignee;
+            updates[`todos/${id}/dueDate`] = dueDate;
+
+            window.fbUpdate(window.fbRef(window.fbDB), updates).then(() => {
+                closeEditTodoModal();
+            }).catch(console.error);
+        };
+
         function renderTodoList() {
             const activeContainer = document.getElementById('activeTodoList');
             const completedContainer = document.getElementById('completedTodoList');
@@ -2146,7 +2328,8 @@
 
         function buildTodoItemElement(task) {
             const card = document.createElement('div');
-            card.className = `todo-item-card ${task.completed ? 'completed' : ''}`;
+            // אם המשימה מסומנת בכוכב - מקבלת class 'starred' לצביעה בצהוב
+            card.className = `todo-item-card ${task.completed ? 'completed' : ''} ${task.starred ? 'starred' : ''}`;
 
             const initials = task.assignee ? getTrainerInitials(task.assignee) : "";
             const avatarBg = task.assignee ? getTrainerColor(task.assignee) : "#64748b";
@@ -2157,9 +2340,25 @@
                 </div>
             ` : '';
 
-            const dateBadge = task.dueDate ? `
-                <div class="todo-item-date">${formatTodoDate(task.dueDate)}</div>
-            ` : '';
+            // חישוב תאריך: איחור (אדום עם !), היום, מחר או תאריך רגיל
+            let dateBadge = '';
+            if (task.dueDate) {
+                const todayStr = getLocalDateString(new Date());
+                const tomorrowObj = new Date();
+                tomorrowObj.setDate(tomorrowObj.getDate() + 1);
+                const tomorrowStr = getLocalDateString(tomorrowObj);
+                const formattedDate = formatTodoDate(task.dueDate);
+
+                if (task.dueDate < todayStr && !task.completed) {
+                    dateBadge = `<div class="todo-item-date overdue"><span style="color:#ef4444; font-weight:900; font-size:1.15em;">!</span> 📅 ${formattedDate} (באיחור)</div>`;
+                } else if (task.dueDate === todayStr && !task.completed) {
+                    dateBadge = `<div class="todo-item-date due-today">⏰ היום (${formattedDate})</div>`;
+                } else if (task.dueDate === tomorrowStr && !task.completed) {
+                    dateBadge = `<div class="todo-item-date due-tomorrow">⏳ מחר (${formattedDate})</div>`;
+                } else {
+                    dateBadge = `<div class="todo-item-date">📅 ${formattedDate}</div>`;
+                }
+            }
 
             card.innerHTML = `
                 <div class="todo-main-content">
@@ -2173,6 +2372,7 @@
                 </div>
                 <div class="todo-actions-right">
                     ${assigneeBadge}
+                    <button type="button" class="todo-edit-btn" onclick="openEditTodoModal('${task.id}')" title="ערוך משימה">✏️</button>
                     <button type="button" class="todo-star-btn ${task.starred ? 'starred' : ''}" onclick="toggleTodoStarred('${task.id}', ${task.starred})" title="סמן בכוכב">
                         ${task.starred ? '★' : '☆'}
                     </button>
@@ -2853,6 +3053,8 @@
                 `;
                 inputsArea.style.display = 'flex';
             }
+
+            checkUserTodoReminders();
         };
 
         function saveTrainerProfile() {
@@ -3017,7 +3219,11 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             const targetTab = document.getElementById(tabId);
             if (targetTab) targetTab.classList.add('active');
-            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+            
+            const btn = document.querySelector(`.tab-btn[onclick*="${tabId}"]`);
+            if (btn) btn.classList.add('active');
+            else if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
             if (save) localStorage.setItem('gorilla_active_tab', tabId);
             
             if (tabId === 'dashboard') {
