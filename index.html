@@ -480,6 +480,7 @@
             font-size: 0.9em;
             outline: none;
             cursor: pointer;
+            width: 100%; /* ווידוא רוחב מלא במובייל וגמיש במחשב */
         }
         .todo-add-btn {
             background: #0284c7;
@@ -494,6 +495,10 @@
             align-items: center;
             gap: 6px;
             justify-content: center;
+            width: 100%;
+        }
+        @media (min-width: 600px) {
+            .todo-add-btn { width: auto; }
         }
         .todo-add-btn:hover { background: #0369a1; }
 
@@ -806,14 +811,13 @@
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
         /* ========================================================
-           📱 שיפורי CSS רספונסיביים מדויקים לעמודת התאריך במובייל
+           📱 שיפורי CSS רספונסיביים מדויקים לעמודת התאריך והתאריכים במובייל
            ======================================================== */
         @media (max-width: 768px) {
             main { padding: 10px 8px; margin: 8px auto; }
             header { padding: 8px 6px; }
             .header-top h1 { font-size: 1em; gap: 6px; }
 
-            /* עמודת תאריך נעוצה (Sticky) בצד ימין עם רוחב קבוע ורקע מותאם למניעת העלמות הטקסט */
             .spreadsheet-container table th:first-child,
             .spreadsheet-container table td:first-child {
                 position: sticky;
@@ -825,18 +829,10 @@
                 background-color: var(--main-bg);
                 box-shadow: -2px 0 6px rgba(0,0,0,0.1);
             }
-            .spreadsheet-container table th:first-child {
-                background-color: var(--th-bg);
-            }
-            .spreadsheet-container tr.today-row td:first-child {
-                background-color: #fef08a !important;
-            }
-            body.dark-mode .spreadsheet-container tr.today-row td:first-child {
-                background-color: #713f12 !important;
-            }
-            .spreadsheet-container tr.canceled-row td:first-child {
-                background-color: rgba(239, 68, 68, 0.25) !important;
-            }
+            .spreadsheet-container table th:first-child { background-color: var(--th-bg); }
+            .spreadsheet-container tr.today-row td:first-child { background-color: #fef08a !important; }
+            body.dark-mode .spreadsheet-container tr.today-row td:first-child { background-color: #713f12 !important; }
+            .spreadsheet-container tr.canceled-row td:first-child { background-color: rgba(239, 68, 68, 0.25) !important; }
 
             .action-btns-group button { min-width: 100%; font-size: 0.88em; padding: 12px; }
 
@@ -845,12 +841,16 @@
             .kpi-value { font-size: 1.55em; }
             .kpi-title { font-size: 0.78em; }
 
+            /* תיקון גודל שדה בחירת התאריך בלשונית משימות במובייל */
             .todo-inputs-row { flex-direction: column; }
-            .todo-input-title, .todo-select-assignee, .todo-input-date, .todo-add-btn { width: 100%; min-width: unset; }
+            .todo-input-title, .todo-select-assignee, .todo-input-date, .todo-add-btn { 
+                width: 100% !important; 
+                min-width: 100% !important; 
+            }
             .todo-item-card { padding: 10px 12px; gap: 8px; }
             .todo-item-title { font-size: 0.9em; }
 
-            .week-tab-btn, .month-folder-btn { padding: 6px 12px; font-size: 0.8em; }
+            .week-tab-btn, .month-folder-btn { padding: 6px 12px; font-size: 0.8eM; }
         }
     </style>
 </head>
