@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>תפעול והדרכה - צוות גיל</title>
     
     <!-- Chart.js לסרגל נתונים ודשבורד אינטראקטיבי -->
@@ -51,7 +51,7 @@
         window.knownTrainers = {
             "itayhaker19@gmail.com": { firstName: "איתי", lastName: "הקר", phone: "" },
             "adielkassa@gmail.com": { firstName: "עדיאל", lastName: "קסה", phone: "0526652209" },
-            "reemkayzer@gmail.com": { firstName: "ראם", lastName: "קייזר", phone: "" },
+            "reemkayzer@gmail.com": { firstName: "ראם", lastName: "קייזר", phone: "0508922231" },
             "nadavyichye@gmail.com": { firstName: "נדב", lastName: "יחיא", phone: "" },
             "idolevko2@gmail.com": { firstName: "עידו", lastName: "לבקוביץ", phone: "" },
             "tomerk2001@gmail.com": { firstName: "תומר", lastName: "כחלון", phone: "" },
@@ -177,7 +177,6 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
         
-        /* אפקט קפיצה אלסטי בריחוף על כלל הכפתורים והכרטיסים */
         button, .btn, .link-table-btn, .tab-btn, .week-tab-btn, .month-folder-btn, 
         .wa-group-btn, .call-btn, .unit-wa-btn, .unit-add-btn, .theme-toggle-btn, 
         .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn, .todo-add-btn, .todo-edit-btn {
@@ -280,8 +279,33 @@
 
         header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
-        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
+        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 10px; justify-content: center; }
         
+        /* תגית האוואטר המשודרגת בראש העמוד */
+        .header-user-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #f37021;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 1em;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            vertical-align: middle;
+            cursor: pointer;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+            user-select: none;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+        }
+        .header-user-avatar:hover {
+            transform: scale(1.1) translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
         .header-actions-left { display: flex; gap: 8px; align-items: center; }
         .theme-toggle-btn, .logout-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.78em; font-weight: bold; }
         .theme-toggle-btn:hover { background: #475569; }
@@ -299,6 +323,19 @@
         main { max-width: 1400px; margin: 12px auto; padding: 16px; background: var(--main-bg); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: background 0.3s; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* סרגל עריכת פרופיל למקרה שאין מדריך */
+        .trainer-profile-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 15px; display: none; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .trainer-info-text { font-size: 0.9em; font-weight: bold; }
+        .trainer-inputs-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .trainer-inputs-group input {
+            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85em; background: var(--input-bg); color: var(--text-color);
+        }
+        .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
+        .trainer-save-btn:hover { background: #0369a1; }
 
         /* עיצובי דשבורד */
         .dashboard-header { margin-bottom: 20px; }
@@ -492,7 +529,6 @@
         }
         .todo-item-card:hover { transform: translateY(-2px); }
         
-        /* צביעת שורה שלמה בצהוב כאשר המשימה מסומנת בכוכב */
         .todo-item-card.starred {
             background-color: #fef9c3 !important;
             border-color: #facc15 !important;
@@ -558,7 +594,6 @@
             align-items: center;
             gap: 4px;
         }
-        /* תאריך באיחור עם סימן קריאה אדום */
         .todo-item-date.overdue {
             color: #ef4444 !important;
             font-weight: 800;
@@ -605,19 +640,7 @@
         .todo-delete-btn { color: #94a3b8; }
         .todo-delete-btn:hover { color: #ef4444; }
 
-        /* סגנונות כלליים */
-        .trainer-profile-bar {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 12px 16px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-        }
-        .trainer-info-text { font-size: 0.9em; font-weight: bold; }
-        .trainer-inputs-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .trainer-inputs-group input {
-            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85em; background: var(--input-bg); color: var(--text-color);
-        }
-        .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
-        .trainer-save-btn:hover { background: #0369a1; }
-
+        /* סגנונות סידור עבודה וטבלאות */
         .schedule-header-action {
             display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--card-bg);
             padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -787,6 +810,43 @@
         .table-title { background-color: #1e293b; color: white; padding: 10px 12px; border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em; display: flex; justify-content: space-between; align-items: center; }
         .slide-img-box { text-align: center; margin: 12px 0; }
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        /* ========================================================
+           📱 שיפורי CSS רספונסיביים ייעודיים למובייל
+           ======================================================== */
+        @media (max-width: 768px) {
+            main { padding: 10px 8px; margin: 8px auto; }
+            header { padding: 8px 6px; }
+            .header-top h1 { font-size: 1em; gap: 6px; }
+
+            .spreadsheet-container table th:first-child,
+            .spreadsheet-container table td:first-child {
+                position: sticky;
+                right: 0;
+                z-index: 10;
+                background-color: var(--main-bg);
+                box-shadow: -2px 0 5px rgba(0,0,0,0.08);
+            }
+            .spreadsheet-container table th:first-child { background-color: var(--th-bg); }
+            .spreadsheet-container tr.today-row td:first-child { background-color: #fef08a !important; }
+            body.dark-mode .spreadsheet-container tr.today-row td:first-child { background-color: #713f12 !important; }
+            .spreadsheet-container tr.canceled-row td:first-child { background-color: #fee2e2 !important; }
+            body.dark-mode .spreadsheet-container tr.canceled-row td:first-child { background-color: #7f1d1d !important; }
+
+            .action-btns-group button { min-width: 100%; font-size: 0.88em; padding: 12px; }
+
+            .dashboard-kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .kpi-card { padding: 12px 6px; }
+            .kpi-value { font-size: 1.55em; }
+            .kpi-title { font-size: 0.78em; }
+
+            .todo-inputs-row { flex-direction: column; }
+            .todo-input-title, .todo-select-assignee, .todo-input-date, .todo-add-btn { width: 100%; min-width: unset; }
+            .todo-item-card { padding: 10px 12px; gap: 8px; }
+            .todo-item-title { font-size: 0.9em; }
+
+            .week-tab-btn, .month-folder-btn { padding: 6px 12px; font-size: 0.8em; }
+        }
     </style>
 </head>
 <body>
@@ -833,15 +893,9 @@
         <header>
             <div class="header-top">
                 <h1>
-                    <div style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background:#f37021; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); vertical-align:middle; overflow:hidden;">
-                        <svg width="28" height="28" viewBox="0 0 100 100" style="transform: rotate(-45deg);">
-                            <rect x="35" y="20" width="30" height="60" rx="15" fill="#1e293b"/>
-                            <path d="M 35 35 Q 50 10 65 35 Z" fill="#334155"/>
-                            <circle cx="50" cy="28" r="4" fill="#38bdf8"/>
-                            <polygon points="20,55 35,50 35,70" fill="#0f172a"/>
-                            <polygon points="80,55 65,50 65,70" fill="#0f172a"/>
-                            <polygon points="45,80 55,80 52,90 48,90" fill="#f59e0b"/>
-                        </svg>
+                    <!-- תגית האוואטר המשודרגת (החלפה של האייקון הכתום) -->
+                    <div id="headerUserAvatar" class="header-user-avatar" title="צוות גיל">
+                        🚀
                     </div>
                     תפעול והדרכה - צוות גיל
                 </h1>
@@ -1669,6 +1723,31 @@
         </div>
     </div>
 
+    <!-- מודאל עריכת פרטי מדריך (נפתח בלחיצה על האוואטר) -->
+    <div id="trainerEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:100000; align-items:center; justify-content:center; padding:20px;">
+        <div class="login-card" style="text-align:right; max-width:400px;">
+            <h3 style="margin-top:0; color:var(--text-color); font-size:1.15em;">👤 פרטי מדריך מחובר</h3>
+            <p style="font-size:0.85em; color:#94a3b8; margin-bottom:12px;">ערוך את פרטיך האישיים עבור שליחת משמרות ותזכורות:</p>
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">שם פרטי:</label>
+            <input type="text" id="modalFName" class="login-input" style="direction:rtl; text-align:right;" required>
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">שם משפחה:</label>
+            <input type="text" id="modalLName" class="login-input" style="direction:rtl; text-align:right;" required>
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">אימייל:</label>
+            <input type="email" id="modalEmail" class="login-input" style="direction:ltr; text-align:right;" required>
+            
+            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">טלפון:</label>
+            <input type="tel" id="modalPhone" class="login-input" style="direction:ltr; text-align:right;" required>
+            
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button type="button" class="login-btn" onclick="saveTrainerProfileFromModal()">שמור פרטים 💾</button>
+                <button type="button" class="login-btn" style="background:#64748b;" onclick="closeTrainerEditModal()">סגור ❌</button>
+            </div>
+        </div>
+    </div>
+
     <div id="datalistsContainer"></div>
 
     <script>
@@ -2123,7 +2202,7 @@
             if (parts.length >= 2) {
                 return (parts[0][0] + parts[1][0]).toUpperCase();
             }
-            return name.substring(0, 2).toUpperCase();
+            return name.substring(0, 2);
         }
 
         function getTrainerColor(name) {
@@ -2142,7 +2221,6 @@
             return dateStr;
         }
 
-        // בדיקת תזכורות פנימיות עבור המדריך המחובר (היום ומחר)
         function checkUserTodoReminders() {
             const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
             const banner = document.getElementById('todoUserReminderBanner');
@@ -2241,7 +2319,6 @@
             window.fbRemove(itemRef).catch(console.error);
         };
 
-        // פונקציות עריכת משימה
         window.openEditTodoModal = function(id) {
             const task = latestTodosData[id];
             if (!task) return;
@@ -2295,7 +2372,6 @@
 
             const tasks = Object.keys(latestTodosData).map(k => ({ id: k, ...latestTodosData[k] }));
 
-            // מיון: מכוכבים קודם, ולאחר מכן לפי תאריך יצירה
             tasks.sort((a, b) => {
                 if (a.starred && !b.starred) return -1;
                 if (!a.starred && b.starred) return 1;
@@ -2328,7 +2404,6 @@
 
         function buildTodoItemElement(task) {
             const card = document.createElement('div');
-            // אם המשימה מסומנת בכוכב - מקבלת class 'starred' לצביעה בצהוב
             card.className = `todo-item-card ${task.completed ? 'completed' : ''} ${task.starred ? 'starred' : ''}`;
 
             const initials = task.assignee ? getTrainerInitials(task.assignee) : "";
@@ -2340,7 +2415,6 @@
                 </div>
             ` : '';
 
-            // חישוב תאריך: איחור (אדום עם !), היום, מחר או תאריך רגיל
             let dateBadge = '';
             if (task.dueDate) {
                 const todayStr = getLocalDateString(new Date());
@@ -3012,6 +3086,7 @@
             if (parts.length === 3) btn.innerText = `${parts[2]}/${parts[1]}`;
         }
 
+        // זיהוי ועדכון תגית האוואטר במקום השורה הארוכה
         window.initTrainerProfile = function(currentUser) {
             let trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
             
@@ -3035,48 +3110,71 @@
                 localStorage.setItem('gorilla_trainer_profile', JSON.stringify(trainer));
             }
 
-            const display = document.getElementById('trainerInfoDisplay');
-            const inputsArea = document.getElementById('trainerInputsArea');
-            if (!display || !inputsArea) return;
+            const profileBar = document.getElementById('trainerProfileBar');
+            const headerAvatar = document.getElementById('headerUserAvatar');
 
-            if (trainer) {
-                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email}${trainer.phone ? ' | ' + trainer.phone : ''}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
-                inputsArea.style.display = 'none';
+            if (trainer && trainer.firstName) {
+                // הסתרת השורה הארוכה כדי לחסוך מקום
+                if (profileBar) profileBar.style.display = 'none';
+
+                // יצירת ראשי תיבות בעברית (למשל: ראם קייזר -> רק)
+                const fullName = (trainer.firstName + ' ' + (trainer.lastName || '')).trim();
+                const initials = (trainer.firstName[0] + (trainer.lastName ? trainer.lastName[0] : (trainer.firstName[1] || ''))).trim();
+                const avatarBg = getTrainerColor(fullName);
+
+                if (headerAvatar) {
+                    headerAvatar.style.background = avatarBg;
+                    headerAvatar.style.borderRadius = '50%';
+                    headerAvatar.innerText = initials;
+                    headerAvatar.title = `מחובר כ: ${fullName} (${trainer.email}) - לחץ לשינוי פרטים`;
+                    headerAvatar.onclick = editTrainerProfile;
+                }
             } else {
-                display.innerHTML = `👤 התחברות מדריך:`;
-                inputsArea.innerHTML = `
-                    <input type="text" id="tFirstName" placeholder="שם פרטי">
-                    <input type="text" id="tLastName" placeholder="שם משפחה">
-                    <input type="email" id="tEmail" placeholder="כתובת מייל">
-                    <input type="tel" id="tPhone" placeholder="מספר טלפון">
-                    <button class="trainer-save-btn" onclick="saveTrainerProfile()">שמור פרופיל 💾</button>
-                `;
-                inputsArea.style.display = 'flex';
+                if (profileBar) profileBar.style.display = 'flex';
+                if (headerAvatar) {
+                    headerAvatar.style.background = '#f37021';
+                    headerAvatar.style.borderRadius = '8px';
+                    headerAvatar.innerHTML = `🚀`;
+                    headerAvatar.title = "צוות גיל";
+                    headerAvatar.onclick = null;
+                }
             }
 
             checkUserTodoReminders();
         };
 
-        function saveTrainerProfile() {
-            const fName = document.getElementById('tFirstName')?.value.trim();
-            const lName = document.getElementById('tLastName')?.value.trim();
-            const email = document.getElementById('tEmail')?.value.trim();
-            const phone = document.getElementById('tPhone')?.value.trim();
+        function editTrainerProfile() {
+            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
+            if (trainer) {
+                document.getElementById('modalFName').value = trainer.firstName || '';
+                document.getElementById('modalLName').value = trainer.lastName || '';
+                document.getElementById('modalEmail').value = trainer.email || '';
+                document.getElementById('modalPhone').value = trainer.phone || '';
+            }
+            const modal = document.getElementById('trainerEditModal');
+            if (modal) modal.style.display = 'flex';
+        }
 
-            if (!fName || !lName || !email || !phone) {
-                alert('אנא מלא שם פרטי, שם משפחה, כתובת מייל ומספר טלפון.');
+        function closeTrainerEditModal() {
+            const modal = document.getElementById('trainerEditModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function saveTrainerProfileFromModal() {
+            const fName = document.getElementById('modalFName')?.value.trim();
+            const lName = document.getElementById('modalLName')?.value.trim();
+            const email = document.getElementById('modalEmail')?.value.trim();
+            const phone = document.getElementById('modalPhone')?.value.trim();
+
+            if (!fName || !email) {
+                alert('אנא מלא שם פרטי וכתובת אימייל.');
                 return;
             }
 
             const profile = { firstName: fName, lastName: lName, email: email, phone: phone };
             localStorage.setItem('gorilla_trainer_profile', JSON.stringify(profile));
             window.initTrainerProfile();
-            alert('הפרטים נשמרו בהצלחה!');
-        }
-
-        function editTrainerProfile() {
-            localStorage.removeItem('gorilla_trainer_profile');
-            window.initTrainerProfile();
+            closeTrainerEditModal();
         }
 
         function exportWeeklyShiftsToCalendar() {
