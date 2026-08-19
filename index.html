@@ -481,6 +481,13 @@
             outline: none;
             cursor: pointer;
             width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            text-align: right;
+        }
+        .todo-input-date {
+            text-align: center;
+            direction: ltr;
         }
         .todo-add-btn {
             background: #0284c7;
@@ -811,7 +818,7 @@
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
         /* ========================================================
-           📱 שיפורי CSS רספונסיביים מדויקים לעמודת התאריך והתאריכים במובייל
+           📱 שיפורי CSS רספונסיביים מדויקים לעמודת התאריך ושדה תאריך משימות
            ======================================================== */
         @media (max-width: 768px) {
             main { padding: 10px 8px; margin: 8px auto; }
@@ -841,11 +848,12 @@
             .kpi-value { font-size: 1.55em; }
             .kpi-title { font-size: 0.78em; }
 
-            /* תיקון גודל שדה בחירת התאריך בלשונית משימות במובייל */
+            /* הכרחת שדות המשימות לקבל רוחב מלא ואחיד במובייל כולל שדה התאריך */
             .todo-inputs-row { flex-direction: column; }
             .todo-input-title, .todo-select-assignee, .todo-input-date, .todo-add-btn { 
                 width: 100% !important; 
                 min-width: 100% !important; 
+                max-width: 100% !important;
             }
             .todo-item-card { padding: 10px 12px; gap: 8px; }
             .todo-item-title { font-size: 0.9em; }
