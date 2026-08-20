@@ -179,13 +179,13 @@
         
         button, .btn, .link-table-btn, .tab-btn, .week-tab-btn, .month-folder-btn, 
         .wa-group-btn, .call-btn, .unit-wa-btn, .unit-add-btn, .theme-toggle-btn, 
-        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .yt-link-btn, .login-btn, .trainer-chip-btn, .todo-add-btn, .todo-edit-btn {
+        .logout-btn, .trainer-save-btn, .cleaning-today-btn, .copy-btn, .login-btn, .trainer-chip-btn, .todo-add-btn, .todo-edit-btn {
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease !important;
         }
         button:hover, .btn:hover, .link-table-btn:hover, .tab-btn:hover, .week-tab-btn:hover,
         .wa-group-btn:hover, .call-btn:hover, .unit-wa-btn:hover, .unit-add-btn:hover, 
         .theme-toggle-btn:hover, .logout-btn:hover, .trainer-save-btn:hover, 
-        .cleaning-today-btn:hover, .copy-btn:hover, .yt-link-btn:hover, .login-btn:hover, .trainer-chip-btn:hover, .todo-add-btn:hover, .todo-edit-btn:hover {
+        .cleaning-today-btn:hover, .copy-btn:hover, .login-btn:hover, .trainer-chip-btn:hover, .todo-add-btn:hover, .todo-edit-btn:hover {
             transform: translateY(-2.5px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.18);
         }
@@ -741,27 +741,6 @@
         }
         .cleaning-today-btn:hover { background-color: #20ba5a; }
 
-        .slide-box {
-            background-color: var(--card-bg); border: 1px solid var(--border-color); border-right: 4px solid #3498db;
-            border-radius: 8px; margin-bottom: 15px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: background 0.3s, border-color 0.3s;
-        }
-        .slide-title { margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 6px; font-size: 1.05em; }
-        .step-list { margin-top: 8px; padding-right: 12px; font-size: 0.9em; }
-        .step-list li { margin-bottom: 8px; }
-        .step-list p { margin: 4px 0; }
-        .code-block { background: var(--code-bg); padding: 2px 5px; border-radius: 4px; font-family: monospace; direction: ltr; display: inline-block; color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85em; word-break: break-all; }
-
-        .videos-flex-container { display: flex; gap: 10px; flex-direction: column; margin: 12px 0; }
-        @media (min-width: 768px) { .videos-flex-container { flex-direction: row; flex-wrap: wrap; } }
-        .slide-video-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; flex: 1; width: 100%; }
-        .slide-video-container h4 { margin: 0 0 6px 0; font-size: 0.85em; color: var(--text-color); }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 6px; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .yt-link-btn {
-            display: inline-flex; align-items: center; gap: 6px; background-color: #ff0000; color: white;
-            padding: 6px 10px; border-radius: 15px; text-decoration: none; font-size: 0.78em; font-weight: bold; margin-top: 6px;
-        }
-
         .cards-container { display: flex; gap: 10px; flex-direction: column; margin-top: 10px; }
         @media (min-width: 600px) { .cards-container { flex-direction: row; flex-wrap: wrap; } }
         .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; flex: 1; min-width: 280px; }
@@ -778,8 +757,6 @@
 
         .link-table-btn { display: inline-block; background-color: #0284c7; color: white; padding: 6px 10px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.8em; text-align: center; }
         .table-title { background-color: #1e293b; color: white; padding: 10px 12px; border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em; display: flex; justify-content: space-between; align-items: center; }
-        .slide-img-box { text-align: center; margin: 12px 0; }
-        .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -848,9 +825,7 @@
                 <button class="tab-btn" onclick="switchTab('dashboard', event)">📈 דשבורד</button>
                 <button class="tab-btn" onclick="switchTab('todo-tab', event)">📝 משימות To-Do</button>
                 <button class="tab-btn" onclick="switchTab('gorilla-status', event)">📊 סטטוס גורילות</button>
-                <button class="tab-btn" onclick="switchTab('pdf-slides', event)">🔧 תקלות</button>
-                <button class="tab-btn" onclick="switchTab('training-program', event)">🎓 הסמכה</button>
-                <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים והעשרה</button>
+                <button class="tab-btn" onclick="switchTab('forms', event)">📋 טפסים</button>
             </div>
         </header>
 
@@ -1015,10 +990,6 @@
                                 <span class="stat-item-label">📍 מיקומי אימון בחודש:</span>
                                 <div class="badges-wrap" id="dashLocationsList"></div>
                             </div>
-                            <div class="stat-item-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                <span class="stat-item-label">🛡️ כוחות מתאמנים (יחידות):</span>
-                                <div class="badges-wrap" id="dashUnitsList"></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1101,329 +1072,9 @@
                 </div>
             </section>
 
-            <!-- לשונית תקלות -->
-            <section id="pdf-slides" class="tab-content">
-                <h2>🔧 מדריך תפעול ופתרון תקלות - גורילה גיל</h2>
-                <p style="color: #64748b; margin-bottom: 12px; font-size: 0.85em;">סדר פעולות מפורט לפתרון תקלות נפוצות במאמן גורילה גיל לפי שלבי עבודה.</p>
-
-                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <a href="tel:0526652209" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
-                        <span>📞</span> צלצל לקסה
-                    </a>
-                    <a href="tel:0526620187" class="call-btn" style="flex: 1; min-width: 200px; justify-content: center; padding: 12px; font-size: 0.9em;">
-                        <span>📞</span> צלצל לטכנאי
-                    </a>
-                </div>
-
-                <div class="search-box" style="margin-bottom: 15px;">
-                    <input type="text" id="slidesSearch" oninput="debouncedFilterSlides()" placeholder="🔍 חפש תקלה או מילת מפתח (למשל: משגר, קומים, תלת מימד, טיל תקול)...">
-                </div>
-
-                <div id="slidesContainer">
-                    <div class="slide-box">
-                        <h3 class="slide-title">🔌 הדלקת הגורילה - סדר פעולות תקני</h3>
-                        <ol class="step-list">
-                            <li><strong>חיבור כבל קומקום לגורילה</strong> (כששום דבר אחר לא מחובר). הדלקת המתג + המתנה של 2 שניות.</li>
-                            <li><strong>הדלקת מחשב ראשי</strong> – לחיצה של 2 שניות.</li>
-                            <li><strong>לחיצה על הכפתור הקטן</strong>.</li>
-                            <li><strong>חיבור שאר קופסת הממשקים</strong> בזמן שהתרגיל נטען במערכת.</li>
-                        </ol>
-                        <div class="slide-img-box">
-                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/2.jpg.png" alt="הדלקת הגורילה" loading="lazy">
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">🚀 תקלות משגר, חיבורי SPARTACUS ופתרון ריצוד</h3>
-                        <div class="step-list">
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/1.jpg.png" alt="תקלות משגר וחיבורי SPARTACUS" loading="lazy">
-                            </div>
-
-                            <p><strong>1. לא מזהה משגר / אין תנועה במשגר:</strong></p>
-                            <ul>
-                                <li>פותחים את אפליקציית <strong>SPARTACUS</strong> ובודקים אם <span class="code-block">COM3</span> מתחבר.</li>
-                                <li>אם <span class="code-block">COM3</span> לא מתחבר, לוחצים על <strong>Device Settings</strong>.</li>
-                                <li>בודקים איזה קום מחובר כעת ברשימה (1, 3, 4, 5).</li>
-                                <li>לוחצים על <strong>Advance</strong> וממתינים עד להופעת תמונת המטוס/מד האופק.</li>
-                                <li>אם עדיין לא מתחבר - עוברים מיידית לסידור קומים ב-Windows.</li>
-                            </ul>
-                            <p><strong>2. סידור קומים (Device Manager):</strong></p>
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/6.jpg.png" alt="סידור קומים ב-Device Manager" loading="lazy">
-                            </div>
-                            <ul>
-                                <li>מקלידים בשורת החיפוש ב-Windows: <strong>Device Manager</strong> (מנהל ההתקנים).</li>
-                                <li>נכנסים לתיקיית <strong>PORTS (COM & LPT)</strong> – יש לוודא הופעת 4 קומים:
-                                    <ul>
-                                        <li><strong>COM1:</strong> היציאה הארוכה (Prolific PL2303GC USB Serial COM Port)</li>
-                                        <li><strong>COM3:</strong> USB Serial Port</li>
-                                        <li><strong>COM4:</strong> USB Serial Port</li>
-                                        <li><strong>COM5:</strong> USB-SERIAL CH340</li>
-                                    </ul>
-                                </li>
-                                <li><strong style="color:#e74c3c;">דגש קריטי:</strong> אסור בשום אופן להגדיר את אותו מספר קום פעמיים!</li>
-                            </ul>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: סידור קומים גורילת גיל</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/yct6JCOWgIs" title="סידור קומים גורילת גיל" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtu.be/yct6JCOWgIs" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">🖥️ תקלות תצוגה ומסכים</h3>
-                        <div class="step-list">
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/5.jpg.png" alt="תקלות תצוגה ומסכים" loading="lazy">
-                            </div>
-
-                            <p><strong>1. מסך שחור בישלט (כאשר ב-IOS רואים תמונה תקינה):</strong></p>
-                            <ul>
-                                <li>מנתקים את כבל <strong>9P</strong> מגב היחידה ומחברים אותו מחדש בחוזקה.</li>
-                            </ul>
-                            <p><strong>2. סידור מסכים ב-Display Settings והגדרת HZ60.32:</strong></p>
-                            <div class="slide-img-box">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/7.jpg.png" alt="סידור מסכים - הגדרת הרץ" style="margin-bottom: 8px;" loading="lazy">
-                                <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/8.jpg.png" alt="סידור מסכים - רזולוציות" loading="lazy">
-                            </div>
-                            <ul>
-                                <li>נכנסים ל-Display Settings בווינדוס -> לוחצים על <strong>Advanced display</strong>.</li>
-                                <li>מוודאים שקצב הרענון מוגדר בדיוק על <span class="code-block">60.32 Hz</span>.</li>
-                                <li>סידור מסכים: <strong>מספרי המסכים לא רלוונטיים</strong> – העיקר שיהיו <strong>3 מסכים גדולים ו-1 קטן</strong>.</li>
-                                <li>רזולוציות: המסכים הגדולים <span class="code-block">1080X1920</span> והמסך הקטן <span class="code-block">600X800</span>.</li>
-                            </ul>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: פתרון תקלה כאשר תלת מימד לא עולה</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/_SPomcHd1VU" title="תלת מימד לא עולה" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtu.be/_SPomcHd1VU" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">💥 תקלות קריסת מערכת ופריקת מתח</h3>
-                        <div class="step-list">
-                            <p><strong>1. פריקת מתח מלאה בגורילה:</strong></p>
-                            <ul>
-                                <li>כיבוי מלא של המערכת באמצעות הכפתור האדום. הוצאת כבל הקומקום, לחיצות מהירות על כפתור ההפעלה עד הבהוב במסכים.</li>
-                            </ul>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: פריקת מתח גורילה</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/gfm4laG0SYo" title="פריקת מתח גורילה" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtube.com/shorts/gfm4laG0SYo" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                            <p><strong>2. פרוססים לא עולים / תהליך תקוע:</strong></p>
-                            <ul>
-                                <li>מנהל המשימות -> Services -> איתור <strong>AppsControlManager</strong> -> קליק ימני Stop -> ואז Start.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">📁 העברת תרגילים בין גורילות (מולבנת למולבנת)</h3>
-                        <div class="slide-img-box">
-                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/4.jpg.png" alt="העברת תרגילים בין גורילות" loading="lazy">
-                        </div>
-                        <ol class="step-list">
-                            <li>חיבור כבל תקשורת רשת ישיר בין הגורילות.</li>
-                            <li><strong>שינוי IP בווינדוס:</strong> הזינו <span class="code-block">NCP</span> בווינדוס -> שינוי IP בלאונצ'ר ל- <span class="code-block">10.0.0.8</span> למקור ו ל- <span class="code-block">10.0.0.96</span> ליעד.</li>
-                            <li>הזינו נתיב <span class="code-block">\\10.0.0.8\c</span> ובחרו בתרחישים הרצויים.</li>
-                        </ol>
-                        <div class="videos-flex-container">
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: העברת תרגילים בין גורילות</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/D4wlKqKUk1o" title="העברת תרגילים בין גורילות" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtube.com/shorts/D4wlKqKUk1o" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                            <div class="slide-video-container">
-                                <h4>🎬 סרטון הדרכה: חיבור הגדרות רשת ותקשורת</h4>
-                                <div class="video-wrapper">
-                                    <iframe src="https://www.youtube.com/embed/W6bQJojtayQ" title="רשתות" loading="lazy" allowfullscreen></iframe>
-                                </div>
-                                <a href="https://youtu.be/W6bQJojtayQ" target="_blank" class="yt-link-btn">▶️ צפה ב-YouTube</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">📥 התקנת / עדכון דרייברים של NVIDIA</h3>
-                        <div class="slide-img-box">
-                            <img src="https://pvtswscsqnymbbzgsafu.supabase.co/storage/v1/object/public/media/3.jpg.png" alt="התקנת דרייברים של NVIDIA" loading="lazy">
-                        </div>
-                        <div class="step-list">
-                            <ol>
-                                <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
-                                <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
-                                <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                                <li>בחלוני Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
-                                <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="slide-box" style="border-right-color: #ef4444;">
-                        <h3 class="slide-title">🎯 טיפול בתקלות טיל תקול ובעיות באחוד מבצעי</h3>
-                        <div class="step-list">
-                            <ul>
-                                <li><strong style="color: #ef4444;">כל תקלה של טיל תקול החלף, שו״ש בלבד</strong></li>
-                                <li><strong>פתרון:</strong> כיבוי הדלקה ואם לא עובד אז ביט למשגר</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="slide-box">
-                        <h3 class="slide-title">🧹 ניקיון ותחזוקה חודשית לגורילה</h3>
-                        <ol class="step-list">
-                            <li><strong>ניקיון כללי:</strong> ניקוי בלחץ אוויר וניגוב במטלית לחה.</li>
-                            <li><strong>אחזקה פיזית:</strong> בדיקת תקינות גלגלים ופרפריות הידוק.</li>
-                            <li><strong>צמות וחיבורים:</strong> בדיקת שלמות צמות הכבלים והמחברים לגורילה.</li>
-                            <li><strong>בדיקת אש:</strong> ביצוע שיגור טיל בדיקה.</li>
-                            <li><strong>תחזוקת רכבים:</strong> פינוי אשפה, שאיבה, ניגוב במגבונים ושטיפה בשטיפומט.</li>
-                            <li><strong>פירוק רשת ופילטרים:</strong> הוצאת 10 ברגים (5 מכל צד), הרמת הרשת וניקוי עם מפוח אוויר ממרחק בטוח!</li>
-                        </ol>
-                    </div>
-                </div>
-            </section>
-
-            <!-- לשונית הסמכה -->
-            <section id="training-program" class="tab-content">
-                <h2>🎓 תוכנית הסמכה - מנהל אתר גיל נייד</h2>
-                <p style="font-size: 0.85em; margin-bottom: 15px;"><strong>מפתח הסמכה מבוקר:</strong> ILS014D | <strong>תחולה:</strong> 02/2014</p>
-
-                <h3 class="table-title">יום מס' 1 - כללי: הכרת החברה ואופן העבודה</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>הכרת החברה</td><td>מנהל אתר</td>
-                                <td>פריסת המאמנים בארץ ובעולם, תחומי העיסוק של החברה, מחלקת התפעול וצוות החיי''ר, הצהרת האיכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת חברה</a></td>
-                            </tr>
-                            <tr>
-                                <td>הצגת מוצרים</td><td>מנהל אתר</td>
-                                <td>הצגת מוצרי החברה.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מוצרים</a></td>
-                            </tr>
-                            <tr>
-                                <td>אופן העבודה במחלקת התפעול</td><td>מנהל אתר</td>
-                                <td>מבנה ארגוני ובעלי תפקידים, ממשקים - רכזת תפעול, מנהל צוות חיי''ר, מנהלי אזורים.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B71638794-805A-4E40-A191-53AE2320BE46%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת מבנה</a></td>
-                            </tr>
-                            <tr>
-                                <td>טיל הגיל בצה''ל</td><td>מנהל אתר</td>
-                                <td>למידה על שימוש טיל הגיל בצה''ל בעבר וכיום, סוגי משגרים, סוגי טילים.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>ירי תחושה</td><td>מנהל אתר</td>
-                                <td>הכרת אמצעי חשיפה תקיפה המצויים כיום בצה''ל - הכולל משגרים + אמצעי תצפית.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 class="table-title">יום מס' 2 - תפעול: שיעורי תפעול והעלאת מערכות</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>שיעור העלאת מערכות</td><td>מנהל אתר</td>
-                                <td>הדלקת המערכת תוך הסבר על המרכיבים השונים, הפעלת אימון כוון בודד, כיבוי מערכות.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B7F33D2D0-628A-4D16-9B34-35F87E0F66FD%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת העלאה</a></td>
-                            </tr>
-                            <tr>
-                                <td>שיעור החלפת אמצעים</td><td>מנהל אתר</td>
-                                <td>החלפת אמצעים מאחוד לישלט וההפך (כולל ספרטון - אינקודר).</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>כיבוי מערכות</td><td>מנהל אתר</td>
-                                <td>כיבוי מערכות לפי הסדר והחזרת המאמן למצב אפס (סידור של המאמן לאימון למחרת).</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 class="table-title">יום מס' 3+4 - אימון כוון בודד: תרגול הרמת מערכות וניהול אימון</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>תרגול הרמת מערכות ותפעול</td><td>מנהל אתר</td>
-                                <td>תרגול של החניך עם סיוע מנהל האתר, מהות ואופן ביצוע תתרגול תפעול.</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
-                                <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 class="table-title">יום מס' 5 - חניכת אימון ומבחנים: תרגול, תקלות ומבחן עיוני</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>מבחן עיוני</td><td>מנהל אתר</td>
-                                <td>ביצוע מבחן עיוני כתוב.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/g/Operations/Infantry_Department/IQCucOPovSqGT7PZLCqrMj93AZdmLZ17258Uo9X2NqYvnE0?e=Wwm1lj" target="_blank" class="link-table-btn" style="background-color: #2ecc71;">✍️ פתח מבחן עיוני 🔗</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 class="table-title">יום מס' 6 - ניהול אתר ומבחן מעשי: ניהול אתר מלא, נהלים ומבחן מעשי</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>הפעלת אימון וניהול אתר</td><td>מנהל אתר</td>
-                                <td>יישום עצמאי של יום אימון מלא בחניכת מנהל אתר, הכרת נהלי דיווח, אחזקה וובלט.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:w:/r/Quality_Assurance/_layouts/15/Doc.aspx?sourcedoc=%7BB11E7533-0094-430C-9374-4767C76DB949%7D&action=default" target="_blank" class="link-table-btn">📄 נוהל דיווחים</a></td>
-                            </tr>
-                            <tr>
-                                <td>מבחן מעשי וסיכום חפיפה</td><td>מנהל צוות/מחלקה</td>
-                                <td>ביצוע מבחן מעשי, מעבר על תכנית ההסמכה וסיכום חפיפה.</td>
-                                <td>-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- לשונית טפסים והעשרה -->
+            <!-- לשונית טפסים -->
             <section id="forms" class="tab-content">
-                <h2>📋 טפסים, ציוד והעשרה</h2>
+                <h2>📋 טפסים וציוד</h2>
                 
                 <div class="search-box" style="margin-bottom: 15px;">
                     <input type="text" id="formsSearch" oninput="debouncedFilterForms()" placeholder="🔍 חפש טופס, רכב...">
@@ -1554,7 +1205,6 @@
         }
 
         const debouncedFilterSchedule = debounce(filterSchedule, 100);
-        const debouncedFilterSlides = debounce(filterSlides, 100);
         const debouncedFilterForms = debounce(filterFormsTab, 100);
 
         function normalizeRowValues(val) {
@@ -2267,7 +1917,6 @@
             let totalTrainees = 0;
             let totalHours = 0;
             let uniqueLocations = new Set();
-            let uniqueUnits = new Set();
             let gorillaTrainingDays = [0, 0, 0, 0, 0, 0, 0];
 
             const processRows = (rows) => {
@@ -2291,7 +1940,6 @@
                         activeTrainingDays.add(item.dayNum);
                     }
 
-                    if (hasUnit) uniqueUnits.add(vals[2].trim());
                     if (hasLocation) uniqueLocations.add(vals[3].trim());
 
                     if (vals[6] && !isNaN(parseInt(vals[6]))) {
@@ -2334,13 +1982,6 @@
                 locList.innerHTML = uniqueLocations.size > 0 
                     ? Array.from(uniqueLocations).map(l => `<span class="info-tag">${l}</span>`).join('') 
                     : '<span style="color:#64748b; font-size:0.85em;">אין מיקומים רשומים</span>';
-            }
-
-            const unitsList = document.getElementById('dashUnitsList');
-            if (unitsList) {
-                unitsList.innerHTML = uniqueUnits.size > 0 
-                    ? Array.from(uniqueUnits).map(u => `<span class="info-tag">${u}</span>`).join('') 
-                    : '<span style="color:#64748b; font-size:0.85em;">אין יחידות רשומות</span>';
             }
 
             updateGorillaBarChart(cleaningDaysArray, gorillaTrainingDays);
@@ -3098,13 +2739,6 @@
                 const textToSearch = rowValues.join(" ").toUpperCase();
                 const matchesAll = terms.every(term => textToSearch.includes(term));
                 row.style.display = matchesAll ? "" : "none";
-            });
-        }
-
-        function filterSlides() {
-            let input = document.getElementById("slidesSearch").value.toUpperCase();
-            document.querySelectorAll("#pdf-slides .slide-box").forEach(box => {
-                box.style.display = box.innerText.toUpperCase().includes(input) ? "" : "none";
             });
         }
 
