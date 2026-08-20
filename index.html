@@ -364,15 +364,6 @@
         .stat-item-label { font-size: 0.9em; font-weight: 600; }
         .stat-item-value { font-size: 1.1em; font-weight: 800; color: #0284c7; }
 
-        .badges-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-        .info-tag {
-            background: rgba(2, 132, 199, 0.1); color: #0284c7; border: 1px solid rgba(2, 132, 199, 0.2);
-            padding: 3px 8px; border-radius: 12px; font-size: 0.78em; font-weight: bold;
-            transition: transform 0.2s ease;
-        }
-        .info-tag:hover { transform: translateY(-1.5px); }
-        body.dark-mode .info-tag { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
-
         .faults-section {
             background: var(--card-bg); border: 1px solid var(--border-color); border-right: 4px solid #ef4444;
             border-radius: 10px; padding: 16px; margin-bottom: 20px;
@@ -985,10 +976,6 @@
                             <div class="stat-item-row">
                                 <span class="stat-item-label">⏱️ סה"כ שעות פעילות (הערכה):</span>
                                 <span class="stat-item-value" id="dashTotalHours">0 שעות</span>
-                            </div>
-                            <div class="stat-item-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                                <span class="stat-item-label">📍 מיקומי אימון בחודש:</span>
-                                <div class="badges-wrap" id="dashLocationsList"></div>
                             </div>
                         </div>
                     </div>
@@ -1916,7 +1903,6 @@
             let canceledTrainingDays = new Set();
             let totalTrainees = 0;
             let totalHours = 0;
-            let uniqueLocations = new Set();
             let gorillaTrainingDays = [0, 0, 0, 0, 0, 0, 0];
 
             const processRows = (rows) => {
@@ -1939,8 +1925,6 @@
                     if (isFullTrainingDay) {
                         activeTrainingDays.add(item.dayNum);
                     }
-
-                    if (hasLocation) uniqueLocations.add(vals[3].trim());
 
                     if (vals[6] && !isNaN(parseInt(vals[6]))) {
                         totalTrainees += parseInt(vals[6]);
@@ -1976,13 +1960,6 @@
 
             const dashHours = document.getElementById('dashTotalHours');
             if (dashHours) dashHours.innerText = `${totalHours} שעות פעילות`;
-
-            const locList = document.getElementById('dashLocationsList');
-            if (locList) {
-                locList.innerHTML = uniqueLocations.size > 0 
-                    ? Array.from(uniqueLocations).map(l => `<span class="info-tag">${l}</span>`).join('') 
-                    : '<span style="color:#64748b; font-size:0.85em;">אין מיקומים רשומים</span>';
-            }
 
             updateGorillaBarChart(cleaningDaysArray, gorillaTrainingDays);
         }
