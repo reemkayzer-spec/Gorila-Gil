@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תפעול והדרכה - צוות גיל</title>
     
     <!-- Chart.js לסרגל נתונים ודשבורד אינטראקטיבי -->
@@ -51,7 +51,7 @@
         window.knownTrainers = {
             "itayhaker19@gmail.com": { firstName: "איתי", lastName: "הקר", phone: "" },
             "adielkassa@gmail.com": { firstName: "עדיאל", lastName: "קסה", phone: "0526652209" },
-            "reemkayzer@gmail.com": { firstName: "ראם", lastName: "קייזר", phone: "0508922231" },
+            "reemkayzer@gmail.com": { firstName: "ראם", lastName: "קייזר", phone: "" },
             "nadavyichye@gmail.com": { firstName: "נדב", lastName: "יחיא", phone: "" },
             "idolevko2@gmail.com": { firstName: "עידו", lastName: "לבקוביץ", phone: "" },
             "tomerk2001@gmail.com": { firstName: "תומר", lastName: "כחלון", phone: "" },
@@ -278,32 +278,8 @@
 
         header { background-color: var(--header-bg); color: white; padding: 12px 8px; text-align: center; position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto 8px auto; padding: 0 6px; }
-        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 10px; justify-content: center; }
+        header h1 { margin: 0; font-size: 1.15em; font-weight: 700; display: flex; align-items: center; gap: 12px; justify-content: center; }
         
-        .header-user-avatar {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #f37021;
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 1em;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            vertical-align: middle;
-            cursor: pointer;
-            flex-shrink: 0;
-            letter-spacing: 0.5px;
-            user-select: none;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
-        }
-        .header-user-avatar:hover {
-            transform: scale(1.1) translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        }
-
         .header-actions-left { display: flex; gap: 8px; align-items: center; }
         .theme-toggle-btn, .logout-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.78em; font-weight: bold; }
         .theme-toggle-btn:hover { background: #475569; }
@@ -321,18 +297,6 @@
         main { max-width: 1400px; margin: 12px auto; padding: 16px; background: var(--main-bg); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: background 0.3s; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        .trainer-profile-bar {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 12px 16px; margin-bottom: 15px; display: none; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
-        }
-        .trainer-info-text { font-size: 0.9em; font-weight: bold; }
-        .trainer-inputs-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .trainer-inputs-group input {
-            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85em; background: var(--input-bg); color: var(--text-color);
-        }
-        .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
-        .trainer-save-btn:hover { background: #0369a1; }
 
         .dashboard-header { margin-bottom: 20px; }
         .dashboard-header h2 { margin: 0 0 4px 0; font-size: 1.3em; display: flex; align-items: center; gap: 8px; }
@@ -456,7 +420,6 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            align-items: center;
         }
         .todo-input-title {
             flex: 2;
@@ -468,7 +431,6 @@
             color: var(--text-color);
             font-size: 0.95em;
             outline: none;
-            height: 44px;
         }
         .todo-input-title:focus { border-color: #38bdf8; }
         .todo-select-assignee, .todo-input-date {
@@ -482,20 +444,12 @@
             font-size: 0.9em;
             outline: none;
             cursor: pointer;
-            height: 44px;
-            display: flex;
-            align-items: center;
-        }
-        .todo-input-date {
-            text-align: right;
-            direction: ltr;
-            -webkit-appearance: textfield; /* מאפשר תצוגה אחידה ומדויקת באייפון ואנדרואיד */
         }
         .todo-add-btn {
             background: #0284c7;
             color: white;
             border: none;
-            padding: 0 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 0.95em;
@@ -504,7 +458,6 @@
             align-items: center;
             gap: 6px;
             justify-content: center;
-            height: 44px;
         }
         .todo-add-btn:hover { background: #0369a1; }
 
@@ -645,6 +598,18 @@
         .todo-edit-btn:hover { color: #38bdf8; }
         .todo-delete-btn { color: #94a3b8; }
         .todo-delete-btn:hover { color: #ef4444; }
+
+        .trainer-profile-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .trainer-info-text { font-size: 0.9em; font-weight: bold; }
+        .trainer-inputs-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .trainer-inputs-group input {
+            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85em; background: var(--input-bg); color: var(--text-color);
+        }
+        .trainer-save-btn { background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85em; }
+        .trainer-save-btn:hover { background: #0369a1; }
 
         .schedule-header-action {
             display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background: var(--card-bg);
@@ -815,66 +780,6 @@
         .table-title { background-color: #1e293b; color: white; padding: 10px 12px; border-radius: 8px 8px 0 0; margin-top: 15px; margin-bottom: 0; font-size: 1em; display: flex; justify-content: space-between; align-items: center; }
         .slide-img-box { text-align: center; margin: 12px 0; }
         .slide-img-box img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-
-        /* ========================================================
-           📱 תיקון מובייל סופי ומושלם לעמודת תאריך ולשדה תאריך ב-To-Do
-           ======================================================== */
-        .date-cell-inner {
-            display: block;
-            width: 75px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        @media (max-width: 768px) {
-            main { padding: 10px 8px; margin: 8px auto; }
-            header { padding: 8px 6px; }
-            .header-top h1 { font-size: 1em; gap: 6px; }
-
-            .spreadsheet-container table th:first-child,
-            .spreadsheet-container table td:first-child {
-                position: -webkit-sticky !important;
-                position: sticky !important;
-                right: 0 !important;
-                z-index: 10 !important;
-                width: 75px !important;
-                min-width: 75px !important;
-                max-width: 75px !important;
-                background-color: var(--main-bg) !important;
-                box-shadow: -2px 0 6px rgba(0,0,0,0.1) !important;
-            }
-            .spreadsheet-container table th:first-child { background-color: var(--th-bg) !important; }
-            .spreadsheet-container tr.today-row td:first-child { background-color: #fef08a !important; }
-            body.dark-mode .spreadsheet-container tr.today-row td:first-child { background-color: #713f12 !important; }
-            .spreadsheet-container tr.canceled-row td:first-child { background-color: rgba(239, 68, 68, 0.25) !important; }
-
-            .action-btns-group button { min-width: 100%; font-size: 0.88em; padding: 12px; }
-
-            .dashboard-kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .kpi-card { padding: 12px 6px; }
-            .kpi-value { font-size: 1.55em; }
-            .kpi-title { font-size: 0.78em; }
-
-            .todo-inputs-row { flex-direction: column; }
-            .todo-input-title, .todo-select-assignee, .todo-input-date, .todo-add-btn { 
-                width: 100% !important; 
-                min-width: 100% !important; 
-                max-width: 100% !important;
-                height: 44px !important;
-            }
-            /* התאמה מלאה לשדה תאריך במובייל כך שיציג את האייקון כמו במחשב */
-            .todo-input-date {
-                -webkit-appearance: auto !important;
-                appearance: auto !important;
-                direction: ltr !important;
-                text-align: center !important;
-            }
-            .todo-item-card { padding: 10px 12px; gap: 8px; }
-            .todo-item-title { font-size: 0.9em; }
-
-            .week-tab-btn, .month-folder-btn { padding: 6px 12px; font-size: 0.8em; }
-        }
     </style>
 </head>
 <body>
@@ -921,8 +826,15 @@
         <header>
             <div class="header-top">
                 <h1>
-                    <div id="headerUserAvatar" class="header-user-avatar" title="צוות גיל">
-                        🚀
+                    <div style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background:#f37021; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.3); vertical-align:middle; overflow:hidden;">
+                        <svg width="28" height="28" viewBox="0 0 100 100" style="transform: rotate(-45deg);">
+                            <rect x="35" y="20" width="30" height="60" rx="15" fill="#1e293b"/>
+                            <path d="M 35 35 Q 50 10 65 35 Z" fill="#334155"/>
+                            <circle cx="50" cy="28" r="4" fill="#38bdf8"/>
+                            <polygon points="20,55 35,50 35,70" fill="#0f172a"/>
+                            <polygon points="80,55 65,50 65,70" fill="#0f172a"/>
+                            <polygon points="45,80 55,80 52,90 48,90" fill="#f59e0b"/>
+                        </svg>
                     </div>
                     תפעול והדרכה - צוות גיל
                 </h1>
@@ -1052,7 +964,6 @@
                     <p>תמונת מצב חיה של פעילות החודש, זמינות המאמנים ותקלות פתוחות. מתעדכן אוטומטית בכל שינוי.</p>
                 </div>
 
-                <!-- 4 כרטיסי KPI עליונים -->
                 <div class="dashboard-kpi-grid">
                     <div class="kpi-card">
                         <div class="kpi-value" id="kpiTotalGorillas" style="color: #64748b;">7</div>
@@ -1076,7 +987,6 @@
                     </div>
                 </div>
 
-                <!-- גריד מרכזי: נתוני פעילות חודשית + נתוני גורילות -->
                 <div class="dashboard-main-grid">
                     <div class="dashboard-box">
                         <div class="dashboard-box-title">
@@ -1113,7 +1023,6 @@
                     </div>
                 </div>
 
-                <!-- ריכוז תקלות פתוחות -->
                 <div class="faults-section">
                     <div class="dashboard-box-title" style="border-bottom-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
                         <span>🔧 תקלות פתוחות כרגע</span>
@@ -1122,7 +1031,6 @@
                     <div id="openFaultsContainer"></div>
                 </div>
 
-                <!-- סרגל חודשים בתחתית הדשבורד -->
                 <div class="month-folders-bar" id="dashboardMonthTabs"></div>
             </section>
 
@@ -1136,7 +1044,6 @@
                         </div>
                     </div>
 
-                    <!-- כרטיס הוספת משימה חדשה -->
                     <form class="todo-add-card" onsubmit="handleCreateTodo(event)">
                         <div class="todo-inputs-row">
                             <input type="text" id="todoTitleInput" class="todo-input-title" placeholder="➕ הוסף משימה חדשה..." required>
@@ -1156,10 +1063,8 @@
                         </div>
                     </form>
 
-                    <!-- רשימת משימות פעילות -->
                     <div class="todo-list-wrap" id="activeTodoList"></div>
 
-                    <!-- רשימת משימות שהושלמו -->
                     <div id="completedTodoSection" style="display:none; margin-top:20px;">
                         <h4 style="margin: 0 0 10px 0; font-size:0.9em; color:#94a3b8; border-bottom:1px solid var(--border-color); padding-bottom:4px;">
                             ✔️ הושלמו (<span id="completedCountDisplay">0</span>)
@@ -1360,7 +1265,7 @@
                                 <li><strong style="color: #ef4444;">חובה:</strong> לנתק את 4 הכבלים (משמאל לימין) לפני הדלקת המערכת!</li>
                                 <li>פתיחת סייר הקבצים (<span class="code-block">Win + E</span>) -> מעבר לנתיב: <span class="code-block">C:\IT\NEW VERSION May 2025</span>.</li>
                                 <li>הרצת קובץ ההתקנה -> לחיצה על <strong>Nvidia Graphics Driver</strong> -> לחיצה על <strong>AGREE AND CONTINUE</strong>.</li>
-                                <li>בחלון Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
+                                <li>בחלוני Installation options: בחירה ב-<strong>Express (Recommended)</strong> -> לחיצה על <strong>NEXT</strong>.</li>
                                 <li>בסיום ההתקנה – ביצוע הפעלה מחדש (Restart) למחשב.</li>
                             </ol>
                         </div>
@@ -1470,11 +1375,6 @@
                                 <td>-</td>
                             </tr>
                             <tr>
-                                <td>מצגת תקלות ותפעול</td><td>מנהל אתר</td>
-                                <td>תפעול תקלות נפוצות במערכת.</td>
-                                <td><a href="https://msbagiraadmoutlook.sharepoint.com/:p:/r/Operations/Infantry_Department/_layouts/15/Doc.aspx?sourcedoc=%7B6AC2CED7-975E-4845-9310-1B5F76503B21%7D&action=edit" target="_blank" class="link-table-btn">📂 מצגת תקלות</a></td>
-                            </tr>
-                            <tr>
                                 <td>תרגול ניהול אימון וסיכום</td><td>מנהל אתר</td>
                                 <td>העברת אימון לחניך כוון בודד, סיכום עם המתאמנים, משוב וסגירת מערכות.</td>
                                 <td>-</td>
@@ -1490,11 +1390,6 @@
                             <tr><th>נושא נלמד</th><th>חופף</th><th>תוכן והנחיות</th><th>קישור ישיר</th></tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>תרגול הרמת מערכות ותקלות</td><td>מנהל אתר</td>
-                                <td>תרגול מעשי של החניך בליווי מנהל האתר, מעבר על מצגת תקלות.</td>
-                                <td>-</td>
-                            </tr>
                             <tr>
                                 <td>מבחן עיוני</td><td>מנהל אתר</td>
                                 <td>ביצוע מבחן עיוני כתוב.</td>
@@ -1531,7 +1426,7 @@
                 <h2>📋 טפסים, ציוד והעשרה</h2>
                 
                 <div class="search-box" style="margin-bottom: 15px;">
-                    <input type="text" id="formsSearch" oninput="debouncedFilterForms()" placeholder="🔍 חפש טופס, רכב, נתוני גיל, מרעום, זום, טווח...">
+                    <input type="text" id="formsSearch" oninput="debouncedFilterForms()" placeholder="🔍 חפש טופס, רכב...">
                 </div>
 
                 <div class="cards-container">
@@ -1563,155 +1458,6 @@
                                 <button class="copy-btn" onclick="copyText('https://forms.cloud.microsoft/r/u1afBRvv3q', this)">📋 העתק</button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="card form-item" style="width: 100%; margin-top: 15px;">
-                    <h3 style="margin-top: 0; color: var(--text-color); border-bottom: 2px solid var(--border-color); padding-bottom: 8px;">🚀 העשרה - נתוני טיל גיל</h3>
-                    <p style="font-size: 0.85em; color: #64748b; margin-bottom: 12px;">ריכוז נתונים טכניים, זמני מעוף, מצבי מרעום ומעטפת בטיחות:</p>
-                    
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🔍 השוואת דגמים (גיל 1 מול גיל 2)</h4>
-                    <div class="table-container" style="margin-bottom: 15px;">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px;">פרמטר</th>
-                                    <th style="padding: 8px;">גיל 1</th>
-                                    <th style="padding: 8px;">גיל 2</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">זום / הגדלה</td>
-                                    <td style="padding: 8px;">10X / 30X</td>
-                                    <td style="padding: 8px;">5X / 10X / 20X</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רדיוס הרג ופציעה</td>
-                                    <td style="padding: 8px;">הרג 8 מטרים | פציעה 15 מטרים</td>
-                                    <td style="padding: 8px;">הרג 2.5–3 מטרים | פציעה 15 מטרים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">זמן מעוף לטווח מקסימלי</td>
-                                    <td style="padding: 8px;"><span class="code-block">26 שניות</span></td>
-                                    <td style="padding: 8px;"><span class="code-block">53 שניות</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">🎯 מצבי מרעום / סוגי מטרות</h4>
-                    <div class="table-container" style="margin-bottom: 15px;">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px;">סוג מטרה</th>
-                                    <th style="padding: 8px;">מנגנון יזום ואופן הפעולה</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">קשה</td>
-                                    <td style="padding: 8px;">חודר</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רכה</td>
-                                    <td style="padding: 8px;">מתפוצץ 30 ס"מ לפני המטרה</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רסס</td>
-                                    <td style="padding: 8px;">מרעום קרבה – 70 ס"מ לפני המטרה</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">☁️ ירי בעננות, ניהוג וסחיפת נעילה</h4>
-                    <div class="table-container" style="margin-bottom: 15px;">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px; width: 30%;">תרחיש / מצב</th>
-                                    <th style="padding: 8px;">אופן פעולה והנחיות</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">עננות נמוכה</td>
-                                    <td style="padding: 8px;">נשגר במעוף נמוך.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">מטרת NLOS (ללא אפשרות למעוף נמוך)</td>
-                                    <td style="padding: 8px;">נשגר בניהוג.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">כניסה לעננות במצב נעילה</td>
-                                    <td style="padding: 8px;">עלולה להתרחש סחיפת נעילה שעלולה להוביל לניהוג זמני.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 1</td>
-                                    <td style="padding: 8px;">סחיפת נעילה ועדכון רציף של הכוון תכניס אותנו למצב זה.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">ניהוג זמני בגיל 2</td>
-                                    <td style="padding: 8px;">המערכת יודעת להתגבר לבד על סחיפת נעילה, ובגלל זה <strong>אין מצב מוגדר של ניהוג זמני</strong>.</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold; color: #ef4444;">חריגה ממשפך בטיחות</td>
-                                    <td style="padding: 8px;">במידה והטיל נסחף ועובר את משפך הבטיחות (<span class="code-block">2500 לצדדים</span>) – הטיל יפיל את עצמו.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h4 style="margin: 12px 0 6px 0; font-size: 0.95em; color: var(--link-color);">⚙️ מעטפת שיגור, בטיחות ומעוף</h4>
-                    <div class="table-container">
-                        <table style="width: 100%; text-align: center; border-collapse: collapse; font-size: 0.82em;">
-                            <thead>
-                                <tr style="background-color: var(--th-bg); color: white;">
-                                    <th style="padding: 8px;">נושא / פרמטר</th>
-                                    <th style="padding: 8px;">נתון / פירוט</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">מהירות הטיל</td>
-                                    <td style="padding: 8px;"><span class="code-block">150 מטר/שנייה</span></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">טווח ירי מינימלי</td>
-                                    <td style="padding: 8px;">450 מטרים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">מגבלת מזג אוויר</td>
-                                    <td style="padding: 8px; color: #ef4444; font-weight: bold;">איסור שיגור ברוח מעל 50 קמ"ש</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">תנאי יזום (מ-150 מטר)</td>
-                                    <td style="padding: 8px;">
-                                        טיל יכול ליזום לאחר 150 מטר בהתקיים 3 תנאים:
-                                        <br>
-                                        1. פתיחת כנפיים &nbsp;|&nbsp; 2. מעבר 150 מטר &nbsp;|&nbsp; 3. כוח עומס של 7G
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">TIPP OFF (יציאה מהזביל)</td>
-                                    <td style="padding: 8px;">נפילה של 60 ס"מ ב-8 המטרים הראשונים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">הצתת מנוע ראשי</td>
-                                    <td style="padding: 8px;">ניצת רק לאחר 3.5 מטרים (להגנת המפעיל)</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">רשף לאחור</td>
-                                    <td style="padding: 8px;">2.7 מטרים</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px; font-weight: bold;">פרופיל מעוף</td>
-                                    <td style="padding: 8px;">הטיל מגיע לשיא הגובה בחצי הדרך למטרה</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </section>
@@ -1746,31 +1492,6 @@
             <div style="display:flex; gap:8px; margin-top:12px;">
                 <button type="button" class="login-btn" onclick="saveEditedTodo()">שמור שינויים 💾</button>
                 <button type="button" class="login-btn" style="background:#64748b;" onclick="closeEditTodoModal()">ביטול ❌</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- מודאל עריכת פרטי מדריך -->
-    <div id="trainerEditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:100000; align-items:center; justify-content:center; padding:20px;">
-        <div class="login-card" style="text-align:right; max-width:400px;">
-            <h3 style="margin-top:0; color:var(--text-color); font-size:1.15em;">👤 פרטי מדריך מחובר</h3>
-            <p style="font-size:0.85em; color:#94a3b8; margin-bottom:12px;">ערוך את פרטיך האישיים עבור שליחת משמרות ותזכורות:</p>
-            
-            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">שם פרטי:</label>
-            <input type="text" id="modalFName" class="login-input" style="direction:rtl; text-align:right;" required>
-            
-            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">שם משפחה:</label>
-            <input type="text" id="modalLName" class="login-input" style="direction:rtl; text-align:right;" required>
-            
-            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">אימייל:</label>
-            <input type="email" id="modalEmail" class="login-input" style="direction:ltr; text-align:right;" required>
-            
-            <label style="font-size:0.85em; font-weight:bold; color:#94a3b8; display:block; margin-bottom:4px;">טלפון:</label>
-            <input type="tel" id="modalPhone" class="login-input" style="direction:ltr; text-align:right;" required>
-            
-            <div style="display:flex; gap:8px; margin-top:12px;">
-                <button type="button" class="login-btn" onclick="saveTrainerProfileFromModal()">שמור פרטים 💾</button>
-                <button type="button" class="login-btn" style="background:#64748b;" onclick="closeTrainerEditModal()">סגור ❌</button>
             </div>
         </div>
     </div>
@@ -2228,7 +1949,7 @@
             if (parts.length >= 2) {
                 return (parts[0][0] + parts[1][0]).toUpperCase();
             }
-            return name.substring(0, 2);
+            return name.substring(0, 2).toUpperCase();
         }
 
         function getTrainerColor(name) {
@@ -2944,10 +2665,8 @@
 
             return `
                 <td>
-                    <div class="date-cell-inner">
-                        <input id="cell_${side}_${monthIdx}_${cacheIndex}_0" type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
-                        ${extraBadge}
-                    </div>
+                    <input id="cell_${side}_${monthIdx}_${cacheIndex}_0" type="text" class="cell-input" value="${currentVal}" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 0, this.value)">
+                    ${extraBadge}
                 </td>
                 ${guideCellHTML}
                 <td><input id="cell_${side}_${monthIdx}_${cacheIndex}_2" type="text" class="cell-input" value="${vals[2] || ''}" placeholder="כוח מתאמן" list="mem-units" onchange="updateCacheAndSave('${side}', ${monthIdx}, ${cacheIndex}, 2, this.value)"></td>
@@ -3136,69 +2855,48 @@
                 localStorage.setItem('gorilla_trainer_profile', JSON.stringify(trainer));
             }
 
-            const profileBar = document.getElementById('trainerProfileBar');
-            const headerAvatar = document.getElementById('headerUserAvatar');
+            const display = document.getElementById('trainerInfoDisplay');
+            const inputsArea = document.getElementById('trainerInputsArea');
+            if (!display || !inputsArea) return;
 
-            if (trainer && trainer.firstName) {
-                if (profileBar) profileBar.style.display = 'none';
-
-                const fullName = (trainer.firstName + ' ' + (trainer.lastName || '')).trim();
-                const initials = (trainer.firstName[0] + (trainer.lastName ? trainer.lastName[0] : (trainer.firstName[1] || ''))).trim();
-                const avatarBg = getTrainerColor(fullName);
-
-                if (headerAvatar) {
-                    headerAvatar.style.background = avatarBg;
-                    headerAvatar.style.borderRadius = '50%';
-                    headerAvatar.innerText = initials;
-                    headerAvatar.title = `מחובר כ: ${fullName} (${trainer.email}) - לחץ לשינוי פרטים`;
-                    headerAvatar.onclick = editTrainerProfile;
-                }
+            if (trainer) {
+                display.innerHTML = `👤 מחובר כ: <strong>${trainer.firstName} ${trainer.lastName}</strong> (${trainer.email}${trainer.phone ? ' | ' + trainer.phone : ''}) <button onclick="editTrainerProfile()" style="background:none; border:none; color:#3498db; cursor:pointer; font-size:0.85em; text-decoration:underline; margin-right:8px;">[שנה פרטים]</button>`;
+                inputsArea.style.display = 'none';
             } else {
-                if (profileBar) profileBar.style.display = 'flex';
-                if (headerAvatar) {
-                    headerAvatar.style.background = '#f37021';
-                    headerAvatar.style.borderRadius = '8px';
-                    headerAvatar.innerHTML = `🚀`;
-                    headerAvatar.title = "צוות גיל";
-                    headerAvatar.onclick = null;
-                }
+                display.innerHTML = `👤 התחברות מדריך:`;
+                inputsArea.innerHTML = `
+                    <input type="text" id="tFirstName" placeholder="שם פרטי">
+                    <input type="text" id="tLastName" placeholder="שם משפחה">
+                    <input type="email" id="tEmail" placeholder="כתובת מייל">
+                    <input type="tel" id="tPhone" placeholder="מספר טלפון">
+                    <button class="trainer-save-btn" onclick="saveTrainerProfile()">שמור פרופיל 💾</button>
+                `;
+                inputsArea.style.display = 'flex';
             }
 
             checkUserTodoReminders();
         };
 
-        function editTrainerProfile() {
-            const trainer = JSON.parse(localStorage.getItem('gorilla_trainer_profile') || 'null');
-            if (trainer) {
-                document.getElementById('modalFName').value = trainer.firstName || '';
-                document.getElementById('modalLName').value = trainer.lastName || '';
-                document.getElementById('modalEmail').value = trainer.email || '';
-                document.getElementById('modalPhone').value = trainer.phone || '';
-            }
-            const modal = document.getElementById('trainerEditModal');
-            if (modal) modal.style.display = 'flex';
-        }
+        function saveTrainerProfile() {
+            const fName = document.getElementById('tFirstName')?.value.trim();
+            const lName = document.getElementById('tLastName')?.value.trim();
+            const email = document.getElementById('tEmail')?.value.trim();
+            const phone = document.getElementById('tPhone')?.value.trim();
 
-        function closeTrainerEditModal() {
-            const modal = document.getElementById('trainerEditModal');
-            if (modal) modal.style.display = 'none';
-        }
-
-        function saveTrainerProfileFromModal() {
-            const fName = document.getElementById('modalFName')?.value.trim();
-            const lName = document.getElementById('modalLName')?.value.trim();
-            const email = document.getElementById('modalEmail')?.value.trim();
-            const phone = document.getElementById('modalPhone')?.value.trim();
-
-            if (!fName || !email) {
-                alert('אנא מלא שם פרטי וכתובת אימייל.');
+            if (!fName || !lName || !email || !phone) {
+                alert('אנא מלא שם פרטי, שם משפחה, כתובת מייל ומספר טלפון.');
                 return;
             }
 
             const profile = { firstName: fName, lastName: lName, email: email, phone: phone };
             localStorage.setItem('gorilla_trainer_profile', JSON.stringify(profile));
             window.initTrainerProfile();
-            closeTrainerEditModal();
+            alert('הפרטים נשמרו בהצלחה!');
+        }
+
+        function editTrainerProfile() {
+            localStorage.removeItem('gorilla_trainer_profile');
+            window.initTrainerProfile();
         }
 
         function exportWeeklyShiftsToCalendar() {
